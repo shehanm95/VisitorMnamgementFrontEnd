@@ -1,0 +1,24 @@
+.authenticationForm {
+    border: 3px solid var(--primary);
+    padding: clamp(10px, 4vmin, 40px);
+    padding-top: 40px;
+    padding-bottom: 40px;
+    border-radius: 20px;
+}
+
+.w-100 {
+    width: 100%;
+}
+
+
+
+.bigButton {
+    background-color: var(--primary);
+    color: var(--light);
+    border: none;
+    outline: none;
+    border-radius: 8px;
+    height: 45px;
+    font-size: 28px;
+    margin: 15px 0 15px 0;
+}

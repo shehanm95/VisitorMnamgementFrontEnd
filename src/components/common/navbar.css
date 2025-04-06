@@ -1,0 +1,20 @@
+.navBar {
+    background-color: var(--primary);
+    height: clamp(60px, 7vmin, 80px);
+    width: 100%;
+    padding: 0 20px 0 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: var(--light);
+}
+
+.logo {
+    height: clamp(40px, 6vmin, 60px);
+    padding-right: 10px;
+}
+
+.profile-image {
+    max-height: clamp(40px, 6vmin, 60px);
+    border-radius: 50%;
+}

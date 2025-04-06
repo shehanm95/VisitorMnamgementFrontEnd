@@ -1,0 +1,218 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  --primary: #0281d0;
+  --primarylink: #40B6FF;
+  --danger: #FF4242;
+  --light: #f7fcff;
+  --light2: #D3E8F5;
+  --light3: #bae2fb;
+  font-family: "Inter", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 600;
+  font-style: normal;
+  color: var(--primary);
+}
+
+.maincontainer {
+  height: 100vh;
+}
+
+.check {
+  border: 1px dashed red;
+}
+
+.w-100 {
+  width: 100%;
+}
+
+.w-75 {
+  width: 75%;
+}
+
+.w-50 {
+  width: 50%;
+}
+
+.w-25 {
+  width: 25%;
+}
+
+.w-60 {
+  width: 60%;
+}
+
+m- .flex {
+  display: flex;
+}
+
+.between {
+  justify-content: space-between;
+}
+
+.around {
+  justify-content: space-around;
+}
+
+.evenly {
+  justify-content: space-evenly;
+}
+
+.centerH {
+  justify-content: center;
+}
+
+.centerV {
+  align-items: center;
+}
+
+.center {
+  justify-content: center;
+  align-items: center;
+}
+
+.column {
+  flex-direction: column;
+}
+
+.bg-primary {
+  background-color: var(--primary);
+}
+
+@media(max-width:576px) {
+  .d-block {
+    display: block;
+  }
+
+  .d-flex {
+    display: flex;
+  }
+
+  .sm-d-none {
+    display: none;
+  }
+}
+
+/* All sides */
+.m-0 {
+  margin: 0 !important;
+}
+
+.m-1 {
+  margin: 0.25rem !important;
+}
+
+.m-2 {
+  margin: 0.5rem !important;
+}
+
+.m-3 {
+  margin: 1rem !important;
+}
+
+.m-4 {
+  margin: 1.5rem !important;
+}
+
+.m-5 {
+  margin: 3rem !important;
+}
+
+.m-auto {
+  margin: auto !important;
+}
+
+/* Top */
+.mt-0 {
+  margin-top: 0 !important;
+}
+
+.mt-1 {
+  margin-top: 0.25rem !important;
+}
+
+/* ...same pattern for mt-2 to mt-5 and mt-auto */
+
+/* Bottom */
+.mb-0 {
+  margin-bottom: 0 !important;
+}
+
+/* ...same pattern for mb-1 to mb-5 and mb-auto */
+
+/* Start (left in LTR) */
+.ms-0 {
+  margin-left: 0 !important;
+}
+
+/* ... */
+
+/* End (right in LTR) */
+.me-0 {
+  margin-right: 0 !important;
+}
+
+/* ... */
+
+/* X-axis (left & right) */
+.mx-0 {
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+}
+
+/* ... */
+
+/* Y-axis (top & bottom) */
+.my-0 {
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+}
+
+/* ... */
+@media (min-width: 576px) {
+  .m-sm-1 {
+    margin: 0.25rem !important;
+  }
+
+  .mt-sm-2 {
+    margin-top: 0.5rem !important;
+  }
+
+  /* etc... */
+}
+
+@media (min-width: 768px) {
+  .m-md-1 {
+    margin: 0.25rem !important;
+  }
+
+  /* etc... */
+}
+
+@media (min-width: 992px) {
+  .m-lg-1 {
+    margin: 0.25rem !important;
+  }
+
+  /* etc... */
+}
+
+@media (min-width: 1200px) {
+  .m-xl-1 {
+    margin: 0.25rem !important;
+  }
+
+  /* etc... */
+}
+
+@media (min-width: 1400px) {
+  .m-xxl-1 {
+    margin: 0.25rem !important;
+  }
+
+  /* etc... */
+}
