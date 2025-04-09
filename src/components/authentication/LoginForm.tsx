@@ -16,7 +16,7 @@ export const LoginForm = () => {
                     <h3 className='mt-4' >Login</h3>
                     <div className='w-100 bigInputFields mt-3 '>
 
-                        <input type="text" placeholder='Email' /><i className="fa-solid fa-at"></i>
+                        <input type="email" placeholder='Email' /><i className="fa-solid fa-at"></i>
                     </div>
 
                     <div className='w-100 bigInputFields mt-3 '>

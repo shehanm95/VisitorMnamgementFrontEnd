@@ -21,7 +21,7 @@ export const RegisterForm = () => {
                     </div>
 
                     <div className="w-100 bigInputFields mt-3">
-                        <input type="text" placeholder="WhatsApp Number" />
+                        <input type="tel" placeholder="WhatsApp Number" />
                         <i className="fa-brands fa-whatsapp"></i>
                     </div>
 
