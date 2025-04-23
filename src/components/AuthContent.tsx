@@ -28,7 +28,7 @@ export default class AuthContent extends React.Component<{}, AuthContentState> {
                     } else if (error.response.data && error.response.data.code) {
                         this.setState({ data: [error.response.data.code] });
                     } else {
-                        this.setState({ data: ["An unexpected error occurred."] });
+                        this.setState({ data: ["email or password wrong.."] });
                     }
                 } else {
                     this.setState({ data: ["Network error or backend is down."] });

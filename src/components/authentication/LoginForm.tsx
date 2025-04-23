@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import api from '../../api/axios';
+import api, { saveRole } from '../../api/axios';
 import { BlueLogo } from '../common/BlueLogo';
 
 interface LoginCredentials {
@@ -29,6 +29,7 @@ export const LoginForm: React.FC = () => {
             const { accessToken, refreshToken } = response.data;
             localStorage.setItem('accessToken', accessToken);
             localStorage.setItem('refreshToken', refreshToken);
+            saveRole(accessToken)
             toast.success('Login successful!');
             navigate('/home');
         } catch (err: any) {

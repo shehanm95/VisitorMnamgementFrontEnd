@@ -161,8 +161,8 @@ export const RegisterForm: React.FC = () => {
                         <button type="submit" className="bigButton w-100">Register</button>
                     </form>
                     <div className="formbottom flex center">
-                        <span>Already have an account?</span>
-                        <Link to="/login">Login</Link>
+                        <span>Already have an account? </span>
+                        <Link className='ps-1' to="/login">Login</Link>
                     </div>
                 </div>
             </div>

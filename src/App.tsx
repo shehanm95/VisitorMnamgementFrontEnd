@@ -4,7 +4,13 @@ import 'react-toastify/dist/ReactToastify.css';
 import './App.css';
 import { LoginForm } from './components/authentication/LoginForm';
 import { RegisterForm } from './components/authentication/RegisterForm';
-import { Home } from './components/content/Home';
+import ProtectedRoute from './context/ProtectedRoute';
+import { UserProfile } from './components/profile/UserProfile';
+import { Home } from './components/Home';
+import { Unauthorized } from './components/common/Unauthorized';
+import { VisitorDashboard } from './components/dashboard/VisitorDashboard';
+import { ModeratorDashboard } from './components/dashboard/ModeratorDashboard';
+import { OfficerDashboard } from './components/dashboard/OfficerDashboard';
 
 const PrivateRoute: React.FC<{ element: React.ReactElement }> = ({ element }) => {
   return localStorage.getItem('accessToken') ? element : <Navigate to="/login" />;
@@ -28,7 +34,40 @@ function App() {
         <Route path="/login" element={<LoginForm />} />
         <Route path="/register" element={<RegisterForm />} />
         <Route path="/home" element={<PrivateRoute element={<Home />} />} />
+        <Route path="/unauthorized" element={<PrivateRoute element={<Unauthorized />} />} />
         <Route path="/" element={<Navigate to="/login" />} />
+        <Route
+          path="/user"
+          element={
+            <ProtectedRoute roles={['VISITOR', 'ADMIN', 'MODERATOR']}>
+              <UserProfile></UserProfile>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/visitorDashboard"
+          element={
+            <ProtectedRoute roles={['VISITOR']}>
+              <VisitorDashboard></VisitorDashboard>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/moderatorDashboard"
+          element={
+            <ProtectedRoute roles={['MODERATOR']}>
+              <ModeratorDashboard></ModeratorDashboard>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/moderatorDashboard"
+          element={
+            <ProtectedRoute roles={['OFFICER']}>
+              <OfficerDashboard></OfficerDashboard>
+            </ProtectedRoute>
+          }
+        />
       </Routes>
     </>
   );

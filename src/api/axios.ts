@@ -1,5 +1,6 @@
 import axios, { AxiosInstance, InternalAxiosRequestConfig, AxiosError } from 'axios';
 import { toast } from 'react-toastify';
+import { jwtDecode } from 'jwt-decode';
 
 const api: AxiosInstance = axios.create({
     baseURL: 'http://localhost:8080/api',
@@ -23,11 +24,27 @@ api.interceptors.request.use(
 interface CustomAxiosRequestConfig extends InternalAxiosRequestConfig {
     _retry?: boolean;
 }
+export const logout = () => {
+    localStorage.removeItem('accessToken');
+    localStorage.removeItem('refreshToken');
+    localStorage.removeItem('userRole');
+    window.location.href = '/login';
+};
+
+interface JwtPayload {
+    sub: string;
+    exp: number;
+    iat: number;
+    role?: string;
+}
 
 api.interceptors.response.use(
-    (response) => response,
+    (response) => {
+        return response;
+    },
     async (error: AxiosError) => {
         const originalRequest = error.config as CustomAxiosRequestConfig | undefined;
+
         if (
             error.response?.status === 401 &&
             originalRequest &&
@@ -41,14 +58,17 @@ api.interceptors.response.use(
                     '/auth/refresh',
                     { refreshToken }
                 );
+
                 const { accessToken, refreshToken: newRefreshToken } = response.data;
 
                 localStorage.setItem('accessToken', accessToken);
                 localStorage.setItem('refreshToken', newRefreshToken);
 
+                saveRole(accessToken);
                 if (originalRequest.headers) {
                     originalRequest.headers.set('Authorization', `Bearer ${accessToken}`);
                 }
+
                 return api(originalRequest);
             } catch (refreshError) {
                 console.error('Token refresh failed:', refreshError);
@@ -59,8 +79,30 @@ api.interceptors.response.use(
                 return Promise.reject(refreshError);
             }
         }
+
         return Promise.reject(error);
     }
 );
+
+export const saveRole = (accessToken: string) => {
+    console.log("role saved");
+    const decoded = jwtDecode<JwtPayload>(accessToken);
+    const userRole = decoded.role;
+
+
+    console.log('User role:', userRole);
+    if (userRole) {
+        localStorage.setItem('userRole', userRole);
+    } else {
+        localStorage.setItem('userRole', 'No Role');
+    }
+}
+
+export const getRole = () => {
+    let role = localStorage.getItem('userRole');
+    console.log("method role : " + role);
+    return role;
+}
+
 
 export default api;
