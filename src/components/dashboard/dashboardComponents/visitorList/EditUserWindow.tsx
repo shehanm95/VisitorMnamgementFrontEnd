@@ -1,0 +1,143 @@
+import React from 'react';
+import { useForm, SubmitHandler } from 'react-hook-form';
+import { z } from 'zod';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { UserDto } from '../../../../types/user';
+import UserService from '../../../../services/userService';
+import './editWindow.css';
+
+interface EditUserWindowProps {
+    user: UserDto;
+    onClose: () => void;
+    onSave?: (updatedUser: UserDto) => void;
+}
+
+const EditUserSchema = z.object({
+    firstName: z.string().min(1, 'First Name is required'),
+    lastName: z.string().min(1, 'Last Name is required'),
+    email: z.string().email('Invalid email address'),
+    role: z.enum(['visitor', 'admin', 'staff', 'moderator']),
+});
+
+type EditUserFormValues = z.infer<typeof EditUserSchema>;
+
+const getFrontendRole = (backendRole: string): 'visitor' | 'admin' | 'staff' | 'moderator' => {
+    switch (backendRole) {
+        case 'ROLE_ADMIN': return 'admin';
+        case 'ROLE_VISITOR': return 'visitor';
+        case 'ROLE_GUEST': return 'staff';
+        case 'ROLE_MODERATOR': return 'moderator';
+        default: return 'visitor';
+    }
+};
+
+const mapFrontendRoleToBackend = (frontendRole: string) => {
+    switch (frontendRole) {
+        case 'admin': return 'ROLE_ADMIN';
+        case 'visitor': return 'ROLE_VISITOR';
+        case 'staff': return 'ROLE_GUEST';
+        case 'moderator': return 'ROLE_MODERATOR';
+        default: return 'ROLE_VISITOR';
+    }
+};
+
+export const EditUserWindow: React.FC<EditUserWindowProps> = ({ user, onClose, onSave }) => {
+    const {
+        register,
+        handleSubmit,
+        formState: { errors, isSubmitting },
+    } = useForm<EditUserFormValues>({
+        resolver: zodResolver(EditUserSchema),
+        defaultValues: {
+            firstName: user.firstName,
+            lastName: user.lastName,
+            email: user.email,
+            role: getFrontendRole(user.role),
+        },
+    });
+
+    const onSubmit: SubmitHandler<EditUserFormValues> = async (data) => {
+        try {
+            const updatedUser: UserDto = {
+                ...user,
+                firstName: data.firstName,
+                lastName: data.lastName,
+                email: data.email,
+                role: mapFrontendRoleToBackend(data.role),
+            };
+
+            const response = await UserService.changeRole(updatedUser);
+
+            if (onSave) {
+                onSave(response);
+            }
+        } catch (error) {
+            console.error('Error updating user:', error);
+            alert('Failed to update user. Please try again.');
+        } finally {
+            onClose();
+        }
+    };
+
+    return (
+        <div className="editUserWindow-overlay">
+            <div className="editUserWindow-container">
+                <button onClick={onClose} className="editUserWindow-close" aria-label="Close">
+                    &times;
+                </button>
+                <h2 className="editUserWindow-title">Edit User</h2>
+
+                <form onSubmit={handleSubmit(onSubmit)} className="editUserWindow-form">
+                    <div className="editUserWindow-field">
+                        <label>First Name</label>
+                        <input
+                            {...register('firstName')}
+                            placeholder="Enter first name"
+                            className={errors.firstName ? 'input-error' : ''}
+                        />
+                        {errors.firstName && <p className="error-message">{errors.firstName.message}</p>}
+                    </div>
+
+                    <div className="editUserWindow-field">
+                        <label>Last Name</label>
+                        <input
+                            {...register('lastName')}
+                            placeholder="Enter last name"
+                            className={errors.lastName ? 'input-error' : ''}
+                        />
+                        {errors.lastName && <p className="error-message">{errors.lastName.message}</p>}
+                    </div>
+
+                    <div className="editUserWindow-field">
+                        <label>Email</label>
+                        <input
+                            {...register('email')}
+                            placeholder="Enter email"
+                            className={errors.email ? 'input-error' : ''}
+                        />
+                        {errors.email && <p className="error-message">{errors.email.message}</p>}
+                    </div>
+
+                    <div className="editUserWindow-field">
+                        <label>Role</label>
+                        <select {...register('role')}>
+                            <option value="visitor">Visitor</option>
+                            <option value="admin">Admin</option>
+                            <option value="staff">Staff</option>
+                            <option value="moderator">Moderator</option>
+                        </select>
+                    </div>
+
+                    <div className="editUserWindow-buttons">
+                        <button type="button" className="cancel-button" onClick={onClose} disabled={isSubmitting}>
+                            Cancel
+                        </button>
+                        <button type="submit" className="save-button" disabled={isSubmitting}>
+                            {isSubmitting ? 'Saving...' : 'Save'}
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    );
+};

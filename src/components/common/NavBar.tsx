@@ -1,5 +1,5 @@
 import React from 'react'
-import './navbar.css'
+import './css/navbar.css'
 import BlueLogo from '../../assets/WhiteLogo.svg'
 import ProfDefault from '../../assets/profdefault.png'
 

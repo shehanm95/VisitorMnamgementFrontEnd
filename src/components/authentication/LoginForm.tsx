@@ -1,13 +1,21 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import api, { saveRole } from '../../api/axios';
 import { BlueLogo } from '../common/BlueLogo';
+import { useForm } from 'react-hook-form';
+import { z } from 'zod';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { AxiosError } from 'axios';
 
-interface LoginCredentials {
-    email: string;
-    password: string;
-}
+// Define Zod schema for login validation
+const loginSchema = z.object({
+    email: z.string().email('Invalid email format'),
+    password: z.string().min(6, 'Password must be at least 6 characters'),
+});
+
+// Infer form type
+type LoginFormInputs = z.infer<typeof loginSchema>;
 
 interface TokenPair {
     accessToken: string;
@@ -16,35 +24,56 @@ interface TokenPair {
 
 export const LoginForm: React.FC = () => {
     const navigate = useNavigate();
-    const [credentials, setCredentials] = useState<LoginCredentials>({
-        email: '',
-        password: '',
-    });
-    const [error, setError] = useState<string | null>(null);
 
-    const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault();
+    // Initialize react-hook-form with zod resolver
+    const {
+        register,
+        handleSubmit,
+        formState: { errors, isSubmitting },
+    } = useForm<LoginFormInputs>({
+        resolver: zodResolver(loginSchema),
+        defaultValues: {
+            email: '',
+            password: '',
+        },
+    });
+
+    const onSubmit = async (data: LoginFormInputs) => {
         try {
-            const response = await api.post<TokenPair>('/auth/login', credentials);
+            console.log('Request URL:', api.getUri() + '/api/auth/login');
+            console.log('Request payload:', data);
+            const response = await api.post<TokenPair>('/api/auth/login', data);
+            console.log('Response:', response.data);
             const { accessToken, refreshToken } = response.data;
             localStorage.setItem('accessToken', accessToken);
             localStorage.setItem('refreshToken', refreshToken);
-            saveRole(accessToken)
+            saveRole(accessToken);
             toast.success('Login successful!');
-            navigate('/home');
-        } catch (err: any) {
-            const errorMessage =
-                typeof err.response?.data === 'string'
-                    ? err.response?.data
-                    : err.response?.data?.message || 'Login failed';
-            toast.error(errorMessage);
-            setError(errorMessage);
-        }
-    };
+            setTimeout(() => navigate('/home'), 1000); // Match RegisterForm
+        } catch (err: unknown) {
+            console.error('Error response:', err);
+            let errorMessage = 'Login failed.';
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const { name, value } = e.target;
-        setCredentials((prev) => ({ ...prev, [name]: value }));
+            if (err instanceof AxiosError) {
+                if (err.response) {
+                    errorMessage =
+                        typeof err.response.data === 'string'
+                            ? err.response.data
+                            : (err.response.data as any)?.message || errorMessage;
+                } else if (err.request) {
+                    errorMessage = 'Network error. Please check your connection.';
+                }
+            } else {
+                errorMessage = err instanceof Error ? err.message : errorMessage;
+            }
+
+            if (errorMessage.includes('not verified')) {
+                errorMessage = 'Your email is not verified. Please check your inbox.';
+            }
+
+            toast.error(errorMessage);
+            return { error: errorMessage };
+        }
     };
 
     return (
@@ -53,32 +82,50 @@ export const LoginForm: React.FC = () => {
                 <div className="logoArea flex center">
                     <BlueLogo />
                 </div>
-                <h3 className='mt-3'>Login</h3>
-                <form onSubmit={handleSubmit}>
+                <h3 className="mt-3">Login</h3>
+                <form onSubmit={handleSubmit(onSubmit)} aria-labelledby="login-form-title">
+                    <h3 id="login-form-title" className="mt-3" hidden>
+                        Login
+                    </h3>
                     <div className="w-100 bigInputFields mt-3">
                         <input
                             type="email"
-                            name="email"
                             placeholder="Email"
-                            value={credentials.email}
-                            onChange={handleChange}
+                            {...register('email')}
                             required
+                            aria-label="Email address"
+                            aria-describedby={errors.email ? 'email-error' : undefined}
                         />
                         <i className="fa-solid fa-at"></i>
+                        {errors.email && (
+                            <p id="email-error" className="text-danger mt-2">
+                                {errors.email.message}
+                            </p>
+                        )}
                     </div>
                     <div className="w-100 bigInputFields mt-3">
                         <input
                             type="password"
-                            name="password"
                             placeholder="Password"
-                            value={credentials.password}
-                            onChange={handleChange}
+                            {...register('password')}
                             required
+                            aria-label="Password"
+                            aria-describedby={errors.password ? 'password-error' : undefined}
                         />
                         <i className="fa-solid fa-lock"></i>
+                        {errors.password && (
+                            <p id="password-error" className="text-danger mt-2">
+                                {errors.password.message}
+                            </p>
+                        )}
                     </div>
-                    {error && <p className="text-danger mt-2">{error}</p>}
-                    <button type="submit" className="bigButton w-100">Login</button>
+                    <button
+                        type="submit"
+                        className="bigButton w-100"
+                        disabled={isSubmitting}
+                    >
+                        {isSubmitting ? 'Logging in...' : 'Login'}
+                    </button>
                 </form>
                 <div className="formbottom flex center">
                     <span>Don't have an account?</span>

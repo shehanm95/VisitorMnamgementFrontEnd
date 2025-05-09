@@ -1,78 +1,89 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { NavBar } from '../common/NavBar';
 import './authenticationForm.css';
 import { BlueLogo } from '../common/BlueLogo';
 import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import api from '../../api/axios';
-import { RegisterCredentials, TokenPair } from '../../types/auth';
+import api, { getRole, saveRole } from '../../api/axios';
+import { TokenPair } from '../../types/auth';
+import { useForm } from 'react-hook-form';
+import { z } from 'zod';
+import { zodResolver } from '@hookform/resolvers/zod';
 
+// Define the Zod schema for form validation
+const registerSchema = z
+    .object({
+        firstName: z.string().min(2, 'First name must be at least 2 characters'),
+        lastName: z.string().min(2, 'Last name must be at least 2 characters'),
+        email: z.string().email('Invalid email format'),
+        phoneNumber: z.string().min(5, 'Phone number must be at least 5 characters'), // Added phoneNumber validation
+        password: z.string().min(8, 'Password must be at least 8 characters'),
+        confirmPassword: z.string().min(8, 'Confirm password must be at least 8 characters'),
+    })
+    .refine((data) => data.password === data.confirmPassword, {
+        message: 'Passwords do not match',
+        path: ['confirmPassword'],
+    });
 
+// Infer the form type from the schema
+type RegisterFormInputs = z.infer<typeof registerSchema>;
 
 export const RegisterForm: React.FC = () => {
     const navigate = useNavigate();
-    const [credentials, setCredentials] = useState<RegisterCredentials>({
-        firstName: '',
-        lastName: '',
-        email: '',
-        password: '',
-        confirmPassword: '',
+    const [rememberMe, setRememberMe] = React.useState<boolean>(false);
+
+    // Initialize react-hook-form with zod resolver
+    const {
+        register,
+        handleSubmit,
+        formState: { errors, isSubmitting },
+    } = useForm<RegisterFormInputs>({
+        resolver: zodResolver(registerSchema),
+        defaultValues: {
+            firstName: '',
+            lastName: '',
+            email: '',
+            phoneNumber: '',
+            password: '',
+            confirmPassword: '',
+        },
     });
-    const [error, setError] = useState<string | null>(null);
-    const [rememberMe, setRememberMe] = useState<boolean>(false);
+    interface RegisterCredentials {
+        firstName: string;
+        lastName: string;
+        imagePath: string | null,
+        email: string;
+        phoneNumber: string,
+        password: string;
+        confirmPassword: string;
+    }
 
-    const validateForm = (): boolean => {
-        if (credentials.firstName.length < 2) {
-            toast.error('First name must be at least 2 characters');
-            return false;
-        }
-        if (credentials.lastName.length < 2) {
-            toast.error('Last name must be at least 2 characters');
-            return false;
-        }
-        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(credentials.email)) {
-            toast.error('Invalid email format');
-            return false;
-        }
-        if (credentials.password.length < 8) {
-            toast.error('Password must be at least 8 characters');
-            return false;
-        }
-        if (credentials.password !== credentials.confirmPassword) {
-            toast.error('Passwords do not match');
-            return false;
-        }
-        return true;
-    };
-
-    const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault();
-        setError(null);
-
-        if (!validateForm()) {
-            return;
-        }
-
+    const onSubmit = async (data: RegisterFormInputs) => {
         try {
-            const response = await api.post<TokenPair>('/auth/register', credentials);
+            const credentials: RegisterCredentials = {
+                firstName: data.firstName,
+                lastName: data.lastName,
+                email: data.email,
+                phoneNumber: data.phoneNumber,
+                password: data.password,
+                confirmPassword: data.confirmPassword,
+                imagePath: ""
+            };
+
+            const response = await api.post<TokenPair>('/api/auth/register', credentials);
             const { accessToken, refreshToken } = response.data;
             localStorage.setItem('accessToken', accessToken);
             localStorage.setItem('refreshToken', refreshToken);
+            saveRole(accessToken);
             toast.success('Registration successful! Redirecting to home...');
-            setTimeout(() => navigate('/home'), 1000); // Delay for toast visibility
+            setTimeout(() => navigate('/home'), 1000);
         } catch (err: any) {
             const errorMessage =
                 typeof err.response?.data === 'string'
                     ? err.response?.data
                     : err.response?.data?.message || 'Registration failed';
             toast.error(errorMessage);
-            setError(errorMessage);
         }
-    };
-
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const { name, value } = e.target;
-        setCredentials((prev) => ({ ...prev, [name]: value }));
     };
 
     const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -89,63 +100,79 @@ export const RegisterForm: React.FC = () => {
                         <BlueLogo />
                     </div>
                     <h3 className="mt-4">Register</h3>
-                    <form onSubmit={handleSubmit}>
+                    <div>
                         <div className="w-100 bigInputFields mt-3">
                             <input
                                 type="text"
-                                name="firstName"
                                 placeholder="First Name"
-                                value={credentials.firstName}
-                                onChange={handleChange}
+                                {...register('firstName')}
                                 required
                             />
                             <i className="fa-solid fa-user"></i>
+                            {errors.firstName && (
+                                <p className="text-danger mt-2">{errors.firstName.message}</p>
+                            )}
                         </div>
                         <div className="w-100 bigInputFields mt-3">
                             <input
                                 type="text"
-                                name="lastName"
                                 placeholder="Last Name"
-                                value={credentials.lastName}
-                                onChange={handleChange}
+                                {...register('lastName')}
                                 required
                             />
                             <i className="fa-solid fa-user"></i>
+                            {errors.lastName && (
+                                <p className="text-danger mt-2">{errors.lastName.message}</p>
+                            )}
                         </div>
                         <div className="w-100 bigInputFields mt-3">
                             <input
                                 type="email"
-                                name="email"
                                 placeholder="Email"
-                                value={credentials.email}
-                                onChange={handleChange}
+                                {...register('email')}
                                 required
                             />
                             <i className="fa-solid fa-at"></i>
+                            {errors.email && (
+                                <p className="text-danger mt-2">{errors.email.message}</p>
+                            )}
+                        </div>
+                        <div className="w-100 bigInputFields mt-3">
+                            <input
+                                type="text"
+                                placeholder="Phone Number"
+                                {...register('phoneNumber')}
+                                required
+                            />
+                            <i className="fa-solid fa-phone"></i>
+                            {errors.phoneNumber && (
+                                <p className="text-danger mt-2">{errors.phoneNumber.message}</p>
+                            )}
                         </div>
                         <div className="w-100 bigInputFields mt-3">
                             <input
                                 type="password"
-                                name="password"
                                 placeholder="Password"
-                                value={credentials.password}
-                                onChange={handleChange}
+                                {...register('password')}
                                 required
                             />
                             <i className="fa-solid fa-lock"></i>
+                            {errors.password && (
+                                <p className="text-danger mt-2">{errors.password.message}</p>
+                            )}
                         </div>
                         <div className="w-100 bigInputFields mt-3">
                             <input
                                 type="password"
-                                name="confirmPassword"
                                 placeholder="Confirm Password"
-                                value={credentials.confirmPassword}
-                                onChange={handleChange}
+                                {...register('confirmPassword')}
                                 required
                             />
                             <i className="fa-solid fa-lock"></i>
+                            {errors.confirmPassword && (
+                                <p className="text-danger mt-2">{errors.confirmPassword.message}</p>
+                            )}
                         </div>
-                        {error && <p className="text-danger mt-2">{error}</p>}
                         <div className="p-1 rememberArea flex centerV mt-3 between">
                             <div>
                                 <input
@@ -155,14 +182,25 @@ export const RegisterForm: React.FC = () => {
                                     checked={rememberMe}
                                     onChange={handleCheckboxChange}
                                 />
-                                <label className='ms-2' htmlFor="rememberme">Remember me</label>
+                                <label className="ms-2" htmlFor="rememberme">
+                                    Remember me
+                                </label>
                             </div>
                         </div>
-                        <button type="submit" className="bigButton w-100">Register</button>
-                    </form>
+                        <button
+                            type="button"
+                            className="bigButton w-100"
+                            onClick={handleSubmit(onSubmit)}
+                            disabled={isSubmitting}
+                        >
+                            Register
+                        </button>
+                    </div>
                     <div className="formbottom flex center">
                         <span>Already have an account? </span>
-                        <Link className='ps-1' to="/login">Login</Link>
+                        <Link className="ps-1" to="/login">
+                            Login
+                        </Link>
                     </div>
                 </div>
             </div>

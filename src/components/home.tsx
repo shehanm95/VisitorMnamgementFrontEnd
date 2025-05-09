@@ -6,6 +6,7 @@ export const Home: React.FC = () => {
     const navigate = useNavigate();
 
     const navigateTo = (link: string) => {
+        console.log(link)
         navigate(link);
     };
 

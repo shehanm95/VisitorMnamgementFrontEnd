@@ -1,11 +1,13 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import './Unauthorized.css';
+import { getRole } from '../../api/axios';
 
 export const Unauthorized = () => {
     const navigate = useNavigate();
 
     const handleBack = () => {
+        getRole();
         navigate('/home');
     };
 

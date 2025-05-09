@@ -1,0 +1,8 @@
+.main-icon {
+    font-size: clamp(20px, 5vmin, 40px);
+    margin-right: 1vmin;
+}
+
+.icontitle {
+    font-size: clamp(16px, 3vmin, 30px);
+}

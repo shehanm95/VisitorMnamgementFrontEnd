@@ -1,5 +1,5 @@
 import React from 'react'
-import './logos.css'
+import './css/logos.css'
 import BlueLogoImg from '../../assets/BlueLogoImg.svg'
 
 export const BlueLogo = () => {

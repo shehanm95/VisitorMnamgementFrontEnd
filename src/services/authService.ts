@@ -5,7 +5,7 @@ import { AuthResponse, LoginCredentials } from '../types/auth';
 
 export const login = async (credentials: LoginCredentials): Promise<AuthResponse> => {
     try {
-        const response = await api.post<AuthResponse>('/auth/login', credentials);
+        const response = await api.post<AuthResponse>('/api/auth/login', credentials);
         const { accessToken, refreshToken } = response.data;
 
         // Store tokens in localStorage (consider cookies for production)

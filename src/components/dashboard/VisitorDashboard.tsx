@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { NavBarContainer } from '../common/NavBarContainer';
+import VisitorPage from './dashboardComponents/VisitorPage';
 
 export const VisitorDashboard = () => {
     const [activeItem, setActiveItem] = useState('Manage Tasks');
@@ -15,7 +16,7 @@ export const VisitorDashboard = () => {
 
     return (
         <NavBarContainer>
-            <div className='h-100 flex check'>
+            <div className='h-100 flex'>
                 <div className="sideBar">
                     <ul className="sidebar-menu">
                         {menuItems.map((item) => (
@@ -32,8 +33,8 @@ export const VisitorDashboard = () => {
                     </ul>
                 </div>
 
-                <div className="contentHolder">
-                    {/* Dynamically render based on activeItem if needed */}
+                <div className="contentHolder p-4">
+                    <VisitorPage></VisitorPage>
                 </div>
             </div>
         </NavBarContainer>

@@ -4,6 +4,10 @@
   box-sizing: border-box;
 }
 
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 :root {
   --primary: #0281d0;
   --primarylink: #40B6FF;
@@ -637,4 +641,21 @@ a {
 .py-auto {
   padding-top: auto !important;
   padding-bottom: auto !important;
+}
+
+button {
+  @apply rounded-md border px-4 py-2 font-semibold transition-colors duration-300;
+  background-color: var(--button-color, #3b82f6);
+  outline: none;
+  border: none;
+  border-radius: 5px;
+  /* fallback blue */
+  color: white;
+  border-color: var(--button-border-color, #3b82f6);
+}
+
+button:hover {
+  background-color: var(--button-hover-color, #2563eb);
+  /* darker blue on hover */
+  border-color: var(--button-hover-color, #2563eb);
 }

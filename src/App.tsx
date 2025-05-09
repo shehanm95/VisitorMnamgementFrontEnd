@@ -11,6 +11,7 @@ import { Unauthorized } from './components/common/Unauthorized';
 import { VisitorDashboard } from './components/dashboard/VisitorDashboard';
 import { ModeratorDashboard } from './components/dashboard/ModeratorDashboard';
 import { OfficerDashboard } from './components/dashboard/OfficerDashboard';
+import { TParent } from './components/test/TParent';
 
 const PrivateRoute: React.FC<{ element: React.ReactElement }> = ({ element }) => {
   return localStorage.getItem('accessToken') ? element : <Navigate to="/login" />;
@@ -36,6 +37,7 @@ function App() {
         <Route path="/home" element={<PrivateRoute element={<Home />} />} />
         <Route path="/unauthorized" element={<PrivateRoute element={<Unauthorized />} />} />
         <Route path="/" element={<Navigate to="/login" />} />
+        <Route path="/test" element={<TParent></TParent>} />
         <Route
           path="/user"
           element={
