@@ -5,4 +5,10 @@
 
 .icontitle {
     font-size: clamp(16px, 3vmin, 30px);
+    margin-top: -10px;
+}
+
+.centerHeader {
+    display: flex;
+    align-items: center;
 }

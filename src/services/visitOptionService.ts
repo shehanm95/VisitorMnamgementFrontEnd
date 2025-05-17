@@ -3,7 +3,6 @@ import { VisitOption } from '../types/visitOption';
 import { AxiosResponse } from 'axios';
 
 export const VisitOptionService = {
-    // Create a new visit option
     createVisitOption: async (visitOption: VisitOption, image?: File): Promise<VisitOption> => {
         const formData = new FormData();
         formData.append('visitOption', JSON.stringify(visitOption));
@@ -18,6 +17,7 @@ export const VisitOptionService = {
         });
         return response.data;
     },
+
 
     // Get a visit option by ID
     getVisitOptionById: async (id: number): Promise<VisitOption> => {

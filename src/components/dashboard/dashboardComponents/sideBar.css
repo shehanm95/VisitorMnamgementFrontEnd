@@ -4,6 +4,11 @@
     background-color: var(--light3);
 }
 
+.contentHolder {
+    height: calc(100vh - var(--navBarHeight));
+    overflow-y: scroll;
+}
+
 /* Sidebar container */
 .sidebar {
     width: 260px;

@@ -9,10 +9,12 @@
 @tailwind utilities;
 
 :root {
+  --navBarHeight: clamp(60px, 7vmin, 80px);
   --primary: #0281d0;
   --primarylink: #40B6FF;
   --danger: #FF4242;
   --light: #f7fcff;
+  --light1: #eaf8ff;
   --light2: #D3E8F5;
   --light3: #bae2fb;
   --placeHolderText: #81b8da;
@@ -116,6 +118,7 @@
 }
 
 .center {
+  display: flex;
   justify-content: center;
   align-items: center;
 }

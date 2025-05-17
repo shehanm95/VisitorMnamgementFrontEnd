@@ -1,19 +1,43 @@
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { NavBarContainer } from '../common/NavBarContainer'
-import VisitorPage from './dashboardComponents/VisitorPage'
+import { Outlet, useNavigate, useLocation } from 'react-router-dom';
 
 export const ModeratorDashboard = () => {
     const [activeItem, setActiveItem] = useState('Manage Tasks');
+    const navigate = useNavigate();
+    const location = useLocation();
+
+    useEffect(() => {
+        let currentSubRoute = location.pathname.split('/moderatorDashboard/')[1] || '';
+
+        // You may want only the first segment after /moderatorDashboard/
+        currentSubRoute = currentSubRoute.split('/')[0];
+
+        const matchedItem = menuItems.find(item => item.route === currentSubRoute);
+        if (matchedItem) {
+            setActiveItem(matchedItem.label);
+        } else {
+            setActiveItem('Manage Tasks');
+        }
+    }, [location.pathname]);
+
 
     const menuItems = [
         { label: 'Manage Tasks', icon: 'fas fa-tasks', badge: '3' },
         { label: 'Set My Gate', icon: 'fas fa-calendar-alt' },
-        { label: 'Manage Visitor Options', icon: 'fas fa-sliders-h' },
-        { label: 'Go To Visitor Options', icon: 'fas fa-external-link-alt' },
-        { label: 'Scan Visitor', icon: 'fas fa-qrcode' },
-        { label: 'All visitors', icon: 'fas fa-users' },
+        { label: 'Manage visit Options', icon: 'fas fa-sliders-h', route: "visitOptions" }, // should go to the moderatorDashboard/visitOption
+        { label: 'Go To visit Options', icon: 'fas fa-external-link-alt' },
+        { label: 'Scan visit', icon: 'fas fa-qrcode' },
+        { label: 'All visits', icon: 'fas fa-users', route: "allvisitors" },  // should go to the moderatorDashboard/allvisits
     ];
+    const handleMenuClick = (item: any) => {
+        setActiveItem(item.label);
+        if (item.route) {
+            navigate(item.route); // Navigate to subroute like /moderatorDashboard/visitOption
+        }
+    };
+
     return (
         <div>
             <NavBarContainer>
@@ -24,7 +48,7 @@ export const ModeratorDashboard = () => {
                                 <li
                                     key={item.label}
                                     className={`sidebar-item ${activeItem === item.label ? 'active' : ''}`}
-                                    onClick={() => setActiveItem(item.label)}
+                                    onClick={() => handleMenuClick(item)}
                                 >
                                     <i className={item.icon}></i>
                                     <span>{item.label}</span>
@@ -35,7 +59,7 @@ export const ModeratorDashboard = () => {
                     </div>
 
                     <div className="contentHolder p-4 w-100">
-                        <VisitorPage></VisitorPage>
+                        <Outlet />
                     </div>
                 </div>
             </NavBarContainer>

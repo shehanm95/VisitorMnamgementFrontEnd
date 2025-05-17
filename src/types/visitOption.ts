@@ -3,7 +3,7 @@ import { VisitType } from "./visitType";
 export interface VisitOption {
     id?: number;
     visitOptionName: string;
-    visitType: VisitType;
+    visitType: VisitType | null;
     description?: string;
     isPreRegistration: boolean;
     imageName?: string;

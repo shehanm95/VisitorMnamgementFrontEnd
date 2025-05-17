@@ -2,7 +2,7 @@ import api from '../api/axios'; // Adjust the import path based on your project 
 import { VisitType } from '../types/visitType';
 import { AxiosResponse } from 'axios';
 
-export const VisitorTypeService = {
+export const VisitTypeService = {
     // Create a new visit type
     createVisitType: async (visitType: VisitType, image?: File): Promise<VisitType> => {
         const formData = new FormData();

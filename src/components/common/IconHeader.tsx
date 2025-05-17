@@ -9,6 +9,8 @@ interface IconHeaderProps {
 
 export const IconHeader: React.FC<IconHeaderProps> = ({ icon, title }) => {
     return (
-        <h2 className='icontitle'><i className={`fas ${icon} main-icon`}></i> {title}</h2>
+        <div className="centerHeader">
+            <h2 className='icontitle'><i className={`fas ${icon} main-icon`}></i> {title}</h2>
+        </div>
     )
 }
