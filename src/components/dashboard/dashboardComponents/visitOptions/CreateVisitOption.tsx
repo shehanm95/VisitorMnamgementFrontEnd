@@ -9,6 +9,10 @@ import { VisitOptionService } from '../../../../services/visitOptionService';
 import { getTypeDetails, TypeDtails } from '../../../../services/typeKeeper';
 import { useNavigate } from 'react-router-dom';
 import { IconHeader } from '../../../common/IconHeader';
+import { FrontPageService } from '../../../../frontServices/FrontPageSerivce';
+import { ModeratorService } from '../../../../frontServices/moderatorService';
+import { LinkService } from '../../../../frontServices/LinkService';
+import { DynamicQuestionSchema } from './AddDynamicQuestion';
 
 // Define Zod schema for form validation
 const VisitOptionSchema = z.object({
@@ -19,6 +23,8 @@ const VisitOptionSchema = z.object({
         hours: z.number().min(0),
         minutes: z.number().min(0).max(59),
     }),
+
+    dynamicQuestions: z.array(DynamicQuestionSchema).optional(),
     maxVisitors: z.number().min(1, 'Must allow at least 1 visitor'),
     workingDates: z.array(
         z.object({
@@ -41,6 +47,10 @@ export const CreateVisitOption = () => {
     const [imageFile, setImageFile] = React.useState<File | null>(null);
     const [imagePreview, setImagePreview] = React.useState<string | null>(null);
     const [generalError, setGeneralError] = useState<string | null>(null);
+    const [preRegistration, setPreRegistration] = useState(false);
+    const togglePreRegistration = () => {
+        setPreRegistration(!preRegistration);
+    }
 
     const navigate = useNavigate();
     const details: TypeDtails = getTypeDetails();
@@ -56,18 +66,18 @@ export const CreateVisitOption = () => {
         defaultValues: {
             name: '',
             description: '',
-            visitTypeId: 0,
+            visitTypeId: details.currentVisitType?.id,
             preRegTime: { hours: 0, minutes: 0 },
             maxVisitors: 1,
             workingDates: [{ from: '', to: '' }],
             collectDetails: { email: false, whatsapp: false, visitorPhoto: false, photoOptional: false },
+            dynamicQuestions: []
         },
     });
 
     const workingDates = watch('workingDates');
     const preRegTime = watch('preRegTime');
     const maxVisitors = watch('maxVisitors');
-    const isPreRegistrationChecked = !!preRegTime.hours || !!preRegTime.minutes || !!maxVisitors;
 
     useEffect(() => {
         if (details.currentVisitType == null) {
@@ -109,7 +119,6 @@ export const CreateVisitOption = () => {
             const newVisitOption: VisitOption = {
                 visitOptionName: data.name,
                 description: data.description,
-
                 visitType: details.currentVisitType,
                 isPreRegistration: !!(preRegTime.hours || preRegTime.minutes || maxVisitors),
                 imageName: imageFile ? imageFile.name : undefined,
@@ -117,16 +126,13 @@ export const CreateVisitOption = () => {
                 isPhotoOptional: data.collectDetails.photoOptional,
                 isPhoneNumberRequired: data.collectDetails.whatsapp,
                 isEmailRequired: data.collectDetails.email,
-                // preRegistration: {
-                //     timeRequired: preRegTime.hours || preRegTime.minutes ? preRegTime : undefined,
-                //     maxVisitors: maxVisitors > 0 ? maxVisitors : undefined,
-                //     workingDates: workingDates.filter((range) => range.from && range.to),
-                // },
+                dynamicQuestions: []
+
             };
-
+            console.log("dynamic: ", { ...newVisitOption })
             const savedVisitOption = await VisitOptionService.createVisitOption(newVisitOption, imageFile || undefined);
-
-            navigate('/moderatorDashboard/visitOptions');
+            ModeratorService.setCurrentVisitOption(savedVisitOption);
+            navigate(LinkService.getInstance().moderatorDashboard.addDynamicQuestion);
         } catch (error) {
             console.error('Error saving visitor option:', error);
             setGeneralError('Failed to save visitor option. Please try again.');
@@ -196,19 +202,13 @@ export const CreateVisitOption = () => {
                     <label className="form-label">
                         <input
                             type="checkbox"
-                            checked={isPreRegistrationChecked}
-                            onChange={(e) => {
-                                if (!e.target.checked) {
-                                    setValue('preRegTime', { hours: 0, minutes: 0 });
-                                    setValue('maxVisitors', 1);
-                                    setValue('workingDates', [{ from: '', to: '' }]);
-                                }
-                            }}
+                            checked={preRegistration}
+                            onChange={() => togglePreRegistration()}
                         />
                         Pre-Registration
                     </label>
 
-                    {isPreRegistrationChecked && (
+                    {preRegistration && (
                         <div id="preregObj" className="form-group">
                             <div className="form-subgroup">
                                 <label className="form-sublabel">How much time you need for one visitor :</label>

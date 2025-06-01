@@ -7,8 +7,48 @@
     font-family: "Inter", sans-serif;
 }
 
+.form-button {
+    padding: 10px 5px;
+}
+
+.w-300px {
+    width: 300px !important;
+}
+
+.sampleButton {
+    display: flex;
+    align-items: center;
+    background-color: var(--primary);
+    color: white;
+    padding: 5px 10px;
+    margin-top: 5px;
+    border-radius: 15px;
+    cursor: default;
+}
+
+.sampleClose {
+    border-radius: 50%;
+    border: 1px solid var(--light);
+    padding: 5px !important;
+    width: 30px;
+    height: 30px;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+}
+
+.sampleClose p {
+    padding: 0 !important;
+    margin: 0 !important;
+    height: 20px;
+    width: 20px;
+}
+
 .form-container input:focus,
-.form-container textarea:focus {
+.form-container textarea:focus,
+.form-container select:focus {
     border-color: var(--primary);
     outline-color: var(--primary);
 }
@@ -32,6 +72,28 @@
     gap: 5px;
 }
 
+.form-button-holder button {
+    min-width: 100px;
+    margin-left: 5px;
+    border: 1px solid var(--primary);
+    color: var(--primary);
+    background-color: var(--light3);
+}
+
+.form-button-holder button:hover {
+    color: var(--light);
+    background-color: var(--primary);
+}
+
+
+.from-question-item {
+    width: 100%;
+    background-color: var(--light3);
+    padding: 5px 15px;
+    border-radius: 10px;
+    margin-top: 5px;
+}
+
 .form-label {
     font-weight: 600;
     color: var(--primary);
@@ -49,9 +111,15 @@
     width: 100%;
     padding: 8px;
     border: 1px solid var(--light2);
+    outline: 1px solid var(--light2);
+    ;
     border-radius: 4px;
     font-family: "Inter", sans-serif;
     color: var(--primary);
+}
+
+.form-error {
+    color: var(--danger) !important;
 }
 
 .form-input::placeholder,
@@ -71,7 +139,7 @@
 }
 
 .form-button {
-    padding: 8px 16px;
+    padding: 8pte 16px;
     background: var(--light3);
     color: var(--primary);
     border: none;
@@ -81,7 +149,6 @@
 }
 
 .form-image {
-
     max-width: 400px;
     margin-top: 10px;
     border-radius: 4px;
@@ -155,7 +222,7 @@
     text-align: right;
 }
 
-.form-button {
+.form-30 {
     width: 300px !important;
 }
 
@@ -172,4 +239,52 @@
     border-radius: 20px;
     cursor: pointer;
     font-family: "Inter", sans-serif;
+}
+
+New Classes for Dynamic Question Form .form-question-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.form-question-select {
+    padding: 8px;
+    border: 1px solid var(--light2);
+    border-radius: 4px;
+    font-family: "Inter", sans-serif;
+    color: var(--primary);
+    background: var(--light);
+    width: 100%;
+}
+
+.form-action-buttons {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.form-cancel-button {
+    padding: 8px 16px;
+    background: var(--light3);
+    color: var(--primary);
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    font-family: "Inter", sans-serif;
+}
+
+.form-add-question-button {
+    color: var(--primary);
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-family: "Inter", sans-serif;
+    margin-top: 10px;
+    text-decoration: underline;
+}
+
+.form-add-question-button:hover {
+    color: var(--primary-dark);
 }

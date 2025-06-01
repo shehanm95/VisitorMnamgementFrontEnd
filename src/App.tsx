@@ -11,17 +11,28 @@ import { Unauthorized } from './components/common/Unauthorized';
 import { VisitorDashboard } from './components/dashboard/VisitorDashboard';
 import { ModeratorDashboard } from './components/dashboard/ModeratorDashboard';
 import { OfficerDashboard } from './components/dashboard/OfficerDashboard';
-import { TParent } from './components/test/TParent';
 import { VisitOptions } from './components/dashboard/dashboardComponents/visitOptions/VisitorOptions';
 import VisitorPage from './components/dashboard/dashboardComponents/VisitorPage';
 import { CreateVisitOption } from './components/dashboard/dashboardComponents/visitOptions/CreateVisitOption';
-import { VisitOption } from './types/visitOption';
+import { GoToOptions } from './components/dashboard/dashboardComponents/goToOptions/GoToOptions';
+import { DisplayVisitTypes } from './components/frontOfficePage/DisplayVisitTypes';
+import { DisplayVisitOptions } from './components/frontOfficePage/DisplayOptionPage';
+import { LinkService } from './frontServices/LinkService';
+import { FrontRegistration } from './components/frontOfficePage/FrontRegistration';
+import { FrontLogin } from './components/frontOfficePage/FrontLogin';
+import { EmaiVeryfyPage } from './components/frontOfficePage/EmaiVeryfyPage';
+import { FrontTakePhotoPage } from './components/frontOfficePage/FrontTakePhotoPage';
+import AddDynamicQuestionForm from './components/dashboard/dashboardComponents/visitOptions/AddDynamicQuestion';
+import ButtonAdder from './components/test/ButtonAdder';
+import { FrontAnswerPage } from './components/frontOfficePage/FrontAnswerPage';
+import FrontDisplayQuestion from './components/frontOfficePage/frontComp/frontDisplayQuestion';
 
 const PrivateRoute: React.FC<{ element: React.ReactElement }> = ({ element }) => {
-  return localStorage.getItem('accessToken') ? element : <Navigate to="/login" />;
+  return localStorage.getItem('accessToken') ? element : <Navigate to={LinkService.getInstance().login} />;
 };
 
 function App() {
+  const links = LinkService.getInstance();
   return (
     <>
       <ToastContainer
@@ -36,31 +47,41 @@ function App() {
         pauseOnHover
       />
       <Routes>
-        <Route path="/login" element={<LoginForm />} />
-        <Route path="/register" element={<RegisterForm />} />
-        <Route path="/home" element={<PrivateRoute element={<Home />} />} />
-        <Route path="/unauthorized" element={<PrivateRoute element={<Unauthorized />} />} />
-        <Route path="/" element={<Navigate to="/login" />} />
-        <Route path="/test" element={<TParent></TParent>} />
+        <Route path={links.login} element={<LoginForm />} />
+        <Route path={links.register} element={<RegisterForm />} />
+        <Route path={links.home} element={<PrivateRoute element={<Home />} />} />
+        <Route path={links.unauthorized} element={<PrivateRoute element={<Unauthorized />} />} />
+        <Route path={links.root} element={<Navigate to={links.frontOffice.visitTypes} />} />
+        <Route path={links.test} element={<FrontDisplayQuestion />} />
+
+
+        <Route path={links.frontOffice.visitTypes} element={<DisplayVisitTypes />} />
+        <Route path={links.frontOffice.visitOptions} element={<DisplayVisitOptions />} />
+        <Route path={links.frontOffice.register} element={<FrontRegistration />} />
+        <Route path={links.frontOffice.login} element={<FrontLogin />} />
+        <Route path={links.frontOffice.verifyEmail} element={<EmaiVeryfyPage />} />
+        <Route path={links.frontOffice.takePhoto} element={<FrontTakePhotoPage />} />
+        <Route path={links.frontOffice.answerQuestions} element={<FrontAnswerPage />} />
 
         <Route
-          path="/user"
+          path={links.user}
           element={
             <ProtectedRoute roles={['VISITOR', 'ADMIN', 'MODERATOR']}>
-              <UserProfile></UserProfile>
+              <UserProfile />
             </ProtectedRoute>
           }
         />
         <Route
-          path="/visitorDashboard"
+          path={links.visitorDashboard}
           element={
             <ProtectedRoute roles={['VISITOR']}>
-              <VisitorDashboard></VisitorDashboard>
+              <VisitorDashboard />
             </ProtectedRoute>
           }
         />
+        {/* Moderator Dashboard Routes */}
         <Route
-          path="/moderatorDashboard"
+          path={links.moderatorDashboard.base}
           element={
             <ProtectedRoute roles={['MODERATOR']}>
               <ModeratorDashboard />
@@ -68,7 +89,7 @@ function App() {
           }
         >
           <Route
-            path="visitOptions"
+            path={links.moderatorDashboard.visitOptions}
             element={
               <ProtectedRoute roles={['MODERATOR']}>
                 <VisitOptions />
@@ -76,16 +97,31 @@ function App() {
             }
           />
           <Route
-            path="visitOptions/create"
+            path={links.moderatorDashboard.goToOptions}
+            element={
+              <ProtectedRoute roles={['MODERATOR']}>
+                <GoToOptions />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path={links.moderatorDashboard.createVisitOption}
             element={
               <ProtectedRoute roles={['MODERATOR']}>
                 <CreateVisitOption />
               </ProtectedRoute>
             }
           />
-
           <Route
-            path="allvisitors"
+            path={links.moderatorDashboard.addDynamicQuestion}
+            element={
+              <ProtectedRoute roles={['MODERATOR']}>
+                <AddDynamicQuestionForm />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path={links.moderatorDashboard.allVisitors}
             element={
               <ProtectedRoute roles={['MODERATOR']}>
                 <VisitorPage />
@@ -93,14 +129,12 @@ function App() {
             }
           />
         </Route>
-
-
-
+        {/* Officer Dashboard Route */}
         <Route
-          path="/moderatorDashboard"
+          path={links.officerDashboard}
           element={
             <ProtectedRoute roles={['OFFICER']}>
-              <OfficerDashboard></OfficerDashboard>
+              <OfficerDashboard />
             </ProtectedRoute>
           }
         />

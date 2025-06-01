@@ -11,18 +11,24 @@
 :root {
   --navBarHeight: clamp(60px, 7vmin, 80px);
   --primary: #0281d0;
+  ----primary-dark: #015d96;
   --primarylink: #40B6FF;
   --danger: #FF4242;
   --light: #f7fcff;
   --light1: #eaf8ff;
   --light2: #D3E8F5;
   --light3: #bae2fb;
+  --disabled: #95b3c6;
   --placeHolderText: #81b8da;
   font-family: "Inter", sans-serif;
   font-optical-sizing: auto;
   font-weight: 600;
   font-style: normal;
   color: var(--primary);
+}
+
+.radius50 {
+  border-radius: 50% !important;
 }
 
 /* Target the input elements inside .bigInputFields */
@@ -134,6 +140,10 @@
 a {
   text-decoration: none;
   color: var(--primarylink)
+}
+
+.text-center {
+  text-align: center;
 }
 
 @media(max-width:576px) {
@@ -653,7 +663,7 @@ button {
   border: none;
   border-radius: 5px;
   /* fallback blue */
-  color: white;
+  color: var(--light);
   border-color: var(--button-border-color, #3b82f6);
 }
 
@@ -661,4 +671,39 @@ button:hover {
   background-color: var(--button-hover-color, #2563eb);
   /* darker blue on hover */
   border-color: var(--button-hover-color, #2563eb);
+}
+
+
+.roundBlueButton {
+  background-color: var(--primary);
+  color: var(--light);
+  border-radius: 20px !important;
+  padding: 10px 20px;
+  font-weight: 600;
+
+}
+
+.light-button {
+  background-color: var(--light);
+  color: var(--primary);
+  font-weight: 700;
+  border-radius: 15px;
+  padding: 8px;
+  font-weight: 800;
+}
+
+.right-align {
+  display: flex;
+  justify-content: end;
+  width: 100%;
+}
+
+.light-button:hover {
+  background-color: var(--light2);
+}
+
+.roundBlueButton:hover {
+  background-color: var(--primarylink);
+  color: var(--light);
+  border-radius: 20px;
 }

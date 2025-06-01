@@ -1,12 +1,14 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import api, { saveRole } from '../../api/axios';
 import { BlueLogo } from '../common/BlueLogo';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { AxiosError } from 'axios';
+import { LinkService } from '../../frontServices/LinkService';
+import { UserContext } from '../../context/ContextProvider';
+import api from '../../api/axios';
 
 // Define Zod schema for login validation
 const loginSchema = z.object({
@@ -24,7 +26,6 @@ interface TokenPair {
 
 export const LoginForm: React.FC = () => {
     const navigate = useNavigate();
-
     // Initialize react-hook-form with zod resolver
     const {
         register,
@@ -47,9 +48,9 @@ export const LoginForm: React.FC = () => {
             const { accessToken, refreshToken } = response.data;
             localStorage.setItem('accessToken', accessToken);
             localStorage.setItem('refreshToken', refreshToken);
-            saveRole(accessToken);
             toast.success('Login successful!');
-            setTimeout(() => navigate('/home'), 1000); // Match RegisterForm
+
+            setTimeout(() => navigate(LinkService.getInstance().home), 1000); // Match RegisterForm
         } catch (err: unknown) {
             console.error('Error response:', err);
             let errorMessage = 'Login failed.';

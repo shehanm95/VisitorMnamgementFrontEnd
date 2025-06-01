@@ -4,11 +4,12 @@ import './authenticationForm.css';
 import { BlueLogo } from '../common/BlueLogo';
 import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import api, { getRole, saveRole } from '../../api/axios';
 import { TokenPair } from '../../types/auth';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { LinkService } from '../../frontServices/LinkService';
+import api from '../../api/axios';
 
 // Define the Zod schema for form validation
 const registerSchema = z
@@ -31,7 +32,7 @@ type RegisterFormInputs = z.infer<typeof registerSchema>;
 export const RegisterForm: React.FC = () => {
     const navigate = useNavigate();
     const [rememberMe, setRememberMe] = React.useState<boolean>(false);
-
+    const linkService = LinkService.getInstance()
     // Initialize react-hook-form with zod resolver
     const {
         register,
@@ -74,7 +75,6 @@ export const RegisterForm: React.FC = () => {
             const { accessToken, refreshToken } = response.data;
             localStorage.setItem('accessToken', accessToken);
             localStorage.setItem('refreshToken', refreshToken);
-            saveRole(accessToken);
             toast.success('Registration successful! Redirecting to home...');
             setTimeout(() => navigate('/home'), 1000);
         } catch (err: any) {
@@ -187,6 +187,7 @@ export const RegisterForm: React.FC = () => {
                                 </label>
                             </div>
                         </div>
+
                         <button
                             type="button"
                             className="bigButton w-100"

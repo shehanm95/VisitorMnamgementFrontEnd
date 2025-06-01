@@ -9,7 +9,7 @@ interface BlurBackProps {
 export const BlurBack: React.FC<BlurBackProps> = ({ zIndex = 2, children }) => {
     return (
         <div
-            className="blurBack check flex center"
+            className="blurBack flex center"
             style={{
                 zIndex: zIndex,
             }}

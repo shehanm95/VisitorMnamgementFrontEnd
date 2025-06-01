@@ -31,7 +31,7 @@
     transition: transform 0.3s ease;
 }
 
-.content {
+.bd-content {
     padding: 10px 0;
     color: var(--primary);
 }

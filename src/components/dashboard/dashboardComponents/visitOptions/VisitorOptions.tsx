@@ -92,7 +92,7 @@ export const VisitOptions = () => {
                             <span>{visitType.visitTypeName}</span>
                             <i className="fas fa-chevron-down"></i>
                         </div>
-                        <div className="content hidden">
+                        <div className="bd-content hidden">
                             {visitType.visitOptions && <>
                                 {visitType.visitOptions.length != 0 && visitType.visitOptions.map((visitOption) => (
                                     <div className="item" key={visitOption.id}>

@@ -1,18 +1,16 @@
 // src/services/authService.ts
 import { AxiosError } from 'axios';
-import api, { saveRole } from '../api/axios';
 import { AuthResponse, LoginCredentials } from '../types/auth';
+import api from '../api/axios';
 
 export const login = async (credentials: LoginCredentials): Promise<AuthResponse> => {
     try {
         const response = await api.post<AuthResponse>('/api/auth/login', credentials);
         const { accessToken, refreshToken } = response.data;
 
-        // Store tokens in localStorage (consider cookies for production)
         localStorage.setItem('accessToken', accessToken);
         localStorage.setItem('refreshToken', refreshToken);
         console.log("loged in");
-        saveRole(accessToken);
 
         return response.data;
     } catch (error) {

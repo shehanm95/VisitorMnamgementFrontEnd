@@ -1,3 +1,4 @@
+import { DynamicQuestion } from "./dynamicQuestion";
 import { VisitType } from "./visitType";
 
 export interface VisitOption {
@@ -11,4 +12,5 @@ export interface VisitOption {
     isPhotoOptional: boolean;
     isPhoneNumberRequired: boolean;
     isEmailRequired: boolean;
+    dynamicQuestions: DynamicQuestion[];
 }

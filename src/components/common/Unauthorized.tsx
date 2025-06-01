@@ -2,13 +2,14 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import './Unauthorized.css';
 import { getRole } from '../../api/axios';
+import { LinkService } from '../../frontServices/LinkService';
 
 export const Unauthorized = () => {
     const navigate = useNavigate();
 
     const handleBack = () => {
         getRole();
-        navigate('/home');
+        navigate(LinkService.getInstance().frontOffice.visitTypes);
     };
 
     return (

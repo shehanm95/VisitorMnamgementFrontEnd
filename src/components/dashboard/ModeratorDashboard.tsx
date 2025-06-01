@@ -1,7 +1,7 @@
 
 import { useState, useEffect } from 'react';
 import { NavBarContainer } from '../common/NavBarContainer'
-import { Outlet, useNavigate, useLocation } from 'react-router-dom';
+import { Outlet, useNavigate, useLocation, Route } from 'react-router-dom';
 
 export const ModeratorDashboard = () => {
     const [activeItem, setActiveItem] = useState('Manage Tasks');
@@ -27,7 +27,7 @@ export const ModeratorDashboard = () => {
         { label: 'Manage Tasks', icon: 'fas fa-tasks', badge: '3' },
         { label: 'Set My Gate', icon: 'fas fa-calendar-alt' },
         { label: 'Manage visit Options', icon: 'fas fa-sliders-h', route: "visitOptions" }, // should go to the moderatorDashboard/visitOption
-        { label: 'Go To visit Options', icon: 'fas fa-external-link-alt' },
+        { label: 'Go To visit Options', icon: 'fas fa-external-link-alt', route: "goToOptions" },
         { label: 'Scan visit', icon: 'fas fa-qrcode' },
         { label: 'All visits', icon: 'fas fa-users', route: "allvisitors" },  // should go to the moderatorDashboard/allvisits
     ];

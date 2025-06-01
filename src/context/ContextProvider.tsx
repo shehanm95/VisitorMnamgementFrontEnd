@@ -1,14 +1,17 @@
-import { createContext, ReactNode } from 'react';
+import { createContext, ReactNode, useState } from 'react';
 import { getRole } from '../api/axios';
+import { UserDto } from '../types/user';
 
 // Define the shape of the context value
 interface UserContextType {
-    role: string;
+    user: UserDto | null;
+    setUser: (newUser: UserDto | null) => void;
 }
 
 // Create the context with a default value
 export const UserContext = createContext<UserContextType>({
-    role: 'GUEST',
+    user: null,
+    setUser: () => { }
 });
 
 // Define props for the provider component
@@ -18,11 +21,10 @@ interface ContextProviderProps {
 
 // Create the provider component
 const ContextProvider = ({ children }: ContextProviderProps) => {
-    const role = getRole() || "GUEST";
-    console.log("got role : " + role)
+    const [user, setUser] = useState<UserDto | null>(null);
 
     return (
-        <UserContext.Provider value={{ role }}>
+        <UserContext.Provider value={{ user, setUser }}>
             {children}
         </UserContext.Provider>
     );
