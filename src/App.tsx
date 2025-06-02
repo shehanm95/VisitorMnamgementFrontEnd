@@ -24,7 +24,7 @@ import { EmaiVeryfyPage } from './components/frontOfficePage/EmaiVeryfyPage';
 import { FrontTakePhotoPage } from './components/frontOfficePage/FrontTakePhotoPage';
 import AddDynamicQuestionForm from './components/dashboard/dashboardComponents/visitOptions/AddDynamicQuestion';
 import ButtonAdder from './components/test/ButtonAdder';
-import { FrontAnswerPage } from './components/frontOfficePage/FrontAnswerPage';
+import { FrontAskQuestionsPage } from './components/frontOfficePage/FrontAskQuestionsPage';
 import FrontDisplayQuestion from './components/frontOfficePage/frontComp/frontDisplayQuestion';
 
 const PrivateRoute: React.FC<{ element: React.ReactElement }> = ({ element }) => {
@@ -61,7 +61,7 @@ function App() {
         <Route path={links.frontOffice.login} element={<FrontLogin />} />
         <Route path={links.frontOffice.verifyEmail} element={<EmaiVeryfyPage />} />
         <Route path={links.frontOffice.takePhoto} element={<FrontTakePhotoPage />} />
-        <Route path={links.frontOffice.answerQuestions} element={<FrontAnswerPage />} />
+        <Route path={links.frontOffice.answerQuestions} element={<FrontAskQuestionsPage />} />
 
         <Route
           path={links.user}

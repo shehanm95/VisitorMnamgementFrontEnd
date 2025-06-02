@@ -5,12 +5,10 @@ import { useNavigate } from 'react-router-dom'
 import { LinkService } from '../../frontServices/LinkService'
 import { FrontPageService } from '../../frontServices/FrontPageSerivce'
 import { useEffect, useState } from 'react'
-import { FrontLoginButton } from './frontComp/FrontLoginButton'
-import FrontLoginForm from './frontComp/FrontLoginForm'
 import { FrontContinueAs } from './frontComp/FrontContinueAs'
 import FrontDisplayQuestion from './frontComp/frontDisplayQuestion'
 
-export const FrontAnswerPage = () => {
+export const FrontAskQuestionsPage = () => {
     const navigate = useNavigate()
     const frontServices = FrontPageService.getInstance();
     const [vistOtionName, setVisitOptionName] = useState('')
@@ -28,7 +26,7 @@ export const FrontAnswerPage = () => {
             if (currentOption?.dynamicQuestions.length && currentOption?.dynamicQuestions.length <= 0) {
                 // stay in this page,
             } else {
-                navigate(links.frontOffice.takePhoto);
+                // navigate(links.frontOffice.takePhoto);
             }
         }
         setVisitOptionOrBack()

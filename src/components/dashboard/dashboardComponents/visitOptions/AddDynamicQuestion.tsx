@@ -4,14 +4,14 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 
 import '../../../../components/common/css/form.css';
-import { IconHeader } from '../../../common/IconHeader';
-import { Center } from '../../../common/Center';
 import { DynamicQuestion } from '../../../../types/dynamicQuestion';
 import { ModeratorService } from '../../../../frontServices/moderatorService';
 import { VisitOption } from '../../../../types/visitOption';
-import { QuestionItem } from './smallComp/QuestionItem';
 import { ButtonAnswer } from '../../../../types/buttonAnswer';
 import { DynamicQuestionService } from '../../../../services/DyanmicQuestionService';
+import { QuestionItem } from './smallComp/QuestionItem';
+import { IconHeader } from '../../../common/IconHeader';
+import { Center } from '../../../common/Center';
 
 // Zod schema
 
@@ -46,10 +46,9 @@ export type DynamicQuestionForm = z.infer<typeof DynamicQuestionSchema>;
 const AddDynamicQuestionForm = () => {
     // const [buttonArray, setButtonArray] = useState<ButtonAnswer[]>([])
     const [addingButtonValue, setAddingButtonValue] = useState("");
-    const [currentVisitOption, setCurrentVisitOption] = useState<VisitOption | null>(
+    const [currentVisitOption, setCurrentVisitOption] = useState<VisitOption | undefined>(
         ModeratorService.getCurrentVisitOption()
     );
-    console.log(currentVisitOption);
 
     const {
         register,
@@ -75,7 +74,8 @@ const AddDynamicQuestionForm = () => {
     const { fields, append, remove } = useFieldArray({
         control,
         name: 'buttonAnswers'
-    })
+    });
+
     const answerType = watch('answerType');
 
     useEffect(() => {
@@ -93,10 +93,17 @@ const AddDynamicQuestionForm = () => {
 
 
     const onSubmit = async (data: DynamicQuestionForm) => {
+        data = data as DynamicQuestion;
+        const vo = ModeratorService.currentVisitOption;
+        if (!vo) {
+            console.error("visit option cannot be null when saving a dynamic question");
+        }
+
         const newQuestion: DynamicQuestion = {
             ...data,
-            visitOption: undefined,
-        };
+            visitOption: vo,
+
+        }
 
         if (currentVisitOption) {
             const updatedVisitOption: VisitOption = {
@@ -105,8 +112,8 @@ const AddDynamicQuestionForm = () => {
             };
             setCurrentVisitOption(updatedVisitOption);
         }
-        console.log(data)
-        const savedQ = await DynamicQuestionService.createQuestion(data);
+        console.log(newQuestion)
+        const savedQ = await DynamicQuestionService.createQuestion(newQuestion);
         currentVisitOption?.dynamicQuestions.push(savedQ);
 
         reset(); // Clear form

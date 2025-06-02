@@ -20,6 +20,7 @@ const FrontDisplayQuestion: React.FC = () => {
         // const fetchedQuestions = DummyService.getQuestions();
         const getQuestions = async () => {
             const option = FrontPageService.getInstance().getSelectedVisitOption();
+            console.log("option id : ", option?.id)
             const id = option?.id || 0;
             const fetchedQuestions = await DynamicQuestionService.getQuestionsByVisitOptionId(id);
             if (fetchedQuestions) {

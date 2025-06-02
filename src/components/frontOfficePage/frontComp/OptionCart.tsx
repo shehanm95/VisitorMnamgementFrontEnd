@@ -21,11 +21,11 @@ export const OptionCard: React.FC<OptionCardProp> = ({ visitOption }) => {
             if (visitOption.imageName) {
                 try {
                     const blob = await VisitOptionService.getImage(visitOption.imageName);
-                    const imageUrl = URL.createObjectURL(blob); // ✅ convert blob to URL
+                    const imageUrl = URL.createObjectURL(blob);
                     setImage(imageUrl);
                 } catch (e) {
                     console.log('Error fetching image:', visitOption.imageName, e);
-                    // fallback image already handled with default CEO image
+
                 }
             }
         };

@@ -3,7 +3,7 @@ import { VisitOption } from "./visitOption";
 
 export interface DynamicQuestion {
     id?: number;
-    visitOption?: VisitOption;
+    visitOption: VisitOption | undefined;
     questionText: string;
     specialInstructions?: string;
     isRequired: boolean;
