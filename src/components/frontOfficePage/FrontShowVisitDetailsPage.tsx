@@ -5,21 +5,29 @@ import { useNavigate } from 'react-router-dom'
 import { LinkService } from '../../frontServices/LinkService'
 import { FrontPageService } from '../../frontServices/FrontPageSerivce'
 import { useEffect, useState } from 'react'
-import { FrontLoginButton } from './frontComp/FrontLoginButton'
-import FrontTakePhoto from './frontComp/FrontTakePhoto'
+import { FrontContinueAs } from './frontComp/FrontContinueAs'
+import FrontShowVisitDetails from './frontComp/FrontShowVisitDetails'
 
-export const FrontTakePhotoPage = () => {
-    const navigate = useNavigate()
-    const frontServices = FrontPageService.getInstance();
+export const FrontShowVisitDetailsPage = () => {
     const [vistOtionName, setVisitOptionName] = useState('')
     const links = LinkService.getInstance()
+    const frontServices = FrontPageService.getInstance();
+    const navigate = useNavigate()
+
+
 
 
     useEffect(() => {
         const setVisitOptionOrBack = () => {
-            const oName = frontServices.getSelectedVisitOption()?.visitOptionName
+            const currentOption = frontServices.getSelectedVisitOption();
+            const oName = currentOption?.visitOptionName
             if (!oName) navigate(links.frontOffice.visitOptions);
             else setVisitOptionName(oName);
+
+
+            if (!currentOption) {
+                console.log("redirect to visit Option")
+            }
         }
         setVisitOptionOrBack()
     }, [])
@@ -33,7 +41,8 @@ export const FrontTakePhotoPage = () => {
 
         <div className='frontPage'>
             <div className="topBar">
-                <div onClick={() => navigateToOptions()} className="backButton"> <i className="fa fa-arrow-left"></i></div>
+                <div onClick={() => navigateToOptions()} className="backButton">
+                    <i className="fa fa-arrow-left"></i></div>
                 <div className='flex column centerV pb-2'>
                     <h1>Wellcome</h1>
                     <h2>{vistOtionName}</h2>
@@ -41,14 +50,15 @@ export const FrontTakePhotoPage = () => {
                 </div>
 
             </div>
-            <div className="front-content w-100">
-                <FrontTakePhoto></FrontTakePhoto>
+
+            <div className="front-content">
+
+                <FrontShowVisitDetails></FrontShowVisitDetails>
+
             </div>
-
-
             <div className="footer">
                 <div className="footerbox">
-                    <FrontLoginButton></FrontLoginButton>
+                    <FrontContinueAs></FrontContinueAs>
                 </div>
                 <div className="footerbox middle">
                     <DateTimeLoc></DateTimeLoc>

@@ -6,4 +6,5 @@ export interface VisitType {
     visitTypeDescription: string;
     imageName?: string;
     visitOptions: VisitOption[]
+    isActive: boolean;
 }

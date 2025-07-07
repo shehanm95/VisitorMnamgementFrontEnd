@@ -12,11 +12,13 @@ interface VisitTypeProps {
 const visitTypeSchema = z.object({
     visitTypeName: z.string().min(1, 'Visitor type name is required'),
     visitTypeDescription: z.string().min(1, 'Description is required'),
+    isActive: z.boolean(), // ✅ Added validation for isActive
 });
 
 export const CreateVisitType: React.FC<VisitTypeProps> = ({ onClose, getSavedType }) => {
     const [visitTypeName, setVisitTypeName] = useState<string>('');
     const [visitTypeDescription, setVisitTypeDescription] = useState<string>('');
+    const [isActive, setIsActive] = useState<boolean>(true); // ✅ Added default value
     const [imageFile, setImageFile] = useState<File | null>(null);
     const [imagePreview, setImagePreview] = useState<string | null>(null);
     const [errors, setErrors] = useState<{ [key: string]: string }>({});
@@ -47,13 +49,16 @@ export const CreateVisitType: React.FC<VisitTypeProps> = ({ onClose, getSavedTyp
             const visitTypeData = visitTypeSchema.parse({
                 visitTypeName,
                 visitTypeDescription,
+                isActive,
             });
 
             // Create VisitType object
             const newVisitType: VisitType = {
                 visitTypeName: visitTypeData.visitTypeName,
                 visitTypeDescription: visitTypeData.visitTypeDescription,
-                visitOptions: []
+                visitOptions: [],
+                isActive: visitTypeData.isActive,
+                imageName: imageFile ? imageFile.name : undefined,
             };
 
             // Save to database using VisitTypeService
@@ -128,6 +133,20 @@ export const CreateVisitType: React.FC<VisitTypeProps> = ({ onClose, getSavedTyp
                     ></textarea>
                     {errors.visitTypeDescription && (
                         <span className="error-text">{errors.visitTypeDescription}</span>
+                    )}
+                </div>
+
+                <div className="popup-form-group">
+                    <label className="popup-form-label">
+                        <input
+                            type="checkbox"
+                            checked={isActive}
+                            onChange={(e) => setIsActive(e.target.checked)}
+                        />
+                        Active
+                    </label>
+                    {errors.isActive && (
+                        <span className="error-text">{errors.isActive}</span>
                     )}
                 </div>
 

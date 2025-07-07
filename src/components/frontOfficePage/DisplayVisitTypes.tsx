@@ -1,14 +1,19 @@
 import './css/displayVisitTypes.css'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { SideBarBlurBack } from '../common/SideBarBlurBack'
 import { FrontSideBar } from './frontComp/FrontSideBar'
 import { WhiteLogo } from '../common/WhiteLogo'
 import { DateTimeLoc } from './frontComp/DateTimeLoc'
 import { TouchFreeSign } from './frontComp/TouchFreeSign'
 import { VisitCardContainer } from './frontComp/VisitCardContainer'
+import { FrontPageService } from '../../frontServices/FrontPageSerivce'
 
 export const DisplayVisitTypes = () => {
     const [isSideBarOn, setSideBarOn] = useState(false)
+
+    useEffect(() => {
+        FrontPageService.getInstance().clearFrontEndService()
+    }, [])
 
 
     function sideBarToggle(): void {

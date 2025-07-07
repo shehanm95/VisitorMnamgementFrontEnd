@@ -5,6 +5,8 @@ import { FrontPageService } from '../../../frontServices/FrontPageSerivce';
 import { OptionCard } from './OptionCart';
 import { useNavigate } from 'react-router-dom';
 import { LinkService } from '../../../frontServices/LinkService';
+import { VisitOptionService } from '../../../services/visitOptionService';
+import { VisitOption } from '../../../types/visitOption';
 
 export const VisitOptionContainer = () => {
     const [visitType, setVisitType] = useState<VisitType | null>();
@@ -12,13 +14,19 @@ export const VisitOptionContainer = () => {
     const frontPage = FrontPageService.getInstance()
     const navigate = useNavigate()
     const links = LinkService.getInstance();
+    const [options, setOptions] = useState<VisitOption[]>([]);
 
     useEffect(() => {
-        const fetchType = () => {
+        const fetchType = async () => {
             const type = frontPage.getSelectedVisitType();
             if (type == null) {
                 navigate(links.frontOffice.visitTypes);
             }
+
+
+            //const op = await VisitOptionService.getActiveOptionsByType(type?.id || 0)
+            const op = await VisitOptionService.getVisitOptionsByVisitType(type?.id || 0)
+            setOptions(op)
             setVisitType(type);
             setLoading(false)
         }
@@ -30,8 +38,8 @@ export const VisitOptionContainer = () => {
             <div className="mt-2"></div>
             <div className="front-content">
 
-                {visitType?.visitOptions.map((visitOption) => (
-                    <OptionCard visitOption={visitOption} key={visitOption.id}></OptionCard>
+                {options.map((visitOption, index) => (
+                    <OptionCard visitOption={visitOption} key={index}></OptionCard>
                 ))}
 
 

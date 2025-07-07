@@ -62,10 +62,10 @@ export const FrontSideBar: React.FC<FrontSideBarProps> = ({ close, childran }) =
                 <i className='fa fa-home'></i> <p>Stay In This Page</p>
             </div>
             <div className="sideBarButton" onClick={() => navigateTo('/moderatorDashBoard')}>
-                <i className='fa fa-external-link'></i><p> Stay In This Page</p>
+                <i className='fa fa-external-link'></i><p> Go To Dashboard</p>
             </div>
             <div className="sideBarButton" onClick={toggleFullScreen}>
-                <i className="fas fa-expand"></i> <p>Stay In This Page</p>
+                <i className="fas fa-expand"></i> <p>Toggle Full Screen</p>
             </div>
 
         </div >

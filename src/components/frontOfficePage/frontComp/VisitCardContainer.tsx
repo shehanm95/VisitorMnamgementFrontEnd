@@ -6,6 +6,7 @@ import { VisitTypeService } from '../../../services/visitTypeSerive';
 import { VisitType } from '../../../types/visitType';
 import { Center } from '../../common/Center';
 
+
 export const VisitCardContainer = () => {
     const [visitTyeps, setVisitTypes] = useState<VisitType[]>([]);
     const [loading, setLoading] = useState(true);

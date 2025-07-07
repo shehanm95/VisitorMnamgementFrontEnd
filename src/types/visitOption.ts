@@ -1,4 +1,5 @@
 import { DynamicQuestion } from "./dynamicQuestion";
+import { SpecificDate } from "./SpecificDate";
 import { VisitType } from "./visitType";
 
 export interface VisitOption {
@@ -13,4 +14,10 @@ export interface VisitOption {
     isPhoneNumberRequired: boolean;
     isEmailRequired: boolean;
     dynamicQuestions: DynamicQuestion[];
+    averageTimeForAPerson: number;
+    visitorsPerRow: number;
+    active: boolean;
+    visitRows: any[];
+    timeRanges: any[];
+    specificDates: SpecificDate[]
 }

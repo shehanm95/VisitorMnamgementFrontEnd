@@ -26,6 +26,15 @@ import AddDynamicQuestionForm from './components/dashboard/dashboardComponents/v
 import ButtonAdder from './components/test/ButtonAdder';
 import { FrontAskQuestionsPage } from './components/frontOfficePage/FrontAskQuestionsPage';
 import FrontDisplayQuestion from './components/frontOfficePage/frontComp/frontDisplayQuestion';
+import { FrontShowVisitDetailsPage } from './components/frontOfficePage/FrontShowVisitDetailsPage';
+import { FrontThankyouPage } from './components/frontOfficePage/FrontThankyouPage';
+import { TimeRangeAdder } from './components/test/TimeRangeAdder';
+import { SpecificDateAdder } from './components/dashboard/dashboardComponents/visitOptions/smallComp/SpecificDateAdder';
+import { TParent } from './components/test/TParent';
+import { ApiTester } from './components/test/ApiTester';
+import { PrintTest } from './components/test/PrintTest';
+import { PreReg } from './components/preReg/PreReg';
+import { PreRegTypes } from './components/preReg/PreRegTypes';
 
 const PrivateRoute: React.FC<{ element: React.ReactElement }> = ({ element }) => {
   return localStorage.getItem('accessToken') ? element : <Navigate to={LinkService.getInstance().login} />;
@@ -52,7 +61,12 @@ function App() {
         <Route path={links.home} element={<PrivateRoute element={<Home />} />} />
         <Route path={links.unauthorized} element={<PrivateRoute element={<Unauthorized />} />} />
         <Route path={links.root} element={<Navigate to={links.frontOffice.visitTypes} />} />
-        <Route path={links.test} element={<FrontDisplayQuestion />} />
+        <Route path={links.test} element={<PrintTest />} />
+
+
+        <Route path={links.preReg.base} element={<PreReg />}>
+          <Route path={links.preReg.types} element={<PreRegTypes />} />
+        </Route>
 
 
         <Route path={links.frontOffice.visitTypes} element={<DisplayVisitTypes />} />
@@ -62,6 +76,8 @@ function App() {
         <Route path={links.frontOffice.verifyEmail} element={<EmaiVeryfyPage />} />
         <Route path={links.frontOffice.takePhoto} element={<FrontTakePhotoPage />} />
         <Route path={links.frontOffice.answerQuestions} element={<FrontAskQuestionsPage />} />
+        <Route path={links.frontOffice.showVisitDetails} element={<FrontShowVisitDetailsPage />} />
+        <Route path={links.frontOffice.thankyouAndInstructions} element={<FrontThankyouPage />} />
 
         <Route
           path={links.user}

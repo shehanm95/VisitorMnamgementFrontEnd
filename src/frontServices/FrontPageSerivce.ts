@@ -1,12 +1,26 @@
+import { AnswerType } from "../types/AnswerType";
 import { UserDto } from "../types/user";
+import { Visit } from "../types/visit";
 import { VisitOption } from "../types/visitOption";
 import { VisitType } from "../types/visitType";
 
 export class FrontPageService {
+    private currentVisitId: number | null = null;
     private static instance: FrontPageService | null = null;
     private selectedVisitType: VisitType | null = null;
     private selectedVisitOption: VisitOption | null = null;
     private currentVisitor: UserDto | null = null;
+    private currentAnswers: AnswerType[] = [];
+    private photo: File | null = null;
+    private currentVisit: any;
+    private saving = false
+
+    setSaving(saving: boolean) {
+        this.saving = saving;
+    }
+    isSaving() {
+        return this.saving;
+    }
 
     private constructor() { } // Private constructor to prevent direct instantiation
 
@@ -16,6 +30,13 @@ export class FrontPageService {
             FrontPageService.instance = new FrontPageService();
         }
         return FrontPageService.instance;
+    }
+
+    public getCurrentVisitId() {
+        return this.currentVisitId
+    }
+    public setCurrentVisitId(id: number) {
+        this.currentVisitId = id;
     }
 
     public setSelectedVisitType(visitType: VisitType): void {
@@ -39,6 +60,8 @@ export class FrontPageService {
         this.selectedVisitType = null;
         this.selectedVisitOption = null;
         this.currentVisitor = null;
+        this.currentVisit = null;
+        this.currentVisitId = null;
     }
 
     public setCurrectVisitor(visitor: UserDto) {
@@ -48,4 +71,30 @@ export class FrontPageService {
         return this.currentVisitor;
     }
 
+    setCurrentDynamicAnswers(answers: AnswerType[]) {
+        this.currentAnswers = answers;
+    }
+
+    getCurrentVisitDetails(): Visit {
+        if (this.selectedVisitOption != null && this.currentVisitor != null) {
+            this.currentVisit = {
+                dynamicAnswers: this.currentAnswers,
+                visitOption: this.selectedVisitOption,
+                visitor: this.currentVisitor
+            }
+        }
+        return this.currentVisit;
+    }
+
+    setCurrentVisit(visit: Visit) {
+        this.currentVisit = visit;
+    }
+
+
+    setVisitorPhoto(photo: File) {
+        this.photo = photo;
+    }
+    getVisitorPhoto() {
+        return this.photo;
+    }
 }

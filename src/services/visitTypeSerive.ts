@@ -31,6 +31,11 @@ export const VisitTypeService = {
         return response.data;
     },
 
+    visitTypesWithPreRegistration: async (): Promise<VisitType[]> => {
+        const response: AxiosResponse<VisitType[]> = await api.get('/api/visit-types/visitTypesWithPreRegistration');
+        return response.data;
+    },
+
     // Update a visit type
     updateVisitType: async (visitType: VisitType, image?: File): Promise<VisitType> => {
         const formData = new FormData();

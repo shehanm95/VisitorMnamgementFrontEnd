@@ -1,15 +1,25 @@
 import { AxiosError, AxiosResponse } from 'axios';
 import api from '../api/axios';
 import { toast } from 'react-toastify';
-import { Visit } from '../types/Visit';
 import { ApiErrorResponse } from '../types/ApiErrorResonse';
+import { Visit } from '../types/visit';
+import { ObjectService } from '../frontServices/ObjectService';
 
 const API_BASE_URL = '/visits';
 
 export const VisitService = {
+
+    async markAsPrinted(id: number): Promise<{ A: number }> {
+        return await api.put(API_BASE_URL + "/markAsPrinted/" + id)
+    },
     async createVisit(visitData: Visit): Promise<Visit | null> {
+        let cleanedObject = ObjectService.removeBulk(visitData,
+            [{
+                doNotRemove: 'dynamicAnswers',
+                butRemoveBulkOf: ['dynamicQuestuion']
+            }]);
         try {
-            const response: AxiosResponse<Visit> = await api.post(API_BASE_URL, visitData);
+            const response: AxiosResponse<Visit> = await api.post(API_BASE_URL, cleanedObject);
             toast.success('Visit created successfully');
             return response.data;
         } catch (error) {

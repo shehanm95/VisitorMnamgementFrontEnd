@@ -9,6 +9,8 @@ export class LinkService {
     public readonly root: string = "/";
     public readonly test: string = "/test";
     public readonly frontOffice: {
+        thankyouAndInstructions: string;
+        showVisitDetails: string;
         takePhoto: string;
         answerQuestions: string;
         verifyEmail: string;
@@ -25,7 +27,9 @@ export class LinkService {
             forgotPass: "/frontOffice/forgotpass",
             verifyEmail: "/frontOffice/verifyEmail",
             answerQuestions: "/frontOffice/answerQuestions",
-            takePhoto: "/frontOffice/takePhoto"
+            takePhoto: "/frontOffice/takePhoto",
+            showVisitDetails: "/frontOffice/showVisitDetails",
+            thankyouAndInstructions: "/frontOffice/thankyou"
         };
     public readonly user: string = "/user";
     public readonly visitorDashboard: string = "/visitorDashboard";
@@ -45,6 +49,16 @@ export class LinkService {
             addDynamicQuestion: "/moderatorDashboard/dynamicQ"
         };
     public readonly officerDashboard: string = "/officerDashboard";
+
+    public readonly preReg: {
+        questions: string;
+        preRegOptions: string;
+        types: string
+    } = {
+            types: "/preReg",
+            preRegOptions: "/preReg/options",
+            questions: "/preReg/questions"
+        };
 
     // Private constructor to prevent direct instantiation
     private constructor() { }

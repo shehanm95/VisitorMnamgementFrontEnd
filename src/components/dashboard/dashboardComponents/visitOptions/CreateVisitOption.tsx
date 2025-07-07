@@ -1,7 +1,6 @@
-
-import React, { useEffect, useRef, useState } from 'react';
+import React, { ChangeEvent, useEffect, useRef, useState } from 'react';
 import { z } from 'zod';
-import { useForm } from 'react-hook-form';
+import { useForm, SubmitHandler, FieldError, FieldErrorsImpl, Merge } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import '../../../../components/common/css/form.css';
 import { VisitOption } from '../../../../types/visitOption';
@@ -9,81 +8,171 @@ import { VisitOptionService } from '../../../../services/visitOptionService';
 import { getTypeDetails, TypeDtails } from '../../../../services/typeKeeper';
 import { useNavigate } from 'react-router-dom';
 import { IconHeader } from '../../../common/IconHeader';
-import { FrontPageService } from '../../../../frontServices/FrontPageSerivce';
 import { ModeratorService } from '../../../../frontServices/moderatorService';
 import { LinkService } from '../../../../frontServices/LinkService';
 import { DynamicQuestionSchema } from './AddDynamicQuestion';
+import { TimeRange } from '../../../../types/TimeRange';
+import { TimeRangeAdder } from '../../../test/TimeRangeAdder';
+import { SpecificDateAdder } from './smallComp/SpecificDateAdder';
+import { useFieldArray } from 'react-hook-form';
 
-// Define Zod schema for form validation
+// Define TimeRange schema separately for reuse
+const TimeRangeSchema = z.object({
+    startTime: z.string().min(1, 'Start time is required'),
+    endTime: z.string().min(1, 'End time is required'),
+});
+
+const SpecificDateSchema = z.object({
+    date: z.string()
+})
+
+// Create a standalone function for time range validation
+const validateTimeRanges = (ranges: { startTime: string; endTime: string }[], averageTime: number) => {
+    const timeToMinutes = (time: string) => {
+        if (!time) return 0;
+        const [hours, minutes] = time.split(':').map(Number);
+        return hours * 60 + minutes;
+    };
+
+    // Check each range's validity
+    for (const range of ranges) {
+        const start = timeToMinutes(range.startTime);
+        const end = timeToMinutes(range.endTime);
+
+        if (end <= start) {
+            return 'End time must be after start time';
+        }
+
+        if ((end - start) < averageTime) {
+            return `Duration must be at least ${averageTime} minutes`;
+        }
+    }
+
+    // Check for overlaps
+    for (let i = 0; i < ranges.length; i++) {
+        const current = ranges[i];
+        const start1 = timeToMinutes(current.startTime);
+        const end1 = timeToMinutes(current.endTime);
+
+        for (let j = i + 1; j < ranges.length; j++) {
+            const other = ranges[j];
+            const start2 = timeToMinutes(other.startTime);
+            const end2 = timeToMinutes(other.endTime);
+
+            if ((start1 < end2 && end1 > start2)) {
+                return 'Time ranges must not overlap';
+            }
+        }
+    }
+
+    return true;
+};
+
 const VisitOptionSchema = z.object({
     name: z.string().min(1, 'Visitor option name is required'),
     description: z.string().min(1, 'Description is required'),
     visitTypeId: z.number().min(1, 'Please select a visitor type'),
-    preRegTime: z.object({
-        hours: z.number().min(0),
-        minutes: z.number().min(0).max(59),
-    }),
-
+    isPreRegistration: z.boolean(),
+    visitDateType: z.enum(["SPECIFIC_DATES", "ALL_WORKING_DATES"]),
+    specificDates: z.array(SpecificDateSchema),
+    averageTimeForAPerson: z.number().min(1, 'Must be at least 1 minute'),
+    visitorsPerRow: z.number().min(1, 'Must allow at least 1 per row'),
+    active: z.boolean(),
     dynamicQuestions: z.array(DynamicQuestionSchema).optional(),
     maxVisitors: z.number().min(1, 'Must allow at least 1 visitor'),
-    workingDates: z.array(
-        z.object({
-            from: z.string(),
-            to: z.string(),
-        })
-    ),
+    timeRanges: z.array(TimeRangeSchema)
+        .min(1, 'At least one time range is required')
+        .superRefine((ranges, ctx) => {
+            // Proper way to access parent data in Zod
+            const averageTime = ctx.addIssue === undefined
+                ? 0 // Fallback value if context doesn't have parent
+                : (ctx as any).parent?.averageTimeForAPerson as number;
+
+            const validationResult = validateTimeRanges(ranges, averageTime);
+
+            if (validationResult !== true) {
+                ctx.addIssue({
+                    code: z.ZodIssueCode.custom,
+                    message: validationResult,
+                });
+            }
+        }),
     collectDetails: z.object({
         email: z.boolean(),
         whatsapp: z.boolean(),
         visitorPhoto: z.boolean(),
         photoOptional: z.boolean(),
     }),
+}).superRefine((data, ctx) => {
+    if (data.visitDateType == "SPECIFIC_DATES" && data.specificDates.length == 0) {
+        ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            path: ["specificDates"],
+            message: "Please add specific dates to visit",
+        });
+
+    }
 });
 
 type VisitOptionForm = z.infer<typeof VisitOptionSchema>;
 
 export const CreateVisitOption = () => {
     const fileInputRef = useRef<HTMLInputElement | null>(null);
-    const [imageFile, setImageFile] = React.useState<File | null>(null);
-    const [imagePreview, setImagePreview] = React.useState<string | null>(null);
+    const [imageFile, setImageFile] = useState<File | null>(null);
+    const [imagePreview, setImagePreview] = useState<string | null>(null);
     const [generalError, setGeneralError] = useState<string | null>(null);
-    const [preRegistration, setPreRegistration] = useState(false);
-    const togglePreRegistration = () => {
-        setPreRegistration(!preRegistration);
-    }
+    const [isSpecific, setIsSpecific] = useState(false)
 
     const navigate = useNavigate();
     const details: TypeDtails = getTypeDetails();
 
+
+
     const {
         register,
         handleSubmit,
-        formState: { errors },
+        formState: { errors, isSubmitting },
         setValue,
         watch,
+        trigger,
+        control
     } = useForm<VisitOptionForm>({
         resolver: zodResolver(VisitOptionSchema),
         defaultValues: {
             name: '',
             description: '',
             visitTypeId: details.currentVisitType?.id,
-            preRegTime: { hours: 0, minutes: 0 },
+            isPreRegistration: false,
+            specificDates: [],
             maxVisitors: 1,
-            workingDates: [{ from: '', to: '' }],
+            averageTimeForAPerson: 30,
+            visitorsPerRow: 1,
+            active: true,
+            visitDateType: 'ALL_WORKING_DATES',
+            timeRanges: [{ startTime: '', endTime: '' }],
             collectDetails: { email: false, whatsapp: false, visitorPhoto: false, photoOptional: false },
             dynamicQuestions: []
         },
     });
 
-    const workingDates = watch('workingDates');
-    const preRegTime = watch('preRegTime');
+    const timeRanges = watch('timeRanges');
+    const preRegTime = watch('specificDates');
     const maxVisitors = watch('maxVisitors');
+    const watchVisitDateType = watch('visitDateType');
+    const isPreRegistration = watch('isPreRegistration');
+    const averageTimeForAPerson = watch('averageTimeForAPerson');
+
+
 
     useEffect(() => {
         if (details.currentVisitType == null) {
             navigate('/moderatorDashboard/visitOptions');
         }
     }, [details, navigate]);
+
+    useEffect(() => {
+        trigger('timeRanges');
+    }, [averageTimeForAPerson, trigger]);
 
     const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
@@ -104,32 +193,36 @@ export const CreateVisitOption = () => {
         fileInputRef.current?.click();
     };
 
-    const addTimeRange = () => {
-        setValue('workingDates', [...workingDates, { from: '', to: '' }]);
+    const handleTimeRangesChange = (ranges: { startTime: string; endTime: string }[]) => {
+        setValue('timeRanges', ranges);
+        trigger('timeRanges');
     };
 
-    const updateTimeRange = (index: number, field: 'from' | 'to', value: string) => {
-        const updatedRanges = [...workingDates];
-        updatedRanges[index][field] = value;
-        setValue('workingDates', updatedRanges);
-    };
-
-    const onSubmit = async (data: VisitOptionForm) => {
+    const onSubmit: SubmitHandler<VisitOptionForm> = async (data) => {
         try {
             const newVisitOption: VisitOption = {
                 visitOptionName: data.name,
                 description: data.description,
                 visitType: details.currentVisitType,
-                isPreRegistration: !!(preRegTime.hours || preRegTime.minutes || maxVisitors),
+                isPreRegistration: data.isPreRegistration,
                 imageName: imageFile ? imageFile.name : undefined,
                 isPhotoRequired: data.collectDetails.visitorPhoto,
                 isPhotoOptional: data.collectDetails.photoOptional,
                 isPhoneNumberRequired: data.collectDetails.whatsapp,
                 isEmailRequired: data.collectDetails.email,
-                dynamicQuestions: []
-
+                dynamicQuestions: [],
+                specificDates: data.specificDates,
+                averageTimeForAPerson: data.averageTimeForAPerson,
+                visitorsPerRow: data.visitorsPerRow,
+                active: data.active,
+                visitRows: [],
+                timeRanges: data.timeRanges.map((range) => ({
+                    startTime: range.startTime,
+                    endTime: range.endTime
+                } as TimeRange))
             };
-            console.log("dynamic: ", { ...newVisitOption })
+
+            console.log(newVisitOption)
             const savedVisitOption = await VisitOptionService.createVisitOption(newVisitOption, imageFile || undefined);
             ModeratorService.setCurrentVisitOption(savedVisitOption);
             navigate(LinkService.getInstance().moderatorDashboard.addDynamicQuestion);
@@ -138,6 +231,26 @@ export const CreateVisitOption = () => {
             setGeneralError('Failed to save visitor option. Please try again.');
         }
     };
+
+    // Helper function to handle error message display
+    const getErrorMessage = (error: unknown): string => {
+        if (typeof error === 'string') return error;
+        if (error && typeof error === 'object' && 'message' in error) {
+            return String(error.message);
+        }
+        return 'Invalid value';
+    };
+
+    function toggleSpecific(event: ChangeEvent<HTMLSelectElement>): void {
+        if (event.target.value == 'SPECIFIC_DATES') {
+            setIsSpecific(true);
+        } else {
+            setIsSpecific(false);
+        }
+    }
+
+    const { fields, append, remove } = useFieldArray({ control, name: 'specificDates' })
+
 
     return (
         <div className="form-container">
@@ -183,7 +296,7 @@ export const CreateVisitOption = () => {
                 </div>
 
                 <div className="form-group">
-                    <label className="form-label">Visitor Type :</label>
+                    <label className="form-label">Visit Type :</label>
                     <select
                         className="form-select"
                         {...register('visitTypeId', { valueAsNumber: true })}
@@ -199,65 +312,86 @@ export const CreateVisitOption = () => {
                 </div>
 
                 <div className="form-group">
+                    <label className="form-label">Average minutes per visitor:</label>
+                    <input
+                        type="number"
+                        className="form-input"
+                        placeholder="Minutes per visitor"
+                        {...register('averageTimeForAPerson', {
+                            valueAsNumber: true,
+                        })}
+                    />
+                    {errors.averageTimeForAPerson && (
+                        <span className="form-error-text">{errors.averageTimeForAPerson.message}</span>
+                    )}
+                </div>
+
+                <div className="form-group">
+                    <label className="form-label">Visitors At Once :</label>
+                    <input
+                        type="number"
+                        className="form-input"
+                        placeholder="Visitors per row"
+                        {...register('visitorsPerRow', {
+                            valueAsNumber: true,
+                        })}
+                    />
+                    {errors.visitorsPerRow && <span className="form-error-text">{errors.visitorsPerRow.message}</span>}
+                </div>
+
+                <div className="form-group">
+                    <label className="form-label">Available Time Ranges:</label>
+                    <TimeRangeAdder
+                        ranges={timeRanges}
+                        onChange={handleTimeRangesChange}
+                        minDuration={averageTimeForAPerson}
+                    />
+                    {errors.timeRanges && (
+                        <span className="form-error-text">{getErrorMessage(errors.timeRanges)}</span>
+                    )}
+                </div>
+
+                <div className="form-group">
                     <label className="form-label">
                         <input
                             type="checkbox"
-                            checked={preRegistration}
-                            onChange={() => togglePreRegistration()}
+                            {...register('active')}
                         />
-                        Pre-Registration
+                        Active
+                    </label>
+                </div>
+
+                <div className="form-group">
+                    <label className="form-label">
+                        <input
+                            type="checkbox"
+                            {...register('isPreRegistration')}
+                        />
+                        Enable Pre-Registration
                     </label>
 
-                    {preRegistration && (
+                    {isPreRegistration && (
                         <div id="preregObj" className="form-group">
                             <div className="form-subgroup">
-                                <label className="form-sublabel">How much time you need for one visitor :</label>
+                                <label className="form-sublabel">Pre Registration Visit Date Time :</label>
                                 <div className="form-time-inputs">
-                                    <input
-                                        type="number"
-                                        className="form-input form-time-input"
-                                        placeholder="Hr"
-                                        {...register('preRegTime.hours', { valueAsNumber: true })}
-                                    />
-                                    <input
-                                        type="number"
-                                        className="form-input form-time-input"
-                                        placeholder="Min"
-                                        {...register('preRegTime.minutes', { valueAsNumber: true })}
-                                    />
+                                    <select {...register('visitDateType')}>
+                                        <option value={"ALL_WORKING_DATES"}>All working Dates</option>
+                                        <option value={"SPECIFIC_DATES"}>Specific Dates</option>
+                                    </select>
                                 </div>
+
+
                             </div>
-                            <div className="form-subgroup">
-                                <label className="form-sublabel">How many visitors you can handle at once :</label>
-                                <input
-                                    type="number"
-                                    className="form-input"
-                                    {...register('maxVisitors', { valueAsNumber: true })}
-                                />
-                            </div>
-                            <div className="form-subgroup">
-                                <label className="form-sublabel">What are the dates you can open for visits :</label>
-                                {workingDates.map((range, index) => (
-                                    <div key={index} className="form-time-range">
-                                        <input
-                                            type="time"
-                                            className="form-input form-time-range-input"
-                                            value={range.from}
-                                            onChange={(e) => updateTimeRange(index, 'from', e.target.value)}
-                                        />
-                                        <span className="form-time-range-label">To:</span>
-                                        <input
-                                            type="time"
-                                            className="form-input form-time-range-input"
-                                            value={range.to}
-                                            onChange={(e) => updateTimeRange(index, 'to', e.target.value)}
-                                        />
-                                    </div>
-                                ))}
-                                <button type="button" className="form-add-time-button" onClick={addTimeRange}>
-                                    +
-                                </button>
-                            </div>
+                            {watchVisitDateType === "SPECIFIC_DATES" &&
+                                <div className="form-subgroup">
+                                    <h3 >Set Specific Visit Dates :</h3>
+                                    <SpecificDateAdder finalDates={fields} append={append} remove={remove} ></SpecificDateAdder>
+
+                                    {errors.visitDateType && (
+                                        <span className="form-error-text">{errors.visitDateType.message}</span>
+                                    )}
+                                </div>}
                         </div>
                     )}
                 </div>
@@ -297,11 +431,15 @@ export const CreateVisitOption = () => {
                 </div>
 
                 <div className="form-button-wrapper">
-                    <button type="submit" className="form-save-button">
-                        Save
+                    <button
+                        type="submit"
+                        className="form-save-button"
+                        disabled={isSubmitting}
+                    >
+                        {isSubmitting ? 'Saving...' : 'Save'}
                     </button>
                 </div>
             </form>
         </div>
     );
-}
+};

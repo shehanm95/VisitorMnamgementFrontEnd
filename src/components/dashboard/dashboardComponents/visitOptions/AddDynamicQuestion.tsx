@@ -46,10 +46,8 @@ export type DynamicQuestionForm = z.infer<typeof DynamicQuestionSchema>;
 const AddDynamicQuestionForm = () => {
     // const [buttonArray, setButtonArray] = useState<ButtonAnswer[]>([])
     const [addingButtonValue, setAddingButtonValue] = useState("");
-    const [currentVisitOption, setCurrentVisitOption] = useState<VisitOption | undefined>(
-        ModeratorService.getCurrentVisitOption()
-    );
-
+    const [currentVisitOption, setCurrentVisitOption] = useState<VisitOption | undefined>(ModeratorService.getCurrentVisitOption());
+    console.log(currentVisitOption);
     const {
         register,
         handleSubmit,
@@ -149,7 +147,7 @@ const AddDynamicQuestionForm = () => {
             <h3>If any dynamic questions to ask</h3>
 
             <div className="form-question-header">
-                {currentVisitOption?.dynamicQuestions.length ? (
+                {currentVisitOption?.description && currentVisitOption?.dynamicQuestions.length ? (
                     currentVisitOption.dynamicQuestions.map((q) => (
                         <QuestionItem key={q.id} question={q} edit={edit} toggleActivate={toggleActivate} />
                     ))

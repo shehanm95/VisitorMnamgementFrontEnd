@@ -36,6 +36,16 @@ export const VisitOptionService = {
         const response: AxiosResponse<VisitOption[]> = await api.get(`/api/visit-options/by-visit-type/${visitTypeId}`);
         return response.data;
     },
+    // Get visit options by visit type ID
+    getActiveOptionsByType: async (visitTypeId: number): Promise<VisitOption[]> => {
+        const response: AxiosResponse<VisitOption[]> = await api.get(`/api/visit-options/activeByType/${visitTypeId}`);
+        return response.data;
+    },
+
+    getAllPreRegActiveOptionsByType: async (visitTypeId: number): Promise<VisitOption[]> => {
+        const response: AxiosResponse<VisitOption[]> = await api.get(`/api/visit-options/getAllPreRegActiveOptionsByType/${visitTypeId}`);
+        return response.data;
+    },
 
     // Update a visit option
     updateVisitOption: async (visitOption: VisitOption, image?: File): Promise<VisitOption> => {

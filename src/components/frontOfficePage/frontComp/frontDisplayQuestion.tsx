@@ -15,17 +15,21 @@ const FrontDisplayQuestion: React.FC = () => {
     const [currentIndex, setCurrentIndex] = useState<number>(0);
     const [haveAnswer, setHaveAnswer] = useState(false)
     const navigate = useNavigate()
+    const [fieldvalue, setFiledValue] = useState<any>('');
+    const frontservice = FrontPageService.getInstance()
 
     useEffect(() => {
         // const fetchedQuestions = DummyService.getQuestions();
         const getQuestions = async () => {
-            const option = FrontPageService.getInstance().getSelectedVisitOption();
+            const option = frontservice.getSelectedVisitOption();
             console.log("option id : ", option?.id)
             const id = option?.id || 0;
             const fetchedQuestions = await DynamicQuestionService.getQuestionsByVisitOptionId(id);
-            if (fetchedQuestions) {
+            if (fetchedQuestions.length > 0) {
+                console.log("have questions")
                 setQuestions(fetchedQuestions);
             } else {
+                console.log("do not have questions")
                 navigate(LinkService.getInstance().frontOffice.takePhoto)
             }
         }
@@ -50,7 +54,7 @@ const FrontDisplayQuestion: React.FC = () => {
     const handleInputChange = (value: string | number) => {
         if (!currentQuestion || currentQuestion.id == null) return;
         if (value) {
-            console.log(haveAnswer, value)
+            setFiledValue(value);
             setHaveAnswer(true);
         }
         updateAnswer({
@@ -93,8 +97,12 @@ const FrontDisplayQuestion: React.FC = () => {
     const handleNext = () => {
         if (currentIndex < questions.length - 1) {
             setCurrentIndex(currentIndex + 1);
+            setFiledValue('');
+
         } else {
             console.log('All Answers:', answers);
+            frontservice.setCurrentDynamicAnswers(answers);
+            navigate(LinkService.getInstance().frontOffice.takePhoto)
         }
         setHaveAnswer(false);
 
@@ -110,6 +118,7 @@ const FrontDisplayQuestion: React.FC = () => {
             {currentQuestion.answerType === 'text' && (
                 <input
                     className='f-form-input w-100 text-center'
+                    value={fieldvalue}
                     type="text"
                     onChange={e => handleInputChange(e.target.value)}
                 />
@@ -119,6 +128,7 @@ const FrontDisplayQuestion: React.FC = () => {
                 <input
                     className='f-form-input w-100 text-center'
                     type="number"
+                    value={fieldvalue}
                     onChange={e => handleInputChange(Number(e.target.value))}
                 />
             )}
