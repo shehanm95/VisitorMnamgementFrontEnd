@@ -51,13 +51,22 @@ export class LinkService {
     public readonly officerDashboard: string = "/officerDashboard";
 
     public readonly preReg: {
+        setRow: string;
+        base: string;
         questions: string;
         preRegOptions: string;
         types: string
     } = {
-            types: "/preReg",
+            base: "/preReg/",
+            types: "/preReg/types",
             preRegOptions: "/preReg/options",
-            questions: "/preReg/questions"
+            questions: "/preReg/questions",
+            setRow: "/preReg/setVisitRow"
+        };
+    profile: {
+        base: string
+    } = {
+            base: '/profile'
         };
 
     // Private constructor to prevent direct instantiation

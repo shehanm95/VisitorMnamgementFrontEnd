@@ -7,7 +7,6 @@ import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { AxiosError } from 'axios';
 import { LinkService } from '../../frontServices/LinkService';
-import { UserContext } from '../../context/ContextProvider';
 import api from '../../api/axios';
 
 // Define Zod schema for login validation
@@ -50,7 +49,7 @@ export const LoginForm: React.FC = () => {
             localStorage.setItem('refreshToken', refreshToken);
             toast.success('Login successful!');
 
-            setTimeout(() => navigate(LinkService.getInstance().home), 1000); // Match RegisterForm
+            setTimeout(() => navigate(LinkService.getInstance().preReg.base), 1000); // Match RegisterForm
         } catch (err: unknown) {
             console.error('Error response:', err);
             let errorMessage = 'Login failed.';

@@ -8,22 +8,22 @@ export type SimpleVisit = {
     id: number | undefined;
     visitType: VisitType | undefined;
     visitOption: VisitOption | undefined;
-    visitor: UserDto | undefined;
+    visitor: UserDto | undefined | null;
     imageName: string | undefined;
     badgePrintDate: Date | undefined;
     dynamicAnswers: Record<string, any> | undefined;
-    visitRow: number | undefined;
+    visitRow: { id: number } | undefined;
     isPrinted: boolean | undefined;
 };
 
-type VisitContextType = {
+export type VisitContextType = {
     visit: SimpleVisit;
     setVisit: (visit: SimpleVisit) => void;
     clearVisit: () => void;
 };
 
 // Create the context with proper typing
-const VisitContext = createContext<VisitContextType | undefined>(undefined);
+export const VisitContext = createContext<VisitContextType | undefined>(undefined);
 
 // Create a provider component
 export const VisitProvider = ({ children }: { children: ReactNode }) => {

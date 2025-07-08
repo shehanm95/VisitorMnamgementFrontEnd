@@ -4,6 +4,7 @@ import { UserContext } from './ContextProvider';
 import { LinkService } from '../frontServices/LinkService';
 import { getCurrentUser } from '../api/axios';
 import { UserDto } from '../types/user';
+import { Utils } from '../frontServices/Utils';
 
 interface ProtectedRouteProps {
     children: React.ReactNode;
@@ -12,7 +13,7 @@ interface ProtectedRouteProps {
 
 interface UserContextType {
     user: UserDto | null;
-    setUser: (newUser: UserDto | null) => void;
+    setUser: (newUser: UserDto | null | undefined) => void;
 }
 
 const ProtectedRoute = ({ children, roles }: ProtectedRouteProps) => {
@@ -29,7 +30,11 @@ const ProtectedRoute = ({ children, roles }: ProtectedRouteProps) => {
 
                 if (!currentUserToUse) {
                     const currentUser = await getCurrentUser();
-                    setUser(currentUser);
+                    if (currentUser) {
+                        setUser(currentUser);
+                        Utils.setUser(currentUser);
+                    }
+                    else console.error("no current user available")
                     currentUserToUse = currentUser;
                 }
 

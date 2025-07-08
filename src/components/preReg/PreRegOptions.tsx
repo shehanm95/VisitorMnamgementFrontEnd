@@ -17,10 +17,12 @@ export const PreRegOptions = () => {
 
     useEffect(() => {
         const getPreRegVisits = async () => {
-            if (visit.id) {
-                const ops = await VisitOptionService.getAllPreRegActiveOptionsByType(visit.id)
+            console.log(visit)
+            if (visit.visitType && visit.visitType.id) {
+                const ops = await VisitOptionService.getAllPreRegActiveOptionsByType(visit.visitType.id)
                 setOptions(ops)
             } else {
+                console.error("something error in fetching visit options")
                 navigate(links.preReg.types)
             }
         }

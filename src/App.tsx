@@ -35,6 +35,8 @@ import { ApiTester } from './components/test/ApiTester';
 import { PrintTest } from './components/test/PrintTest';
 import { PreReg } from './components/preReg/PreReg';
 import { PreRegTypes } from './components/preReg/PreRegTypes';
+import { PreRegOptions } from './components/preReg/PreRegOptions';
+import { PreRegSetVisitRow } from './components/preReg/PreRegSetVisitRow';
 
 const PrivateRoute: React.FC<{ element: React.ReactElement }> = ({ element }) => {
   return localStorage.getItem('accessToken') ? element : <Navigate to={LinkService.getInstance().login} />;
@@ -60,12 +62,16 @@ function App() {
         <Route path={links.register} element={<RegisterForm />} />
         <Route path={links.home} element={<PrivateRoute element={<Home />} />} />
         <Route path={links.unauthorized} element={<PrivateRoute element={<Unauthorized />} />} />
-        <Route path={links.root} element={<Navigate to={links.frontOffice.visitTypes} />} />
+        <Route path={links.root} element={<Navigate to={links.preReg.base} />} />
         <Route path={links.test} element={<PrintTest />} />
+
+        <Route path={links.profile.base} element={<UserProfile />} />
 
 
         <Route path={links.preReg.base} element={<PreReg />}>
           <Route path={links.preReg.types} element={<PreRegTypes />} />
+          <Route path={links.preReg.preRegOptions} element={<PreRegOptions />} />
+          <Route path={links.preReg.setRow} element={<PreRegSetVisitRow />} />
         </Route>
 
 

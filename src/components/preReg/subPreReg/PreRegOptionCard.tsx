@@ -26,7 +26,6 @@ export const PreRegOptionCard = ({ vOption: option }: { vOption: VisitOption }) 
                     setImage(imageUrl);
                 } catch (e) {
                     console.log('Error fetching image:', option.imageName, e);
-                    // fallback image already handled with default CEO image
                 }
             }
         };
@@ -42,7 +41,7 @@ export const PreRegOptionCard = ({ vOption: option }: { vOption: VisitOption }) 
 
     const openVisit = (option: VisitOption) => {
         setVisit({ ...visit, visitOption: option })
-        navigate(LinkService.getInstance().preReg.questions);
+        navigate(LinkService.getInstance().preReg.setRow);
     };
 
     return (

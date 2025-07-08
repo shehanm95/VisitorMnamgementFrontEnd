@@ -11,9 +11,9 @@ import { useVisit } from '../../../context/preRegContext';
 export const PreRegTypeCard = ({ vType }: { vType: VisitType }) => {
     const [image, setImage] = useState<string>(CEO);
     const navigate = useNavigate()
+    const links = LinkService.getInstance();
 
     const { visit, setVisit } = useVisit()
-
 
 
     useEffect(() => {
@@ -40,8 +40,14 @@ export const PreRegTypeCard = ({ vType }: { vType: VisitType }) => {
     }, [vType.imageName]);
 
     const openVisit = (vType: VisitType) => {
-        setVisit({ ...visit, visitType: vType })
-        navigate(LinkService.getInstance().preReg.preRegOptions);
+        if (visit.visitor) {
+            setVisit({ ...visit, visitType: vType })
+            console.log("moved to type opions")
+            navigate(links.preReg.preRegOptions);
+        } else {
+            navigate(links.login)
+        }
+
     };
 
     return (

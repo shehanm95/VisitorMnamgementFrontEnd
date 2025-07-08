@@ -4,6 +4,8 @@ import { toast } from 'react-toastify';
 import { ApiErrorResponse } from '../types/ApiErrorResonse';
 import { Visit } from '../types/visit';
 import { ObjectService } from '../frontServices/ObjectService';
+import { VisitRowReq } from '../types/VisitRowReq';
+import { VisitRow } from '../types/VisitRow';
 
 const API_BASE_URL = '/visits';
 
@@ -12,6 +14,15 @@ export const VisitService = {
     async markAsPrinted(id: number): Promise<{ A: number }> {
         return await api.put(API_BASE_URL + "/markAsPrinted/" + id)
     },
+
+    async getVisitRowsForDate(visitRawReq: VisitRowReq): Promise<VisitRow[]> {
+        let o = ObjectService.removeBulk(visitRawReq, [])
+        console.log(o)
+        const response = await api.post(API_BASE_URL + "/getVisitRowsForDate", o);
+        return response.data;
+    },
+
+
     async createVisit(visitData: Visit): Promise<Visit | null> {
         let cleanedObject = ObjectService.removeBulk(visitData,
             [{

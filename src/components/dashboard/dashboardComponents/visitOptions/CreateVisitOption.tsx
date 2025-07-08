@@ -156,8 +156,6 @@ export const CreateVisitOption = () => {
     });
 
     const timeRanges = watch('timeRanges');
-    const preRegTime = watch('specificDates');
-    const maxVisitors = watch('maxVisitors');
     const watchVisitDateType = watch('visitDateType');
     const isPreRegistration = watch('isPreRegistration');
     const averageTimeForAPerson = watch('averageTimeForAPerson');
@@ -223,6 +221,7 @@ export const CreateVisitOption = () => {
             };
 
             console.log(newVisitOption)
+
             const savedVisitOption = await VisitOptionService.createVisitOption(newVisitOption, imageFile || undefined);
             ModeratorService.setCurrentVisitOption(savedVisitOption);
             navigate(LinkService.getInstance().moderatorDashboard.addDynamicQuestion);

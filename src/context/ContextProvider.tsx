@@ -4,7 +4,7 @@ import { UserDto } from '../types/user';
 
 // Define the shape of the context value
 interface UserContextType {
-    user: UserDto | null;
+    user: UserDto | null | undefined;
     setUser: (newUser: UserDto | null) => void;
 }
 
@@ -21,7 +21,7 @@ interface ContextProviderProps {
 
 // Create the provider component
 const ContextProvider = ({ children }: ContextProviderProps) => {
-    const [user, setUser] = useState<UserDto | null>(null);
+    const [user, setUser] = useState<UserDto | null | undefined>(null);
 
     return (
         <UserContext.Provider value={{ user, setUser }}>
