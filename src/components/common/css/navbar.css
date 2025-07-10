@@ -9,6 +9,22 @@
     color: var(--light);
 }
 
+.navbarLoginButton {
+    background-color: white;
+    color: var(--primary);
+    padding: 10px 20px;
+    margin-right: 15px;
+    font-weight: 900 !important;
+}
+
+.navbarLoginButton:hover {
+    background-color: var(--light2);
+    color: var(--primary);
+    padding: 10px 20px;
+    margin-right: 15px;
+    font-weight: 700;
+}
+
 .logo {
     height: clamp(40px, 6vmin, 60px);
     padding-right: 10px;

@@ -9,12 +9,13 @@ import { LinkService } from '../../frontServices/LinkService'
 import { Utils } from '../../frontServices/Utils'
 import { getCurrentUser } from '../../api/axios'
 import { UserDto } from '../../types/user'
+import { FrontLoginButton } from '../frontOfficePage/frontComp/FrontLoginButton'
+
 
 export const NavBar = () => {
     let { user } = useContext(UserContext)
     const [u, setU] = useState<UserDto | undefined | null>(user)
-    let firstName = u?.firstName;
-    let lastName = u?.lastName;
+    const links = LinkService.getInstance();
     const navigate = useNavigate()
 
     useEffect(() => {
@@ -38,14 +39,15 @@ export const NavBar = () => {
                     <WhiteLogo></WhiteLogo>
                 </div>
             </div>
-            <div className="profArea centerV flex">
+            <div className="profArea centerV flex p-3">
                 {u && <>
-                    <h4 onClick={() => navigate(LinkService.getInstance().profile.base)} className='sm-d-none' >{u.firstName} {u.lastName}</h4>
-                    <img onClick={() => navigate(LinkService.getInstance().profile.base)} src={ProfDefault} alt="profile-image" className='profile-image' />
+                    <h4 onClick={() => navigate(links.profile.base)} className='sm-d-none' >{Utils.toTitleCase(u.firstName)} {Utils.toTitleCase(u.lastName)}</h4>
+                    <img onClick={() => navigate(links.profile.base)} src={ProfDefault} alt="profile-image" className='profile-image' />
                 </>}
                 {!u && <>
-                    <h4 className='sm-d-none' >name will goes here</h4>
-                    <img src={ProfDefault} alt="profile-image" className='profile-image' /></>}
+                    <button className='navbarLoginButton' onClick={() => navigate(links.login)}>Login</button>
+                    <img onClick={() => navigate(links.login)} src={ProfDefault} alt="profile-image" className='profile-image' />
+                </>}
 
 
 

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { LinkService } from '../../frontServices/LinkService'
 import userService from '../../services/userService'
-import { getCurrentUser } from '../../api/axios'
+import { getCurrentUser, logout } from '../../api/axios'
 import { UserDto } from '../../types/user'
 import { Utils } from '../../frontServices/Utils'
 
@@ -26,13 +26,13 @@ export const UserProfile = () => {
         <div> <h1>This is User Profile</h1>
             {user ? <>
 
-                <p>{user.firstName} {user.lastName}</p>
+                <p>{Utils.toTitleCase(user.firstName)} {Utils.toTitleCase(user.lastName)}</p>
             </> :
                 <p>no user available</p>
             }
             <button onClick={goToDashboard} className='front-Button'>Dashboard </button>
             <button onClick={() => navigate(links.preReg.base)} className='front-Button'>Home </button>
-
+            <button onClick={logout} className='front-Button'>Logout</button>
         </div>
     )
 }

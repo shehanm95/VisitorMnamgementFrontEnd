@@ -48,6 +48,7 @@ const AddDynamicQuestionForm = () => {
     const [addingButtonValue, setAddingButtonValue] = useState("");
     const [currentVisitOption, setCurrentVisitOption] = useState<VisitOption | undefined>(ModeratorService.getCurrentVisitOption());
     console.log(currentVisitOption);
+
     const {
         register,
         handleSubmit,
@@ -91,30 +92,47 @@ const AddDynamicQuestionForm = () => {
 
 
     const onSubmit = async (data: DynamicQuestionForm) => {
-        data = data as DynamicQuestion;
-        const vo = ModeratorService.currentVisitOption;
-        if (!vo) {
-            console.error("visit option cannot be null when saving a dynamic question");
-        }
+        try {
+            const vo = ModeratorService.currentVisitOption;
+            if (!vo) {
+                console.error("visit option cannot be null when saving a dynamic question");
+                return;
+            }
 
-        const newQuestion: DynamicQuestion = {
-            ...data,
-            visitOption: vo,
-
-        }
-
-        if (currentVisitOption) {
-            const updatedVisitOption: VisitOption = {
-                ...currentVisitOption,
-                dynamicQuestions: [...currentVisitOption.dynamicQuestions, newQuestion],
+            const newQuestion: DynamicQuestion = {
+                ...data,
+                visitOption: vo,
             };
-            setCurrentVisitOption(updatedVisitOption);
-        }
-        console.log(newQuestion)
-        const savedQ = await DynamicQuestionService.createQuestion(newQuestion);
-        currentVisitOption?.dynamicQuestions.push(savedQ);
 
-        reset(); // Clear form
+            // Save to server
+            const savedQ = await DynamicQuestionService.createQuestion(newQuestion);
+
+            // Update local state
+            if (currentVisitOption) {
+                const updatedVisitOption: VisitOption = {
+                    ...currentVisitOption,
+                    dynamicQuestions: [...currentVisitOption.dynamicQuestions, savedQ],
+                };
+                setCurrentVisitOption(updatedVisitOption);
+            }
+
+            // Proper reset with default values
+            reset({
+                questionText: '',
+                specialInstructions: '',
+                isRequired: false,
+                answerType: 'text',
+                buttonAnswers: [],
+                isActive: true, // Assuming you want this default
+                canSelectMoreThanOne: false
+            });
+
+            // Also clear the local button input
+            setAddingButtonValue('');
+
+        } catch (error) {
+            console.error("Error saving question:", error);
+        }
     };
 
     const onCancel = () => {

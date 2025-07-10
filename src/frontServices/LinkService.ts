@@ -69,6 +69,7 @@ export class LinkService {
             base: '/profile'
         };
 
+
     // Private constructor to prevent direct instantiation
     private constructor() { }
 

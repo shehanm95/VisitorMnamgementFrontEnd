@@ -83,6 +83,11 @@
   width: 100%;
 }
 
+hr {
+  border-top: 1px solid var(--primary);
+  margin: 15px 0;
+}
+
 .w-75 {
   width: 75%;
 }

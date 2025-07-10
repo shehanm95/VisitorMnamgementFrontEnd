@@ -22,6 +22,13 @@ export const VisitService = {
         return response.data;
     },
 
+    async createPreRegVisit(visit: Visit): Promise<Visit> {
+        // let o = ObjectService.removeBulk(visitRawReq, [])
+        // console.log(o)
+        const response = await api.post(API_BASE_URL + "/createPreRegVisit", visit);
+        return response.data;
+    },
+
 
     async createVisit(visitData: Visit): Promise<Visit | null> {
         let cleanedObject = ObjectService.removeBulk(visitData,

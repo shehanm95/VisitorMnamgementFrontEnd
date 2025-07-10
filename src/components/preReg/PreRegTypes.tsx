@@ -14,7 +14,8 @@ export const PreRegTypes = () => {
     useEffect(() => {
         const getPreRegVisits = async () => {
             const ts = await VisitTypeService.getAllVisitTypes()
-            setTypes(ts);
+            if (ts)
+                setTypes(ts);
         }
 
         const setVisitor = async () => {

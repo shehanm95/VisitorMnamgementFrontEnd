@@ -1,11 +1,11 @@
-import React from 'react';
-import { useDynamicQuestions } from '../../customHooks/useDynamicQuestions';
-import { FrontPageService } from '../../../frontServices/FrontPageSerivce';
-import { LinkService } from '../../../frontServices/LinkService';
-import { RightAlign } from '../../common/RightAlign';
-import { DynamicQuestionService } from '../../../services/DyanmicQuestionService';
+import { FrontPageService } from "../../frontServices/FrontPageSerivce";
+import { LinkService } from "../../frontServices/LinkService";
+import { DynamicQuestionService } from "../../services/DyanmicQuestionService";
+import { RightAlign } from "../common/RightAlign";
+import { useDynamicQuestions } from "../customHooks/useDynamicQuestions";
 
-const FrontDisplayQuestion: React.FC = () => {
+
+const PreRegDisplayQuestion: React.FC = () => {
     const frontservice = FrontPageService.getInstance();
     const linkService = LinkService.getInstance();
 
@@ -32,43 +32,47 @@ const FrontDisplayQuestion: React.FC = () => {
         }
     });
 
-    if (!currentQuestion) return <div>Loading...</div>;
+    if (!currentQuestion) return <div className="pre-reg-question__loading">Loading...</div>;
 
     return (
-        <div className='flex center column w-100'>
-            <p className='m-3'>Question {currentIndex + 1} of {questions.length}</p>
-            <h2>{currentQuestion.questionText}</h2>
-            <div className="mt-3"></div>
+        <div className="pre-reg-question">
+            <p className="pre-reg-question__progress">
+                Question {currentIndex + 1} of {questions.length}
+            </p>
+            <h2 className="pre-reg-question__title">{currentQuestion.questionText}</h2>
 
             {currentQuestion.answerType === 'text' && (
                 <input
-                    className='f-form-input w-100 text-center'
+                    className="pre-reg-question__input"
                     value={fieldValue}
                     type="text"
-                    onChange={e => handleInputChange(e.target.value)}
+                    onChange={(e) => handleInputChange(e.target.value)}
+                    placeholder="Type your answer here..."
                 />
             )}
 
             {currentQuestion.answerType === 'number' && (
                 <input
-                    className='f-form-input w-100 text-center'
+                    className="pre-reg-question__input"
                     type="number"
                     value={fieldValue}
-                    onChange={e => handleInputChange(Number(e.target.value))}
+                    onChange={(e) => handleInputChange(Number(e.target.value))}
+                    placeholder="Enter a number..."
                 />
             )}
 
             {currentQuestion.answerType === 'button' && (
-                <div>
-                    {currentQuestion.buttonAnswers?.map(btn => {
+                <div className="pre-reg-question__button-container">
+                    {currentQuestion.buttonAnswers?.map((btn) => {
                         const selected = answers
-                            .find(a => a.questionId === currentQuestion.id)
-                            ?.selectedButtonAnswers?.some(b => b.id === btn.id);
+                            .find((a) => a.questionId === currentQuestion.id)
+                            ?.selectedButtonAnswers?.some((b) => b.id === btn.id);
 
                         return (
                             <button
                                 key={btn.id}
-                                className={`front-Button ${selected ? 'front-button-selected' : ''}`}
+                                className={`pre-reg-question__option-button ${selected ? 'pre-reg-question__option-button--selected' : ''
+                                    }`}
                                 onClick={() => handleButtonClick(btn)}
                             >
                                 {btn.buttonText}
@@ -78,12 +82,11 @@ const FrontDisplayQuestion: React.FC = () => {
                 </div>
             )}
 
-            <div className="m-5"></div>
-            <div className="w-100 mt-5">
+            <div className="pre-reg-question__action-container">
                 <RightAlign>
                     <button
                         disabled={currentQuestion.isRequired && !haveAnswer}
-                        className='front-Button'
+                        className="pre-reg-question__next-button"
                         onClick={handleNext}
                     >
                         {currentIndex < questions.length - 1 ? 'Next' : 'Finish'}
@@ -94,4 +97,4 @@ const FrontDisplayQuestion: React.FC = () => {
     );
 };
 
-export default FrontDisplayQuestion;
+export default PreRegDisplayQuestion;

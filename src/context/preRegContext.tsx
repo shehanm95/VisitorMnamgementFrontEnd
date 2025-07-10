@@ -3,6 +3,7 @@ import { createContext, useContext, useState, ReactNode } from 'react';
 import { VisitType } from '../types/visitType';
 import { VisitOption } from '../types/visitOption';
 import { UserDto } from '../types/user';
+import { Visit } from '../types/visit';
 
 export type SimpleVisit = {
     id: number | undefined;
@@ -14,12 +15,14 @@ export type SimpleVisit = {
     dynamicAnswers: Record<string, any> | undefined;
     visitRow: { id: number } | undefined;
     isPrinted: boolean | undefined;
+    realVisit: Visit | undefined;
 };
 
 export type VisitContextType = {
     visit: SimpleVisit;
     setVisit: (visit: SimpleVisit) => void;
     clearVisit: () => void;
+
 };
 
 // Create the context with proper typing
@@ -37,6 +40,7 @@ export const VisitProvider = ({ children }: { children: ReactNode }) => {
         dynamicAnswers: undefined,
         visitRow: undefined,
         isPrinted: undefined,
+        realVisit: undefined,
     });
 
     const clearVisit = () => {
@@ -50,6 +54,7 @@ export const VisitProvider = ({ children }: { children: ReactNode }) => {
             dynamicAnswers: undefined,
             visitRow: undefined,
             isPrinted: undefined,
+            realVisit: undefined
         });
     };
 

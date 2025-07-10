@@ -37,6 +37,7 @@ import { PreReg } from './components/preReg/PreReg';
 import { PreRegTypes } from './components/preReg/PreRegTypes';
 import { PreRegOptions } from './components/preReg/PreRegOptions';
 import { PreRegSetVisitRow } from './components/preReg/PreRegSetVisitRow';
+import PreRegDisplayQuestion from './components/preReg/PreRegDisplayQuestion';
 
 const PrivateRoute: React.FC<{ element: React.ReactElement }> = ({ element }) => {
   return localStorage.getItem('accessToken') ? element : <Navigate to={LinkService.getInstance().login} />;
@@ -72,6 +73,7 @@ function App() {
           <Route path={links.preReg.types} element={<PreRegTypes />} />
           <Route path={links.preReg.preRegOptions} element={<PreRegOptions />} />
           <Route path={links.preReg.setRow} element={<PreRegSetVisitRow />} />
+          <Route path={links.preReg.questions} element={<PreRegDisplayQuestion />} />
         </Route>
 
 
