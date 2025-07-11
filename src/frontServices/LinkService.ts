@@ -51,17 +51,20 @@ export class LinkService {
     public readonly officerDashboard: string = "/officerDashboard";
 
     public readonly preReg: {
+        thankyou: string;
         setRow: string;
         base: string;
         questions: string;
         preRegOptions: string;
         types: string
+
     } = {
             base: "/preReg/",
             types: "/preReg/types",
             preRegOptions: "/preReg/options",
             questions: "/preReg/questions",
-            setRow: "/preReg/setVisitRow"
+            setRow: "/preReg/setVisitRow",
+            thankyou: "/preReg/thankyou"
         };
     profile: {
         base: string

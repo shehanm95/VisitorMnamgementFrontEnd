@@ -204,7 +204,7 @@ export const PreRegSetVisitRow = () => {
                             </LoadingButton>}
                         </div>
                             :
-                            <div className='row-more-than'>
+                            <div key={R.id} className='row-more-than'>
                                 <div onClick={() => setSelectedVisitRow(R.id)} className="row-timeAndSlotContainer d-inline-block">
                                     <span className="row-time">{Utils.formatTimeTo12Hour(R.startTime)} - {Utils.formatTimeTo12Hour(R.endTime)}:</span>
                                     <h4 className='d-inline-block row-more-than-text'>{R.visits && R.visitorsPerRow - R.visits.length}/ {R.visitorsPerRow} {" "} Available </h4>
