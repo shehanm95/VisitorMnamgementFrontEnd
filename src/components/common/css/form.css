@@ -288,3 +288,37 @@ New Classes for Dynamic Question Form .form-question-header {
 .form-add-question-button:hover {
     color: var(--primary-dark);
 }
+
+
+/* service point */
+
+.form-action-buttons {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.form-cancel-button {
+    padding: 8px 16px;
+    background: var(--light3);
+    color: var(--primary);
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    font-family: "Inter", sans-serif;
+}
+
+.form-save-button {
+    padding: 8px 16px;
+    background: var(--primary);
+    color: white;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    font-family: "Inter", sans-serif;
+}
+
+.form-button-wrapper {
+    text-align: right;
+}

@@ -1,3 +1,4 @@
+import { Duty } from "./Duty";
 import { DynamicQuestion } from "./dynamicQuestion";
 import { ServicePointStatus } from "./ServicePointStatus";
 import { SpecialNote } from "./SpecialNote";
@@ -12,9 +13,11 @@ export interface ServicePoint {
     officerInstructions: string;
     visitorInstructions: string;
     visitOption: VisitOption;
-    officers: UserDto[];
+    duties: Duty[];
     visits: Visit[];
     servicePointStatus: ServicePointStatus;
     officerQuestions: DynamicQuestion[];
-    specialNotes: SpecialNote[];
+    specialNotes: SpecialNote[]; // no need to set them here
+    isFrontOffice: boolean;
+    isHost: boolean;
 }

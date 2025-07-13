@@ -27,6 +27,11 @@
   color: var(--primary);
 }
 
+.w-150px {
+  display: inline-block;
+  width: 150px;
+}
+
 .radius50 {
   border-radius: 50% !important;
 }

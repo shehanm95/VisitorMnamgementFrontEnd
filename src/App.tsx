@@ -39,6 +39,7 @@ import { PreRegOptions } from './components/preReg/PreRegOptions';
 import { PreRegSetVisitRow } from './components/preReg/PreRegSetVisitRow';
 import PreRegDisplayQuestion from './components/preReg/PreRegDisplayQuestion';
 import { PreRegThankYou } from './components/preReg/PreRegThankYou';
+import { AddServicePoint } from './components/dashboard/dashboardComponents/AddServicePoint';
 
 const PrivateRoute: React.FC<{ element: React.ReactElement }> = ({ element }) => {
   return localStorage.getItem('accessToken') ? element : <Navigate to={LinkService.getInstance().login} />;
@@ -143,6 +144,14 @@ function App() {
             element={
               <ProtectedRoute roles={['MODERATOR']}>
                 <AddDynamicQuestionForm />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path={links.moderatorDashboard.addServicePoint}
+            element={
+              <ProtectedRoute roles={['MODERATOR']}>
+                <AddServicePoint />
               </ProtectedRoute>
             }
           />

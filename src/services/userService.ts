@@ -9,6 +9,25 @@ import { ApiErrorResponse } from '../types/ApiErrorResonse';
 const API_BASE_URL = '/user';
 
 export class UserService {
+    async findUser(input: string): Promise<UserDto[]> {
+        try {
+            const response: AxiosResponse<UserDto[]> = await api.get(`${API_BASE_URL}/findUser/${input}`);
+            return response.data;
+        } catch (error) {
+            const err = error as AxiosError<ApiErrorResponse>;
+            const errorMessage = err.response?.data?.message || "An unexpected error occurred";
+            toast.error(errorMessage);
+            console.error('Error:', errorMessage);
+            throw new Error(errorMessage);
+        }
+    }
+
+    async getImage(iamgeName: string): Promise<Blob> {
+        const res: AxiosResponse<Blob> = await api.get(`${API_BASE_URL}/get/image/${iamgeName}`, { responseType: 'blob' });
+        return res.data;
+    }
+
+
     async getUserByEmail(email: string): Promise<UserDto | null> {
         try {
             const response: AxiosResponse<UserDto> = await api.get(`${API_BASE_URL}/get/${email}`);

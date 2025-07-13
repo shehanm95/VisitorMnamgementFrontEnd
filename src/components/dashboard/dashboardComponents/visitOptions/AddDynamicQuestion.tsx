@@ -12,6 +12,9 @@ import { DynamicQuestionService } from '../../../../services/DyanmicQuestionServ
 import { QuestionItem } from './smallComp/QuestionItem';
 import { IconHeader } from '../../../common/IconHeader';
 import { Center } from '../../../common/Center';
+import { RightAlign } from '../../../common/RightAlign';
+import { useNavigate } from 'react-router-dom';
+import { LinkService } from '../../../../frontServices/LinkService';
 
 // Zod schema
 
@@ -47,6 +50,7 @@ const AddDynamicQuestionForm = () => {
     // const [buttonArray, setButtonArray] = useState<ButtonAnswer[]>([])
     const [addingButtonValue, setAddingButtonValue] = useState("");
     const [currentVisitOption, setCurrentVisitOption] = useState<VisitOption | undefined>(ModeratorService.getCurrentVisitOption());
+    const navigate = useNavigate()
     console.log(currentVisitOption);
 
     const {
@@ -102,6 +106,7 @@ const AddDynamicQuestionForm = () => {
             const newQuestion: DynamicQuestion = {
                 ...data,
                 visitOption: vo,
+                referenceQuestions: []
             };
 
             // Save to server
@@ -157,6 +162,10 @@ const AddDynamicQuestionForm = () => {
 
     function toggleActivate(question: DynamicQuestion): void {
         throw new Error('Function not implemented.');
+    }
+
+    function goToServicePoint(): void {
+        navigate(LinkService.getInstance().moderatorDashboard.addServicePoint)
     }
 
     return (
@@ -261,12 +270,13 @@ const AddDynamicQuestionForm = () => {
                 </div>
 
                 {/* Add New Dynamic Question Button */}
-                <Center>
-                    <button type="button" className="vO-add-button">
-                        <i className="fas fa-plus-circle"></i> Add New Dynamic Question
-                    </button>
-                </Center>
             </form>
+            <hr className='mt-5' />
+            <RightAlign>
+                <button onClick={goToServicePoint} type="button" className="form-save-button mt-5">
+                    Next : Add service point
+                </button>
+            </RightAlign>
         </div>
     );
 };

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import './visitOptions.css';
 import { Center } from '../../../common/Center';
 import { BlurBack } from '../../../common/BlurBack';
-import { CreateVisitType } from './VisitType';
+import { CreateVisitType } from './CreateVisitType';
 import { VisitType } from '../../../../types/visitType';
 import { VisitTypeService } from '../../../../services/visitTypeSerive';
 import { setTypeDetails } from '../../../../services/typeKeeper';

@@ -3,7 +3,7 @@ import { VisitOption } from "./visitOption";
 
 export interface DynamicQuestion {
     id?: number;
-    visitOption: VisitOption | undefined;
+    visitOption?: VisitOption;
     questionText: string;
     specialInstructions?: string;
     isRequired: boolean;
@@ -11,4 +11,5 @@ export interface DynamicQuestion {
     buttonAnswers?: ButtonAnswer[];
     isActive: boolean;
     canSelectMoreThanOne: boolean;
+    referenceQuestions: DynamicQuestion[];
 }

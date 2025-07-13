@@ -18,7 +18,7 @@ const visitTypeSchema = z.object({
 export const CreateVisitType: React.FC<VisitTypeProps> = ({ onClose, getSavedType }) => {
     const [visitTypeName, setVisitTypeName] = useState<string>('');
     const [visitTypeDescription, setVisitTypeDescription] = useState<string>('');
-    const [isActive, setIsActive] = useState<boolean>(true); // ✅ Added default value
+    const [isActive, setIsActive] = useState<boolean>(true);
     const [imageFile, setImageFile] = useState<File | null>(null);
     const [imagePreview, setImagePreview] = useState<string | null>(null);
     const [errors, setErrors] = useState<{ [key: string]: string }>({});
