@@ -666,22 +666,23 @@ a {
   padding-bottom: auto !important;
 }
 
+/* 
 button {
   @apply rounded-md border px-4 py-2 font-semibold transition-colors duration-300;
   background-color: var(--button-color, #3b82f6);
   outline: none;
   border: none;
   border-radius: 5px;
-  /* fallback blue */
+ 
   color: var(--light);
   border-color: var(--button-border-color, #3b82f6);
 }
 
 button:hover {
-  background-color: var(--button-hover-color, #2563eb);
-  /* darker blue on hover */
+  background-color: var(--primary);
+  
   border-color: var(--button-hover-color, #2563eb);
-}
+} */
 
 
 .roundBlueButton {
@@ -716,4 +717,17 @@ button:hover {
   background-color: var(--primarylink);
   color: var(--light);
   border-radius: 20px;
+}
+
+.outline_button {
+  border-radius: 5px;
+  border: 2px solid var(--primary);
+  min-width: 80px;
+  color: var(--primary);
+  padding: 4px 10px;
+  background-color: var(--light1);
+}
+
+.justify-content-between {
+  justify-content: space-between;
 }

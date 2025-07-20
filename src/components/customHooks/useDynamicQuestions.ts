@@ -48,6 +48,7 @@ export const useDynamicQuestions = ({
             questionId: currentQuestion.id,
             dynamicQuestion: currentQuestion,
             answerType: currentQuestion.answerType,
+            selectedButtonAnswers: [],
             value,
         });
     }, [currentQuestion, updateAnswer]);
@@ -56,7 +57,7 @@ export const useDynamicQuestions = ({
         if (!currentQuestion || currentQuestion.id == null) return;
 
         const existing = answers.find(a => a.questionId === currentQuestion.id);
-        let selected: ButtonAnswer[] = [];
+        let selectedButtons: ButtonAnswer[] = [];
 
         if (existing?.selectedButtonAnswers) {
             setHaveAnswer(true);
@@ -65,18 +66,18 @@ export const useDynamicQuestions = ({
         if (currentQuestion.canSelectMoreThanOne) {
             const alreadySelected = existing?.selectedButtonAnswers || [];
             const isSelected = alreadySelected.some(b => b.id === button.id);
-            selected = isSelected
+            selectedButtons = isSelected
                 ? alreadySelected.filter(b => b.id !== button.id)
                 : [...alreadySelected, button];
         } else {
-            selected = [button];
+            selectedButtons = [button];
         }
 
         updateAnswer({
             questionId: currentQuestion.id,
             dynamicQuestion: currentQuestion,
             answerType: 'button',
-            selectedButtonAnswers: selected,
+            selectedButtonAnswers: selectedButtons,
         });
     }, [answers, currentQuestion, updateAnswer]);
 

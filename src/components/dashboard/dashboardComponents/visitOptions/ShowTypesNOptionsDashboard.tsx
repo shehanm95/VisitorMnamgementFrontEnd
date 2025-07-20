@@ -9,7 +9,7 @@ import { setTypeDetails } from '../../../../services/typeKeeper';
 import { useNavigate } from 'react-router-dom';
 import { IconHeader } from '../../../common/IconHeader';
 
-export const VisitOptions = () => {
+export const ShowTypesNOptionsDashboard = () => {
     const [visitTypeWindow, setVisitTypeWindow] = useState(false);
     const [visitTypes, setVisitTypes] = useState<VisitType[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
@@ -19,6 +19,7 @@ export const VisitOptions = () => {
     useEffect(() => {
         const fetchVisitTypes = async () => {
             try {
+                console.log("tring to getting visit types")
                 const types = await VisitTypeService.getAllVisitTypes();
                 setVisitTypes(types);
                 setLoading(false);

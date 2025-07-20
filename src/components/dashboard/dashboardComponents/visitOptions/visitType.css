@@ -7,6 +7,12 @@
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     font-family: "Inter", sans-serif;
     position: relative;
+
+}
+
+.pop-up-body {
+    overflow-y: auto;
+    max-height: 100%;
 }
 
 .popup-form input:focus,

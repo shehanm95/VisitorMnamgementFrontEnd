@@ -2,22 +2,22 @@ import { Duty } from "./Duty";
 import { DynamicQuestion } from "./dynamicQuestion";
 import { ServicePointStatus } from "./ServicePointStatus";
 import { SpecialNote } from "./SpecialNote";
-import { UserDto } from "./user";
 import { Visit } from "./visit";
 import { VisitOption } from "./visitOption";
 
 export interface ServicePoint {
-    id: number;
+    id?: number;
     pointName: string;
+    location: string;
     pointDescription: string;
     officerInstructions: string;
     visitorInstructions: string;
     visitOption: VisitOption;
-    duties: Duty[];
+    duties: Duty[] | any[];
     visits: Visit[];
     servicePointStatus: ServicePointStatus;
-    officerQuestions: DynamicQuestion[];
-    specialNotes: SpecialNote[]; // no need to set them here
+    officerQuestions: DynamicQuestion[] | any[];
+    specialNotes: SpecialNote[];
     isFrontOffice: boolean;
     isHost: boolean;
 }

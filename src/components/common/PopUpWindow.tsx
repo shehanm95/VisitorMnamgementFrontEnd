@@ -16,7 +16,7 @@ export const PopUpWindow: React.FC<PopUpProps> = ({ onClose, children }) => {
                     ×
                 </button>
                 <h2 className="popup-form-title">Create Visitor Type</h2>
-                <div>
+                <div className='pop-up-body'>
                     {children}
                 </div>
 

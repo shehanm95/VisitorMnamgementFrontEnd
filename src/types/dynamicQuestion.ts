@@ -1,4 +1,5 @@
 import { ButtonAnswer } from "./buttonAnswer";
+import { ReferenceHolder } from "./ReferenceHolder";
 import { VisitOption } from "./visitOption";
 
 export interface DynamicQuestion {
@@ -11,5 +12,5 @@ export interface DynamicQuestion {
     buttonAnswers?: ButtonAnswer[];
     isActive: boolean;
     canSelectMoreThanOne: boolean;
-    referenceQuestions: DynamicQuestion[];
+    referenceQuestions?: DynamicQuestion[];
 }

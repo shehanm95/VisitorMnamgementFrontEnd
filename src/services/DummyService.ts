@@ -15,6 +15,7 @@ export const DummyService = {
                 ],
                 isActive: true,
                 canSelectMoreThanOne: false,
+                referenceQuestions: []
             },
             {
                 id: 2,
@@ -23,6 +24,7 @@ export const DummyService = {
                 answerType: 'number',
                 isActive: true,
                 canSelectMoreThanOne: false,
+                referenceQuestions: []
             },
             {
                 id: 3,
@@ -32,6 +34,7 @@ export const DummyService = {
                 specialInstructions: 'You can write a short paragraph.',
                 isActive: true,
                 canSelectMoreThanOne: false,
+                referenceQuestions: []
             },
             {
                 id: 4,
@@ -45,6 +48,7 @@ export const DummyService = {
                 ],
                 isActive: true,
                 canSelectMoreThanOne: false,
+                referenceQuestions: []
             },
             {
                 id: 5,
@@ -53,6 +57,7 @@ export const DummyService = {
                 answerType: 'number',
                 isActive: true,
                 canSelectMoreThanOne: false,
+                referenceQuestions: []
             },
             {
                 id: 6,
@@ -61,6 +66,7 @@ export const DummyService = {
                 answerType: 'text',
                 isActive: true,
                 canSelectMoreThanOne: true,
+                referenceQuestions: []
             },
             {
                 id: 7,
@@ -75,6 +81,7 @@ export const DummyService = {
                 ],
                 isActive: true,
                 canSelectMoreThanOne: true,
+                referenceQuestions: []
             },
             {
                 id: 8,
@@ -83,6 +90,7 @@ export const DummyService = {
                 answerType: 'number',
                 isActive: true,
                 canSelectMoreThanOne: false,
+                referenceQuestions: []
             },
             {
                 id: 9,
@@ -91,6 +99,7 @@ export const DummyService = {
                 answerType: 'text',
                 isActive: true,
                 canSelectMoreThanOne: true,
+                referenceQuestions: []
             },
             {
                 id: 10,
@@ -104,6 +113,7 @@ export const DummyService = {
                 ],
                 isActive: true,
                 canSelectMoreThanOne: false,
+                referenceQuestions: []
             },
             {
                 id: 11,
@@ -112,6 +122,7 @@ export const DummyService = {
                 answerType: 'number',
                 isActive: true,
                 canSelectMoreThanOne: false,
+                referenceQuestions: []
             },
             {
                 id: 12,
@@ -120,6 +131,7 @@ export const DummyService = {
                 answerType: 'text',
                 isActive: true,
                 canSelectMoreThanOne: false,
+                referenceQuestions: []
             },
             {
                 id: 13,
@@ -134,6 +146,7 @@ export const DummyService = {
                 ],
                 isActive: true,
                 canSelectMoreThanOne: false,
+                referenceQuestions: []
             },
             {
                 id: 14,
@@ -142,6 +155,7 @@ export const DummyService = {
                 answerType: 'number',
                 isActive: true,
                 canSelectMoreThanOne: false,
+                referenceQuestions: []
             },
             {
                 id: 15,
@@ -156,6 +170,7 @@ export const DummyService = {
                 ],
                 isActive: true,
                 canSelectMoreThanOne: true,
+                referenceQuestions: []
             },
         ];
 

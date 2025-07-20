@@ -31,13 +31,13 @@ export const VisitService = {
 
 
     async createVisit(visitData: Visit): Promise<Visit | null> {
-        let cleanedObject = ObjectService.removeBulk(visitData,
-            [{
-                doNotRemove: 'dynamicAnswers',
-                butRemoveBulkOf: ['dynamicQuestuion']
-            }]);
+        // let cleanedObject = ObjectService.removeBulk(visitData,
+        //     [{
+        //         doNotRemove: 'dynamicAnswers',
+        //         butRemoveBulkOf: ['dynamicQuestuion']
+        //     }]);
         try {
-            const response: AxiosResponse<Visit> = await api.post(API_BASE_URL, cleanedObject);
+            const response: AxiosResponse<Visit> = await api.post(API_BASE_URL, visitData);
             toast.success('Visit created successfully');
             return response.data;
         } catch (error) {

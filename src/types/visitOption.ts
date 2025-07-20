@@ -1,4 +1,5 @@
 import { DynamicQuestion } from "./dynamicQuestion";
+import { ServicePoint } from "./ServicePoint";
 import { SpecificDate } from "./SpecificDate";
 import { VisitType } from "./visitType";
 
@@ -20,4 +21,5 @@ export interface VisitOption {
     visitRows: any[];
     timeRanges: any[];
     specificDates: SpecificDate[]
+    servicePoints?: ServicePoint[];
 }

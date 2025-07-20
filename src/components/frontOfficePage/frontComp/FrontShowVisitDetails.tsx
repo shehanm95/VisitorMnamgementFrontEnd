@@ -23,6 +23,7 @@ const FrontShowVisitDetails = () => {
     const [comapanyName, setCompanyName] = useState("ZinCat Technologies")
 
     useEffect(() => {
+
         const getSavedVisit = async () => {
             try {
                 if (visit && frontService.getCurrentVisitId() == null) {
@@ -273,9 +274,6 @@ const FrontShowVisitDetails = () => {
     return (
         <div className="vd-container">
             <h1>Visit Details</h1>
-
-
-
 
             {/* Visitor Information Section */}
             <div className="vd-section mt-2">

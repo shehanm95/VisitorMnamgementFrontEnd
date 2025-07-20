@@ -76,7 +76,7 @@ export const RegisterForm: React.FC = () => {
             localStorage.setItem('accessToken', accessToken);
             localStorage.setItem('refreshToken', refreshToken);
             toast.success('Registration successful! Redirecting to home...');
-            setTimeout(() => navigate('/home'), 1000);
+            setTimeout(() => navigate(LinkService.getInstance().preReg.base), 1000);
         } catch (err: any) {
             const errorMessage =
                 typeof err.response?.data === 'string'

@@ -75,6 +75,20 @@ export class LinkService {
         };
 
 
+    servicePoint: {
+        showFullVisit: string;
+        answerQuestions: string;
+        scan: string;
+        base: string
+    } = {
+            base: '/servicePoint',
+            scan: '/servicePoint/scan',
+            showFullVisit: "/servicePoint/showFullVisit",
+            answerQuestions: "/servicePoint/answerQuestions"
+        };
+
+
+
     // Private constructor to prevent direct instantiation
     private constructor() { }
 

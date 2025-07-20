@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useFieldArray, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { number, z } from 'zod';
@@ -8,22 +8,30 @@ import { ServicePointService } from '../../../services/ServicePointService';
 import '../../common/css/form.css';
 import { IconHeader } from '../../common/IconHeader';
 import { toast } from 'react-toastify';
-import { FrontPageService } from '../../../frontServices/FrontPageSerivce';
-import { DynamicQuestionSchema } from './visitOptions/AddDynamicQuestion';
 import { PopUpWindow } from '../../common/PopUpWindow';
 import { AddOfficerDuty } from './servicePointComps/AddOfficerDuty';
+import { PersonItem } from './servicePointComps/PersonItem';
+import { UserDto } from '../../../types/user';
+import { AddOfficerQuestion } from './servicePointComps/AddOfficerQuestion';
+import { OfficerQuestionSchema } from '../../../types/OfficerQuestionSchema';
+import { DynamicQuestion } from '../../../types/dynamicQuestion';
+import { ModeratorService } from '../../../frontServices/moderatorService';
+import { DynamicQuestionService } from '../../../services/DyanmicQuestionService';
 
 
 const dutySchema = z.object({
-    id: z.number(),
-    officer: z.object({ id: z.number() }),
+    // id: z.number(),
+    officer: z.object({ id: z.any() }),
     dutyState: z.enum(['PENDING', 'ACCEPTED', 'DECLINED']),
     AcceptedTime: z.string().optional()
 })
 
+export type DutySchemaType = z.infer<typeof dutySchema>
+
 // Define Zod schema for form validation
 const servicePointSchema = z.object({
     pointName: z.string().min(1, 'Name is required'),
+    location: z.string(),
     pointDescription: z.string().optional(),
     officerInstructions: z.string().optional(),
     visitorInstructions: z.string().optional(),
@@ -32,18 +40,26 @@ const servicePointSchema = z.object({
     servicePointStatus: z.nativeEnum(ServicePointStatus),
     visitOption: z.object({ id: z.number() }),
     duties: z.array(dutySchema),
-    officerQuestions: z.array(DynamicQuestionSchema)
+    officerQuestions: z.array(OfficerQuestionSchema)
 });
 
 type ServicePointFormData = z.infer<typeof servicePointSchema>;
 
 export const AddServicePoint = () => {
     const servicePointService = new ServicePointService();
-    const frontService = FrontPageService.getInstance();
-    const visitOption = frontService.getSelectedVisitOption();
+    const visitOption = ModeratorService.getCurrentVisitOption()
+    const [dynamicQuestions, setDynamicQuestions] = useState<DynamicQuestion[]>([])
     const [addOfficerQuestion, setAddOfficerQuestion] = useState(false)
     const [addOfficer, setAddOfficer] = useState(false)
+    const [addedDynamicRefQustion, setAddedDynamicRefQuestions] = useState<DynamicQuestion[]>([])
 
+    useEffect(() => {
+        const getQ = async () => {
+            const dq = await DynamicQuestionService.getQuestionsByVisitOptionId(visitOption?.id!)
+            setDynamicQuestions(dq)
+        }
+        getQ()
+    }, [])
     const {
         register,
         handleSubmit,
@@ -64,16 +80,30 @@ export const AddServicePoint = () => {
     });
 
     const { fields: dutyList, append: appendDuty, remove: removeDuty } = useFieldArray({ control, name: 'duties' });
-    const { fields: questionList, append: appendQuestion, remove: removeQuestion } = useFieldArray({ control, name: 'officerQuestions' });
+    const { fields: OffQuestionList, append: appendOffQuestion, remove: removeOffQuestion } = useFieldArray({ control, name: 'officerQuestions' });
 
-    const onSubmit = async (data: any) => {
+    const onSubmit = async (data: ServicePointFormData) => {
+        console.log('data', data)
+        const newServicePoint: ServicePoint = {
+            pointName: data.pointName,
+            pointDescription: data.pointDescription || '',
+            officerInstructions: data.officerInstructions || '',
+            visitorInstructions: data.visitorInstructions || '',
+            visitOption: visitOption!,
+            duties: data.duties,
+            visits: [],
+            servicePointStatus: ServicePointStatus.ACTIVE,
+            officerQuestions: OffQuestionList,
+            specialNotes: [],
+            isFrontOffice: data.isFrontOffice,
+            isHost: data.isHost,
+            location: data.location
+        }
+        newServicePoint.officerQuestions.map(q => q.id = undefined)
+        console.log(newServicePoint)
         try {
-            const servicePointData: Partial<ServicePoint> = {
-                ...data,
-                visitOption: { id: data.visitOptionId } as any // Temporary type assertion
-            };
-
-            const createdServicePoint = await servicePointService.createServicePoint(servicePointData);
+            const createdServicePoint = await servicePointService.createServicePoint(newServicePoint);
+            console.log(createdServicePoint)
             toast.success('Service point created successfully!');
             reset();
             // You might want to redirect or update state here
@@ -98,6 +128,18 @@ export const AddServicePoint = () => {
                     />
                     {errors.pointName && (
                         <span className="form-error">{errors.pointName.message}</span>
+                    )}
+                </div>
+                <div className="form-group">
+                    <label className="form-label">Point Location*</label>
+                    <input
+                        type="text"
+                        className={`form-input ${errors.location ? 'error' : ''}`}
+                        placeholder="Enter service point location"
+                        {...register('location')}
+                    />
+                    {errors.location && (
+                        <span className="form-error">{errors.location.message}</span>
                     )}
                 </div>
 
@@ -146,12 +188,10 @@ export const AddServicePoint = () => {
                 </div>
 
                 <hr />
-
-                {/* Duty Officers Area - To be implemented */}
                 <div className="form-group">
                     <div>
                         <label className="form-label w-150px">Duty Officers:</label>
-                        <button type="button" className="vO-add-button">
+                        <button onClick={() => setAddOfficer(true)} type="button" className="vO-add-button">
                             <i className="fas fa-plus-circle"></i> Add Officer
                         </button>
                     </div>
@@ -159,6 +199,16 @@ export const AddServicePoint = () => {
                         {/* Officers will be added here */}
                     </div>
                 </div>
+                {/* Duty Officers Area - To be implemented */}
+                {dutyList.length > 0 && <h4 className='mb-4'>Already added officers</h4>}
+                {dutyList.length > 0 &&
+                    dutyList.map((d, index) =>
+                        <div key={index} className='ms-1 flex centerV w-50 justify-content-between'>
+                            <PersonItem user={d.officer as UserDto}></PersonItem>
+                            <button onClick={() => removeDuty(index)} key={index} className='outline_button'>Remove</button>
+                        </div>
+
+                    )}
 
                 <hr />
 
@@ -171,7 +221,15 @@ export const AddServicePoint = () => {
                         </button>
                     </div>
                     <div className="form-subgroup">
-                        {/* Questions will be added here */}
+                        {OffQuestionList.length > 0 && <h4 className='mb-4'>Already added officers</h4>}
+                        {OffQuestionList.length > 0 &&
+                            OffQuestionList.map((oQ, index) =>
+                                <div key={index} className='ms-1 flex centerV w-50 justify-content-between'>
+                                    <h4>{oQ.questionText}</h4>
+                                    <button type='button' onClick={() => removeOffQuestion(index)} key={index} className='outline_button'>Remove</button>
+                                </div>
+
+                            )}
                     </div>
                 </div>
 
@@ -188,12 +246,27 @@ export const AddServicePoint = () => {
                     </button>
                 </div>
             </form>
+
+
             {addOfficerQuestion &&
-                <PopUpWindow onClose={() => setAddOfficerQuestion(false)} children={<AddOfficerDuty></AddOfficerDuty>}>
-                </PopUpWindow>}
+                <PopUpWindow onClose={() => setAddOfficerQuestion(false)}>
+                    <AddOfficerQuestion
+                        append={appendOffQuestion}
+                        dynamicQuestions={dynamicQuestions}
+                        referenceDynamicQues={addedDynamicRefQustion}
+                        setReferenceDynamicQues={setAddedDynamicRefQuestions}
+                        close={() => setAddOfficerQuestion(false)}>
+                    </AddOfficerQuestion>
+                </PopUpWindow>
+            }
 
             {addOfficer &&
-                <PopUpWindow onClose={() => setAddOfficerQuestion(false)} children={<h2>this is popup</h2>}>
+                <PopUpWindow onClose={() => setAddOfficer(false)} >
+                    <AddOfficerDuty
+                        close={() => setAddOfficer(false)} dutyList={dutyList}
+                        appendDuty={appendDuty}
+                        removeDuty={removeDuty}>
+                    </AddOfficerDuty>
                 </PopUpWindow>}
 
         </div>
