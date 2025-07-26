@@ -56,9 +56,19 @@ export const VisitService = {
         }
     },
 
-    async updateVisit(id: number, visitData: Visit): Promise<Visit | null> {
+    async getAllVisits(): Promise<Visit[]> {
         try {
-            const response: AxiosResponse<Visit> = await api.put(`${API_BASE_URL}/${id}`, visitData);
+            const response: AxiosResponse<Visit[]> = await api.get(`${API_BASE_URL}/all`);
+            return response.data;
+        } catch (error) {
+            this.handleError(error, 'Error fetching all visits');
+            return [];
+        }
+    },
+
+    async updateVisit(visitData: Visit): Promise<Visit | null> {
+        try {
+            const response: AxiosResponse<Visit> = await api.put(`${API_BASE_URL}/${visitData.id}`, visitData);
             toast.success('Visit updated successfully');
             return response.data;
         } catch (error) {

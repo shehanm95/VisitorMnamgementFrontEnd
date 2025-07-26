@@ -10,7 +10,7 @@ import { usePointContext } from '../../context/PointContext';
 import { toast } from 'react-toastify';
 import { VisitService } from '../../services/visitService';
 import { Visit } from '../../types/visit';
-import { PointFrontService } from '../../frontServices/FilterServicePoints';
+import { PointFrontService } from '../../frontServices/PointFrontService';
 
 const PointScanVisit: React.FC = () => {
     const links = LinkService.getInstance();
@@ -47,7 +47,7 @@ const PointScanVisit: React.FC = () => {
             if (visitData) {
                 setVisit(visitData);
                 console.log('Scanned visit:', visitData);
-                const servicePoints = PointFrontService.filter(visitData, officer!)
+                const servicePoints = PointFrontService.fetchServicePointsByOfficer(visitData, officer!)
                 if (servicePoints) {
                     setServicePoints(servicePoints)
                     navigate(links.servicePoint.answerQuestions);

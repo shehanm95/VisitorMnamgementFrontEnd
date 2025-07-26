@@ -181,10 +181,10 @@ export const AddOfficerQuestion = ({ close, append, dynamicQuestions, referenceD
 
                     </div>
                 }
-                <hr />
-                {JSON.stringify(addedReferenceDynamicQues)}
-                <hr />
-                {JSON.stringify(errors)}
+                {/* <hr /> */}
+                {/* {JSON.stringify(addedReferenceDynamicQues)} */}
+                {/* <hr /> */}
+                {/* {JSON.stringify(errors)} */}
             </form>
 
             {refWindowOpened &&
@@ -193,9 +193,6 @@ export const AddOfficerQuestion = ({ close, append, dynamicQuestions, referenceD
                         dynamicQuestions={dynamicQuestions}
                         referenceDynamicQues={addedReferenceDynamicQues}
                         setReferenceDynamicQues={setAddedReferenceDynamicQues}
-
-
-
                     >
                     </RefWindow>
                 </PopUpWindow>}

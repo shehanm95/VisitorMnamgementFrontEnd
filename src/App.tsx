@@ -40,6 +40,7 @@ import { PreRegSetVisitRow } from './components/preReg/PreRegSetVisitRow';
 import PreRegDisplayQuestion from './components/preReg/PreRegDisplayQuestion';
 import { PreRegThankYou } from './components/preReg/PreRegThankYou';
 import { AddServicePoint } from './components/dashboard/dashboardComponents/AddServicePoint';
+import { AllVisits } from './components/dashboard/dashboardComponents/AllVisits';
 import PointParent from './components/servicePoint/PointParent';
 import PointScanVisit from './components/servicePoint/PointScanUser';
 import { PointContext, PointProvider } from './context/PointContext';
@@ -178,6 +179,14 @@ function App() {
               element={
                 <ProtectedRoute roles={['MODERATOR']}>
                   <VisitorPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path={links.moderatorDashboard.allVisits}
+              element={
+                <ProtectedRoute roles={['MODERATOR']}>
+                  <AllVisits />
                 </ProtectedRoute>
               }
             />

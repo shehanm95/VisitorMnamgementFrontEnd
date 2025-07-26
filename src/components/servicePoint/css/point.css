@@ -90,3 +90,61 @@
     border-color: var(--primary);
     box-shadow: 0 0 0 2px var(--primarylink);
 }
+
+
+/* new addings */
+/* Question container */
+.point-answering-question {
+    margin-bottom: 1.2rem;
+    padding: 0.8rem;
+    background-color: var(--light1);
+    border-radius: 8px;
+    border: 1px solid var(--light2);
+}
+
+/* Answer text styling */
+.point-answering-answer {
+    padding: 0.6rem;
+    background-color: white;
+    border-radius: 6px;
+    margin-top: 0.5rem;
+    font-size: 0.95rem;
+    border: 1px solid var(--light2);
+}
+
+/* No answer message */
+.point-answering-no-answer {
+    padding: 0.6rem;
+    color: #888;
+    font-style: italic;
+    margin-top: 0.5rem;
+    font-size: 0.9rem;
+}
+
+/* Button answers container */
+.point-answering-button-answers {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin: 10px;
+    margin-top: 0.7rem;
+}
+
+/* Individual answer buttons */
+.point-answering-button {
+    background-color: var(--light2);
+    color: var(--primary);
+    border-radius: 16px;
+    padding: 0.4rem 0.8rem;
+    font-size: 0.85rem;
+    border: 1px solid var(--primary);
+    margin: 5px;
+}
+
+/* Section content container */
+.point-answering-section-content {
+    background-color: var(--light1);
+    padding: 1rem;
+    border-radius: 8px;
+    border: 1px solid var(--light2);
+}

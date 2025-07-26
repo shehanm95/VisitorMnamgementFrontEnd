@@ -34,6 +34,7 @@ export class LinkService {
     public readonly user: string = "/user";
     public readonly visitorDashboard: string = "/visitorDashboard";
     public readonly moderatorDashboard: {
+        allVisits: string;
         addServicePoint: string;
         addDynamicQuestion: string;
         base: string;
@@ -48,7 +49,8 @@ export class LinkService {
             createVisitOption: "/moderatorDashboard/visitOptions/create",
             allVisitors: "/moderatorDashboard/allvisitors",
             addDynamicQuestion: "/moderatorDashboard/dynamicQ",
-            addServicePoint: "/moderatorDashboard/addServicePoint"
+            addServicePoint: "/moderatorDashboard/addServicePoint",
+            allVisits: "/moderatorDashboard/allVisits"
         };
     public readonly officerDashboard: string = "/officerDashboard";
 

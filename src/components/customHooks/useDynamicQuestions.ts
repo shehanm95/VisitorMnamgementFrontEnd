@@ -26,7 +26,7 @@ export const useDynamicQuestions = ({
 
     const updateAnswer = useCallback((newAnswer: AnswerType) => {
         setAnswers(prev => {
-            const existingIndex = prev.findIndex(a => a.questionId === newAnswer.questionId);
+            const existingIndex = prev.findIndex(a => a.dynamicQuestion.id === newAnswer.dynamicQuestion.id);
             if (existingIndex !== -1) {
                 const updated = [...prev];
                 updated[existingIndex] = newAnswer;
@@ -45,7 +45,6 @@ export const useDynamicQuestions = ({
         }
 
         updateAnswer({
-            questionId: currentQuestion.id,
             dynamicQuestion: currentQuestion,
             answerType: currentQuestion.answerType,
             selectedButtonAnswers: [],
@@ -56,7 +55,7 @@ export const useDynamicQuestions = ({
     const handleButtonClick = useCallback((button: ButtonAnswer) => {
         if (!currentQuestion || currentQuestion.id == null) return;
 
-        const existing = answers.find(a => a.questionId === currentQuestion.id);
+        const existing = answers.find(a => a.dynamicQuestion.id === currentQuestion.id);
         let selectedButtons: ButtonAnswer[] = [];
 
         if (existing?.selectedButtonAnswers) {
@@ -74,7 +73,6 @@ export const useDynamicQuestions = ({
         }
 
         updateAnswer({
-            questionId: currentQuestion.id,
             dynamicQuestion: currentQuestion,
             answerType: 'button',
             selectedButtonAnswers: selectedButtons,

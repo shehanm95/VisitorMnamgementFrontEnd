@@ -31,7 +31,8 @@ export const ModeratorDashboard = () => {
         { label: 'Manage visit Options', icon: 'fas fa-sliders-h', route: "visitOptions" }, // should go to the moderatorDashboard/visitOption
         { label: 'Go To visit Options', icon: 'fas fa-external-link-alt', route: "goToOptions" },
         { label: 'Scan visit', icon: 'fas fa-qrcode', route: links.servicePoint.scan }, // should go to the servicePoint/scan
-        { label: 'All visits', icon: 'fas fa-users', route: "allvisitors" },  // should go to the moderatorDashboard/allvisits
+        { label: 'All visitors', icon: 'fas fa-users', route: "allvisitors" },
+        { label: 'All visits', icon: 'fa fa-compass', route: links.moderatorDashboard.allVisits }, // should go to the moderatorDashboard/allVisits
     ];
     const handleMenuClick = (item: any) => {
         setActiveItem(item.label);

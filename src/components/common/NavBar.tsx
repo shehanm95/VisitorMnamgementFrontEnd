@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react'
 import './css/navbar.css'
 import BlueLogo from '../../assets/WhiteLogo.svg'
-import ProfDefault from '../../assets/profdefault.png'
+import ProfDefault from '../../assets/navProf.jpg'
 import { WhiteLogo } from './WhiteLogo'
 import { UserContext } from '../../context/ContextProvider'
 import { useNavigate } from 'react-router-dom'
