@@ -39,3 +39,8 @@
 .button:hover {
     background-color: #0088cc;
 }
+
+.card .button {
+    background-color: #00aaff;
+    color: white;
+}

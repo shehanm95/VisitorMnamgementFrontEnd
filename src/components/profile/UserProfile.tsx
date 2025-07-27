@@ -13,6 +13,7 @@ import { VisitService } from '../../services/visitService'
 import { Visit } from '../../types/visit'
 import './visitTable.css'
 import { DisplayVisitList } from '../common/DisplayVisitList'
+import { Center } from '../common/Center'
 
 export const UserProfile = () => {
     const navigate = useNavigate()
@@ -118,13 +119,15 @@ export const UserProfile = () => {
                         filteredVisits.length > 0 ? (
                             <DisplayVisitList filteredVisits={filteredVisits}></DisplayVisitList>
                         ) : (
-                            <div className='m-5'>
-                                <h2 className='m-5'>
-                                    {activeFilter === 'all'
-                                        ? 'You do not have any visits yet'
-                                        : `No ${activeFilter} visits found`}
-                                </h2>
-                            </div>
+                            <Center>
+                                <div className='m-5'>
+                                    <h2 className='m-5'>
+                                        {activeFilter === 'all'
+                                            ? 'You do not have any visits yet'
+                                            : `No ${activeFilter} visits found`}
+                                    </h2>
+                                </div>
+                            </Center>
                         )
 
 

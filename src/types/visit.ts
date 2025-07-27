@@ -13,7 +13,7 @@ export interface Visit {
     dynamicAnswers: AnswerType[];
     visitRow: VisitRow;
     isPrinted: boolean;
-    enteredGate: Gate;
-    exitGate: Gate;
-    exitTime: string;
+    enteredGate?: Gate;
+    exitGate?: Gate;
+    exitTime?: string;
 }

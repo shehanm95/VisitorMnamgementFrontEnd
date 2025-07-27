@@ -20,6 +20,7 @@ import { useNavigate } from 'react-router-dom';
 import { LinkService } from '../../frontServices/LinkService';
 import { Utils } from '../../frontServices/Utils';
 import { ShowPreRegOptionDetails } from './subPreReg/ShowPreRegOptionDetails';
+import { VisitOptionService } from '../../services/visitOptionService';
 
 // Schema for visit row data
 const visitRowSchema = z.object({
@@ -56,6 +57,7 @@ export const PreRegSetVisitRow = () => {
             dynamicAnswers: [],
             visitRow: visitRow as VisitRow,
             isPrinted: false,
+
         }
         setConfirmState(ConfirmState.confirming)
         const createPreRegVisit = async () => {
@@ -80,7 +82,8 @@ export const PreRegSetVisitRow = () => {
     // Fetch available dates
     useEffect(() => {
         const fetchAvailableDates = async () => {
-            const allowedDates = visit.visitOption?.specificDates;
+            const visitOption = await VisitOptionService.getVisitOptionById(visit.visitOption?.id!);
+            const allowedDates = visitOption.specificDates;
             console.log(allowedDates)
             if (allowedDates) {
                 setAvailableDates(allowedDates);
