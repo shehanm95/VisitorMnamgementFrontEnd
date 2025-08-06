@@ -19,7 +19,7 @@ import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
 import { LinkService } from '../../frontServices/LinkService';
 import { Utils } from '../../frontServices/Utils';
-import { ShowPreRegOptionDetails } from './subPreReg/ShowPreRegOptionDetails';
+import { ShowOptionDetails } from './subPreReg/ShowOptionDetails';
 import { VisitOptionService } from '../../services/visitOptionService';
 
 // Schema for visit row data
@@ -39,6 +39,11 @@ export const PreRegSetVisitRow = () => {
     const [confirmState, setConfirmState] = useState<ConfirmState>(ConfirmState.readyToconfirm)
     const navigate = useNavigate()
 
+    if (!visit) {
+        navigate(LinkService.getInstance().preReg.base)
+        return null;
+    }
+
 
     const selectVisitCircle = (visitRow: VisitRow, circleId: number) => {
         if (visitRow.visits && visitRow.visits.length <= circleId) {
@@ -56,7 +61,7 @@ export const PreRegSetVisitRow = () => {
             visitor: visit.visitor!,
             dynamicAnswers: [],
             visitRow: visitRow as VisitRow,
-            isPrinted: false,
+            printed: false,
 
         }
         setConfirmState(ConfirmState.confirming)
@@ -145,7 +150,7 @@ export const PreRegSetVisitRow = () => {
 
     return (
         <div className="date-selection-container">
-            <ShowPreRegOptionDetails visitType={visit.visitType!} visitOption={visit.visitOption!}></ShowPreRegOptionDetails>
+            <ShowOptionDetails visitType={visit.visitType!} visitOption={visit.visitOption!}></ShowOptionDetails>
 
             <hr />
 

@@ -1,18 +1,34 @@
 import React from 'react';
-import { UserDto } from '../../../../types/user';
+import { UserDto } from '../../../../types/UserDto';
+import { PersonCircle } from '../servicePointComps/PersonCircle';
+import { useMyNavigator } from '../../../customHooks/useMyNavigator';
+import userService from '../../../../services/userService';
 
 interface VisitorRowProps {
     user: UserDto;
     onEditUser: (user: UserDto) => void;
+    removeFromList: (id: number) => void
 }
 
-export const VisitorRow: React.FC<VisitorRowProps> = ({ user, onEditUser }) => {
+export const VisitorRow: React.FC<VisitorRowProps> = ({ user, onEditUser, removeFromList }) => {
+    function deleteUser(id: number): void {
+        const deleteU = async () => {
+            const response = await userService.deleteUser(id);
+            if (response) {
+                removeFromList(id)
+                console.log("user deleted")
+            }
+            ;
+        }
+        deleteU()
+    }
+
     return (
         <tr className="border-b">
             <td className="py-2 px-4">
                 <div className="proImg flex center">
-
-                    <img src={`${user.imagePath}`} alt="" />
+                    <PersonCircle user={user}></PersonCircle>
+                    {/* <img src={`${user.imagePath}`} alt="" /> */}
                 </div>
             </td>
 
@@ -25,9 +41,15 @@ export const VisitorRow: React.FC<VisitorRowProps> = ({ user, onEditUser }) => {
             <td className="py-2 px-4">
                 <button
                     onClick={() => onEditUser(user)}
-                    className="bg-blue-500 text-white px-2 py-1 rounded hover:bg-blue-600"
+                    className="outline_button"
                 >
                     Edit User
+                </button>
+                <button
+                    onClick={() => deleteUser(user.id!)}
+                    className="outline_button ms-1"
+                >
+                    Delete User
                 </button>
             </td>
         </tr>

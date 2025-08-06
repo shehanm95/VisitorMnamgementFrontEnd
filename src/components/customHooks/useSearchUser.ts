@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { UserDto } from '../../types/user';
+import { UserDto } from '../../types/UserDto';
 import userService from '../../services/userService';
 
 export const useSearchUser = () => {

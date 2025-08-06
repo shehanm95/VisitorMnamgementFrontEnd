@@ -8,6 +8,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { AxiosError } from 'axios';
 import { LinkService } from '../../frontServices/LinkService';
 import api from '../../api/axios';
+import { NavBarContainer } from '../common/NavBarContainer';
 
 // Define Zod schema for login validation
 const loginSchema = z.object({
@@ -77,61 +78,63 @@ export const LoginForm: React.FC = () => {
     };
 
     return (
-        <div className="maincontainer flex center">
-            <div className="authenticationForm">
-                <div className="logoArea flex center">
-                    <BlueLogo />
-                </div>
-                <h3 className="mt-3">Login</h3>
-                <form onSubmit={handleSubmit(onSubmit)} aria-labelledby="login-form-title">
-                    <h3 id="login-form-title" className="mt-3" hidden>
-                        Login
-                    </h3>
-                    <div className="w-100 bigInputFields mt-3">
-                        <input
-                            type="email"
-                            placeholder="Email"
-                            {...register('email')}
-                            required
-                            aria-label="Email address"
-                            aria-describedby={errors.email ? 'email-error' : undefined}
-                        />
-                        <i className="fa-solid fa-at"></i>
+        <NavBarContainer>
+            <div className="maincontainer flex center">
+                <div className="authenticationForm">
+                    <div className="logoArea flex center">
+                        <BlueLogo />
+                    </div>
+                    <h3 className="mt-3">Login</h3>
+                    <form onSubmit={handleSubmit(onSubmit)} aria-labelledby="login-form-title">
+                        <h3 id="login-form-title" className="mt-3" hidden>
+                            Login
+                        </h3>
+                        <div className="w-100 bigInputFields mt-3">
+                            <input
+                                type="email"
+                                placeholder="Email"
+                                {...register('email')}
+                                required
+                                aria-label="Email address"
+                                aria-describedby={errors.email ? 'email-error' : undefined}
+                            />
+                            <i className="fa-solid fa-at"></i>
+                        </div>
                         {errors.email && (
                             <p id="email-error" className="text-danger mt-2">
                                 {errors.email.message}
                             </p>
                         )}
-                    </div>
-                    <div className="w-100 bigInputFields mt-3">
-                        <input
-                            type="password"
-                            placeholder="Password"
-                            {...register('password')}
-                            required
-                            aria-label="Password"
-                            aria-describedby={errors.password ? 'password-error' : undefined}
-                        />
-                        <i className="fa-solid fa-lock"></i>
+                        <div className="w-100 bigInputFields mt-3">
+                            <input
+                                type="password"
+                                placeholder="Password"
+                                {...register('password')}
+                                required
+                                aria-label="Password"
+                                aria-describedby={errors.password ? 'password-error' : undefined}
+                            />
+                            <i className="fa-solid fa-lock"></i>
+                        </div>
                         {errors.password && (
                             <p id="password-error" className="text-danger mt-2">
                                 {errors.password.message}
                             </p>
                         )}
+                        <button
+                            type="submit"
+                            className="bigButton w-100"
+                            disabled={isSubmitting}
+                        >
+                            {isSubmitting ? 'Logging in...' : 'Login'}
+                        </button>
+                    </form>
+                    <div className="formbottom flex center">
+                        <span>Don't have an account?</span>{" "}
+                        <Link className='ps-1' to="/register">Register</Link>
                     </div>
-                    <button
-                        type="submit"
-                        className="bigButton w-100"
-                        disabled={isSubmitting}
-                    >
-                        {isSubmitting ? 'Logging in...' : 'Login'}
-                    </button>
-                </form>
-                <div className="formbottom flex center">
-                    <span>Don't have an account?</span>
-                    <Link to="/register">Register</Link>
                 </div>
             </div>
-        </div>
+        </NavBarContainer>
     );
 };

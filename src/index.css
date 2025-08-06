@@ -11,6 +11,7 @@
 :root {
   --navBarHeight: clamp(60px, 7vmin, 80px);
   --primary: #0281d0;
+  --secondary: #61addc;
   ----primary-dark: #015d96;
   --primarylink: #40B6FF;
   --danger: #FF4242;
@@ -730,4 +731,8 @@ button:hover {
 
 .justify-content-between {
   justify-content: space-between;
+}
+
+.text-danger {
+  color: var(--danger);
 }

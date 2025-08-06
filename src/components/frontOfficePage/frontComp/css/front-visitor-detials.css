@@ -95,3 +95,11 @@ em {
     color: var(--disabled);
     font-size: 0.9em;
 }
+
+.vd-profile-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 8px;
+    border: 4px solid var(--primary);
+}

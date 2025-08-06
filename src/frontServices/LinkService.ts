@@ -1,5 +1,9 @@
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+
 export class LinkService {
     private static instance: LinkService | null = null;
+
 
     // Public readonly properties for all routes
     public readonly login: string = "/login";
@@ -41,6 +45,8 @@ export class LinkService {
         visitOptions: string;
         goToOptions: string;
         createVisitOption: string;
+        visitOptionDetails: string;
+        visitOptionDetailsMethod: (id: number) => string;
         allVisitors: string;
     } = {
             base: "/moderatorDashboard",
@@ -50,7 +56,15 @@ export class LinkService {
             allVisitors: "/moderatorDashboard/allvisitors",
             addDynamicQuestion: "/moderatorDashboard/dynamicQ",
             addServicePoint: "/moderatorDashboard/addServicePoint",
-            allVisits: "/moderatorDashboard/allVisits"
+            allVisits: "/moderatorDashboard/allVisits",
+            visitOptionDetails: "/moderatorDashboard/visitOptions/details/:id",
+            visitOptionDetailsMethod: (id: number): string => {
+                if (!id) {
+                    toast.error("visitOption not found")
+                    return "/moderatorDashboard/visitOptions"
+                }
+                return "/moderatorDashboard/visitOptions/details/" + String(id)
+            }
         };
     public readonly officerDashboard: string = "/officerDashboard";
 
@@ -61,6 +75,7 @@ export class LinkService {
         questions: string;
         preRegOptions: string;
         types: string
+        verifyEmail: string
 
     } = {
             base: "/preReg/",
@@ -68,12 +83,19 @@ export class LinkService {
             preRegOptions: "/preReg/options",
             questions: "/preReg/questions",
             setRow: "/preReg/setVisitRow",
-            thankyou: "/preReg/thankyou"
+            thankyou: "/preReg/thankyou",
+            verifyEmail: "/preReg/verifyEmail"
         };
     profile: {
-        base: string
+        checkVisitor: string;
+        base: string,
+        checkVisitorMethod: (id: number) => string
     } = {
-            base: '/profile'
+            base: '/profile',
+            checkVisitor: "/profile/checkVisitor/:id",
+            checkVisitorMethod: function (id: number): string {
+                return "/profile/checkVisitor/" + String(id)
+            }
         };
 
 
@@ -88,8 +110,15 @@ export class LinkService {
             showFullVisit: "/servicePoint/showFullVisit",
             answerQuestions: "/servicePoint/answerQuestions"
         };
-
-
+    visit: {
+        fullVisit: string
+        fullVisitMethod: (id: number) => string
+    } = {
+            fullVisit: "/visit/:id",
+            fullVisitMethod: (id: number): string => {
+                return "/visit/" + String(id)
+            }
+        }
 
     // Private constructor to prevent direct instantiation
     private constructor() { }

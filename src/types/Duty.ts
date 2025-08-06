@@ -1,6 +1,6 @@
 import { DutyState } from "./DutyState"
 import { ServicePoint } from "./ServicePoint"
-import { UserDto } from "./user"
+import { UserDto } from "./UserDto"
 
 export interface Duty {
     id: number,

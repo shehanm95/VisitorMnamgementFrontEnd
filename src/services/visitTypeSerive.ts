@@ -31,6 +31,12 @@ export const VisitTypeService = {
         return response.data;
     },
 
+    // Get all PREREG visit types
+    getAllPreRegVisitTypes: async (): Promise<VisitType[]> => {
+        const response: AxiosResponse<VisitType[]> = await api.get('/api/visit-types/allPreRegTypes');
+        return response.data;
+    },
+
     visitTypesWithPreRegistration: async (): Promise<VisitType[]> => {
         const response: AxiosResponse<VisitType[]> = await api.get('/api/visit-types/visitTypesWithPreRegistration');
         return response.data;

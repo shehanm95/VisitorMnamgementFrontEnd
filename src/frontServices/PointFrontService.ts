@@ -2,8 +2,9 @@ import { off } from "process";
 import { Duty } from "../types/Duty";
 import { DynamicQuestion } from "../types/dynamicQuestion";
 import { ServicePoint } from "../types/ServicePoint";
-import { UserDto } from "../types/user";
+import { UserDto } from "../types/UserDto";
 import { Visit } from "../types/visit";
+import { AnswerType } from "../types/AnswerType";
 
 
 export const PointFrontService = {
@@ -29,10 +30,27 @@ export const PointFrontService = {
                 if (answer) {
                     referenceQuestion.answer = answer;
                 } else {
-                    referenceQuestion.answer = undefined; // Ensure answer is defined
+                    referenceQuestion.answer = undefined;
                 }
             }
         }
         return officerQuestions;
-    }
+    },
+
+    getFullyAnswerSetupVisit(visit: Visit) {
+        const answers: AnswerType[] = visit.dynamicAnswers || [];
+        //loop service points
+        visit.visitOption.servicePoints?.map((servicePoint: ServicePoint) => {
+            servicePoint.officerQuestions.map((officerQuestion: DynamicQuestion) => {
+                officerQuestion.answer = answers.find((answer: AnswerType) => answer.dynamicQuestion.id == officerQuestion.id)
+                officerQuestion.referenceQuestions?.map((refQ) => refQ.answer = answers.find(an => an.dynamicQuestion.id == refQ.id))
+                // return officerQuestion;
+            })
+        })
+        // console.log("answered visit :", visit)
+        return visit;
+    },
+
+
+
 };

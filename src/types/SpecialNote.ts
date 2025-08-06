@@ -1,5 +1,5 @@
 import { ServicePoint } from "./ServicePoint";
-import { UserDto } from "./user";
+import { UserDto } from "./UserDto";
 import { Visit } from "./visit";
 
 export interface SpecialNote {

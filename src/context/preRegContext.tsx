@@ -2,7 +2,7 @@
 import { createContext, useContext, useState, ReactNode } from 'react';
 import { VisitType } from '../types/visitType';
 import { VisitOption } from '../types/visitOption';
-import { UserDto } from '../types/user';
+import { UserDto } from '../types/UserDto';
 import { Visit } from '../types/visit';
 
 export type SimpleVisit = {

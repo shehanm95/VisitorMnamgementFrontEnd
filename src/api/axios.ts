@@ -6,7 +6,7 @@ import axios, {
 import { toast } from 'react-toastify';
 import { jwtDecode } from 'jwt-decode';
 import { mainUrl } from '../services/main';
-import { UserDto } from '../types/user';
+import { UserDto } from '../types/UserDto';
 import userService from '../services/userService';
 import { Utils } from '../frontServices/Utils';
 

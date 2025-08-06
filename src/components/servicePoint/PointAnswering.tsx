@@ -11,13 +11,16 @@ import { AnsweringToQuestion } from './pointComps/AnsweringToQuestion';
 import { PointShowRefsAndAskOffQuestions } from './pointComps/PointShowRefsAndAskOffQuestions';
 import { Visit } from '../../types/visit';
 import { VisitService } from '../../services/visitService';
-import { useNavigate } from 'react-router-dom';
+import { UNSAFE_AssetsManifest, useNavigate } from 'react-router-dom';
 import { LinkService } from '../../frontServices/LinkService';
 import { set } from 'react-hook-form';
+import { ServicePoint } from '../../types/ServicePoint';
 
 export const PointAnswering = () => {
     const { visit, setVisit, servicePoints, setServicePoints } = usePointContext();
-    const [currentServicePint, setCurrentServicePoint] = useState(servicePoints![0]);
+    const [currentServicePint, setCurrentServicePoint] = useState<ServicePoint | undefined>(() =>
+        servicePoints && servicePoints.length > 0 ? servicePoints[0] : undefined
+    );
     const [pointQuestions, setPointQuestions] = useState<DynamicQuestion[]>([]);
     const pointAnswers = useRef<AnswerType[]>([]);
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
@@ -27,8 +30,13 @@ export const PointAnswering = () => {
     const linkS = LinkService.getInstance();
 
     useEffect(() => {
-        const questions = PointFrontService.getOfficerQuestionswithAnsweredReferences(visit!, currentServicePint);
-        setPointQuestions(questions);
+        if (currentServicePint) {
+            const questions = PointFrontService.getOfficerQuestionswithAnsweredReferences(visit!, currentServicePint!);
+            setPointQuestions(questions);
+        } else {
+            console.error("no service points to show")
+            navigate(linkS.preReg.base);
+        }
     }, [visit, currentServicePint]);
 
     const saveVisitWithOfficerAnswers = async (visit: Visit) => {
@@ -73,7 +81,7 @@ export const PointAnswering = () => {
 
         <div className="point-answering-container mt-3">
             {/* <!-- Profile Section --> */}
-            <PointProfile visitor={visit?.visitor!}></PointProfile>
+            <PointProfile visitor={visit?.visitor!} visitId={visit?.id}></PointProfile>
 
             {/* <!-- Special Notes Section --> */}
             <PointSpecialNoteTitle></PointSpecialNoteTitle>

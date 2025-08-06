@@ -374,7 +374,7 @@ export const CreateVisitOption = () => {
                             <div className="form-subgroup">
                                 <label className="form-sublabel">Pre Registration Visit Date Time :</label>
                                 <div className="form-time-inputs">
-                                    <select {...register('visitDateType')}>
+                                    <select className="formt-visitDateType" {...register('visitDateType')}>
                                         <option value={"ALL_WORKING_DATES"}>All working Dates</option>
                                         <option value={"SPECIFIC_DATES"}>Specific Dates</option>
                                     </select>

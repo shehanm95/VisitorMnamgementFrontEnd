@@ -188,7 +188,7 @@ export const AddOfficerQuestion = ({ close, append, dynamicQuestions, referenceD
             </form>
 
             {refWindowOpened &&
-                <PopUpWindow onClose={() => setRefWindowOpened(false)}>
+                <PopUpWindow onClose={() => setRefWindowOpened(false)} title={'Add Reference Questions'}>
                     <RefWindow
                         dynamicQuestions={dynamicQuestions}
                         referenceDynamicQues={addedReferenceDynamicQues}

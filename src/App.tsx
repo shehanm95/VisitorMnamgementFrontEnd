@@ -11,7 +11,7 @@ import { Unauthorized } from './components/common/Unauthorized';
 import { VisitorDashboard } from './components/dashboard/VisitorDashboard';
 import { ModeratorDashboard } from './components/dashboard/ModeratorDashboard';
 import { OfficerDashboard } from './components/dashboard/OfficerDashboard';
-import { ShowTypesNOptionsDashboard } from './components/dashboard/dashboardComponents/visitOptions/ShowTypesNOptionsDashboard';
+import { ShowVisitTypesNVisitOptionsDashboard } from './components/dashboard/dashboardComponents/visitOptions/ShowTypesNOptionsDashboard';
 import VisitorPage from './components/dashboard/dashboardComponents/VisitorPage';
 import { CreateVisitOption } from './components/dashboard/dashboardComponents/visitOptions/CreateVisitOption';
 import { GoToOptions } from './components/dashboard/dashboardComponents/goToOptions/GoToOptions';
@@ -46,6 +46,10 @@ import PointScanVisit from './components/servicePoint/PointScanUser';
 import { PointContext, PointProvider } from './context/PointContext';
 import { PointAnswering } from './components/servicePoint/PointAnswering';
 import { PointFullVisit } from './components/servicePoint/PointFullVisit';
+import { CheckVisitorProfile } from './components/profile/CheckVisitorProfile';
+import { CheckFullVisit } from './components/common/CheckFullVisit';
+import { VisitOptionDetails } from './components/dashboard/viewVisitOption/VisitOptionDetails';
+import { PreRegVerifyEmail } from './components/preReg/PreRegVerifyEmail';
 
 const PrivateRoute: React.FC<{ element: React.ReactElement }> = ({ element }) => {
   return localStorage.getItem('accessToken') ? element : <Navigate to={LinkService.getInstance().login} />;
@@ -84,6 +88,7 @@ function App() {
             <Route path={links.preReg.setRow} element={<PreRegSetVisitRow />} />
             <Route path={links.preReg.questions} element={<PreRegDisplayQuestion />} />
             <Route path={links.preReg.thankyou} element={<PreRegThankYou />} />
+            <Route path={links.preReg.verifyEmail} element={<PreRegVerifyEmail />} />
           </Route>
 
 
@@ -117,6 +122,24 @@ function App() {
               </ProtectedRoute>
             }
           />
+
+          <Route
+            path={links.profile.checkVisitor}
+            element={
+              <ProtectedRoute roles={['VISITOR', 'ADMIN', 'MODERATOR']}>
+                <CheckVisitorProfile />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path={links.visit.fullVisit}
+            element={
+              <ProtectedRoute roles={['VISITOR', 'ADMIN', 'MODERATOR']}>
+                <CheckFullVisit />
+              </ProtectedRoute>
+            }
+          />
+
           <Route
             path={links.visitorDashboard}
             element={
@@ -138,7 +161,15 @@ function App() {
               path={links.moderatorDashboard.visitOptions}
               element={
                 <ProtectedRoute roles={['MODERATOR']}>
-                  <ShowTypesNOptionsDashboard />
+                  <ShowVisitTypesNVisitOptionsDashboard />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path={links.moderatorDashboard.visitOptionDetails}
+              element={
+                <ProtectedRoute roles={['MODERATOR']}>
+                  <VisitOptionDetails />
                 </ProtectedRoute>
               }
             />

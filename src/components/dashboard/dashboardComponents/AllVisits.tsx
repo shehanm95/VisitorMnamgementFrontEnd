@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { UserDto } from '../../../types/user';
+import { UserDto } from '../../../types/UserDto';
 import { VisitService } from '../../../services/visitService';
 import { Visit } from '../../../types/visit';
 import { AllVisitList } from '../../common/AllVisitList';

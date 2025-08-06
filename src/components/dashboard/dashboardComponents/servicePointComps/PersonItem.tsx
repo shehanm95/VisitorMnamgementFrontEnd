@@ -1,5 +1,5 @@
 import React from 'react'
-import { UserDto } from '../../../../types/user'
+import { UserDto } from '../../../../types/UserDto'
 import { PersonCircle } from './PersonCircle'
 import { Utils } from '../../../../frontServices/Utils'
 

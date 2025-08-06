@@ -30,14 +30,21 @@ export const VisitService = {
     },
 
 
-    async createVisit(visitData: Visit): Promise<Visit | null> {
-        // let cleanedObject = ObjectService.removeBulk(visitData,
-        //     [{
-        //         doNotRemove: 'dynamicAnswers',
-        //         butRemoveBulkOf: ['dynamicQuestuion']
-        //     }]);
+    async createVisit(visitData: Visit, photo: File | null | undefined): Promise<Visit | null> {
         try {
-            const response: AxiosResponse<Visit> = await api.post(API_BASE_URL, visitData);
+            const formData = new FormData();
+            formData.append('visitDto', JSON.stringify(visitData));
+            if (photo) {
+                formData.append('image', photo);
+            } else {
+                toast.warn("you not uploaded a image")
+            }
+
+            const response: AxiosResponse<Visit> = await api.post(API_BASE_URL + "/add", formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                },
+            });
             toast.success('Visit created successfully');
             return response.data;
         } catch (error) {
@@ -101,6 +108,7 @@ export const VisitService = {
     async getVisitsByVisitorUserId(visitorUserId: number): Promise<Visit[]> {
         try {
             const response: AxiosResponse<Visit[]> = await api.get(`${API_BASE_URL}/by-visitor/${visitorUserId}`);
+            console.log("fetcheed visits by user : ", response.data)
             return response.data;
         } catch (error) {
             this.handleError(error, 'Error fetching visits by visitor');

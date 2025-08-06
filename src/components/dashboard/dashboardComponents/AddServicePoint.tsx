@@ -11,7 +11,7 @@ import { toast } from 'react-toastify';
 import { PopUpWindow } from '../../common/PopUpWindow';
 import { AddOfficerDuty } from './servicePointComps/AddOfficerDuty';
 import { PersonItem } from './servicePointComps/PersonItem';
-import { UserDto } from '../../../types/user';
+import { UserDto } from '../../../types/UserDto';
 import { AddOfficerQuestion } from './servicePointComps/AddOfficerQuestion';
 import { OfficerQuestionSchema } from '../../../types/OfficerQuestionSchema';
 import { DynamicQuestion } from '../../../types/dynamicQuestion';
@@ -104,7 +104,6 @@ export const AddServicePoint = () => {
         try {
             const createdServicePoint = await servicePointService.createServicePoint(newServicePoint);
             console.log(createdServicePoint)
-            toast.success('Service point created successfully!');
             reset();
             // You might want to redirect or update state here
         } catch (error) {
@@ -249,7 +248,9 @@ export const AddServicePoint = () => {
 
 
             {addOfficerQuestion &&
-                <PopUpWindow onClose={() => setAddOfficerQuestion(false)}>
+                <PopUpWindow
+                    title='Add Officer Question'
+                    onClose={() => setAddOfficerQuestion(false)}>
                     <AddOfficerQuestion
                         append={appendOffQuestion}
                         dynamicQuestions={dynamicQuestions}
@@ -261,7 +262,9 @@ export const AddServicePoint = () => {
             }
 
             {addOfficer &&
-                <PopUpWindow onClose={() => setAddOfficer(false)} >
+                <PopUpWindow
+                    title='Add Officer Duty'
+                    onClose={() => setAddOfficer(false)} >
                     <AddOfficerDuty
                         close={() => setAddOfficer(false)} dutyList={dutyList}
                         appendDuty={appendDuty}

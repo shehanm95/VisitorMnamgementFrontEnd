@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from 'react'
-import { UserDto } from '../../../../types/user'
+import { UserDto } from '../../../../types/UserDto'
 import userService from '../../../../services/userService'
 import ProfPic from '../../../frontOfficePage/frontComp/profileImage.avif'
 import './personCircle.css'
+import { useMyNavigator } from '../../../customHooks/useMyNavigator'
 
 export const PersonCircle = ({ user }: { user: UserDto }) => {
     const [image, setImage] = useState(ProfPic)
-
+    const { navigate, links } = useMyNavigator()
     useEffect(() => {
         if (user.imagePath) {
             const getPersonImage = async () => {
@@ -23,7 +24,7 @@ export const PersonCircle = ({ user }: { user: UserDto }) => {
 
     return (
 
-        <div className='d-inline-block flex centerV'>
+        <div onClick={() => navigate(links.profile.checkVisitorMethod(user.id!))} className='d-inline-block flex centerV'>
             <div className="cir-personImage-holder">
                 <img className='cir-personImage' src={image} alt="prof" />
             </div>

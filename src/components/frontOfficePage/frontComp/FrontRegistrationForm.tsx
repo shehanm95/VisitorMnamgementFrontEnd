@@ -7,7 +7,7 @@ import { Center } from '../../common/Center';
 import { RightAlign } from '../../common/RightAlign';
 import { useNavigate } from 'react-router-dom';
 import { LinkService } from '../../../frontServices/LinkService';
-import { UserDto } from '../../../types/user';
+import { UserDto } from '../../../types/UserDto';
 import userService from '../../../services/userService';
 import { FrontPageService } from '../../../frontServices/FrontPageSerivce';
 

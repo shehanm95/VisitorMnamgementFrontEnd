@@ -12,7 +12,7 @@ interface VisitTypeProps {
 const visitTypeSchema = z.object({
     visitTypeName: z.string().min(1, 'Visitor type name is required'),
     visitTypeDescription: z.string().min(1, 'Description is required'),
-    isActive: z.boolean(), // ✅ Added validation for isActive
+    isActive: z.boolean(),
 });
 
 export const CreateVisitType: React.FC<VisitTypeProps> = ({ onClose, getSavedType }) => {

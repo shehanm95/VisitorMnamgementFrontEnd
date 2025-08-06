@@ -1,5 +1,5 @@
 import { getCurrentUser } from "../api/axios";
-import { UserDto } from "../types/user";
+import { UserDto } from "../types/UserDto";
 
 let ur: UserDto | undefined | null = undefined;
 

@@ -1,6 +1,6 @@
 import { createContext, ReactNode, useState } from 'react';
 import { getRole } from '../api/axios';
-import { UserDto } from '../types/user';
+import { UserDto } from '../types/UserDto';
 
 // Define the shape of the context value
 interface UserContextType {

@@ -28,8 +28,8 @@ export const DisplayVisitList = ({ filteredVisits }: { filteredVisits: Visit[] }
                             <td className="visit-table-cell">{/* Status will go here */}</td>
                             <td className="visit-table-cell">{/* Notes will go here */}</td>
                             <td className="visit-table-cell">
-                                <span className={`visit-table-status ${v.isPrinted ? 'printed' : 'not-printed'}`}>
-                                    {v.isPrinted ? 'Yes' : 'No'}
+                                <span className={`visit-table-status ${v.printed ? 'printed' : 'not-printed'}`}>
+                                    {v.printed ? 'Yes' : 'No'}
                                 </span>
                             </td>
                         </tr>

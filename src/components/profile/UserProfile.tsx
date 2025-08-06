@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { LinkService } from '../../frontServices/LinkService'
 import userService from '../../services/userService'
 import { getCurrentUser, logout } from '../../api/axios'
-import { UserDto } from '../../types/user'
+import { UserDto } from '../../types/UserDto'
 import { Utils } from '../../frontServices/Utils'
 import { ProfileDetails } from './subProf/ProfileDetails'
 import './profile.css'
@@ -24,10 +24,11 @@ export const UserProfile = () => {
     const [loadingVisits, setLoadingVisits] = useState(true)
     const [activeFilter, setActiveFilter] = useState<'all' | 'future' | 'past'>('all')
 
+
     const goToDashboard = () => {
         console.log(user)
-        if (user?.role === 'ROLE_MODERATOR') { navigate(links.moderatorDashboard.base) }
-        else if (user?.role === 'ROLE_ADMIN') { navigate(links.moderatorDashboard.base) }
+        if (user?.role === 'ROLE_MODERATOR') { navigate(links.moderatorDashboard.visitOptions) }
+        else if (user?.role === 'ROLE_ADMIN') { navigate(links.moderatorDashboard.visitOptions) }
         else if (user?.role === 'ROLE_VISITOR') { navigate(links.visitorDashboard) }
         else {
             alert("role not identified")
@@ -35,6 +36,10 @@ export const UserProfile = () => {
     }
 
     useEffect(() => {
+        if (!user) {
+            navigate(links.preReg.base)
+            return
+        }
         const getVisits = async () => {
             try {
                 setLoadingVisits(true)
@@ -75,7 +80,7 @@ export const UserProfile = () => {
             <div className='prof-container'>
                 <h2 className='mt-5 mb-3'>User Profile</h2>
 
-                {user && <ProfileDetails user={user}></ProfileDetails>}
+                {user && <ProfileDetails allowChange={true} user={user}></ProfileDetails>}
 
                 <RightAlign>
                     <button onClick={goToDashboard} className='front-Button'>Dashboard </button>

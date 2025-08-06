@@ -20,13 +20,13 @@ export const ModeratorDashboard = () => {
         if (matchedItem) {
             setActiveItem(matchedItem.label);
         } else {
-            setActiveItem('Manage Tasks');
+            setActiveItem('Manage visit Options');
         }
     }, [location.pathname]);
 
 
     const menuItems = [
-        { label: 'Manage Tasks', icon: 'fas fa-tasks', badge: '3' },
+        // { label: 'Manage Tasks', icon: 'fas fa-tasks', badge: '3' },
         { label: 'Set My Gate', icon: 'fas fa-calendar-alt' },
         { label: 'Manage visit Options', icon: 'fas fa-sliders-h', route: "visitOptions" }, // should go to the moderatorDashboard/visitOption
         { label: 'Go To visit Options', icon: 'fas fa-external-link-alt', route: "goToOptions" },
@@ -55,7 +55,7 @@ export const ModeratorDashboard = () => {
                                 >
                                     <i className={item.icon}></i>
                                     <span>{item.label}</span>
-                                    {item.badge && <span className="badge">{item.badge}</span>}
+                                    {/* {item.badge && <span className="badge">{item.badge}</span>} */}
                                 </li>
                             ))}
                         </ul>

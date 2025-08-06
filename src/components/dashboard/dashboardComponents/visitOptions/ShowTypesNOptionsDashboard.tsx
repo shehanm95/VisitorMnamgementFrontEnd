@@ -8,8 +8,9 @@ import { VisitTypeService } from '../../../../services/visitTypeSerive';
 import { setTypeDetails } from '../../../../services/typeKeeper';
 import { useNavigate } from 'react-router-dom';
 import { IconHeader } from '../../../common/IconHeader';
+import { useMyNavigator } from '../../../customHooks/useMyNavigator';
 
-export const ShowTypesNOptionsDashboard = () => {
+export const ShowVisitTypesNVisitOptionsDashboard = () => {
     const [visitTypeWindow, setVisitTypeWindow] = useState(false);
     const [visitTypes, setVisitTypes] = useState<VisitType[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
@@ -53,7 +54,7 @@ export const ShowTypesNOptionsDashboard = () => {
         setVisitTypes([...visitTypes, visitType]); // Optimistically add to list
     };
 
-    const navigate = useNavigate()
+    const { navigate, links } = useMyNavigator()
 
     const openCreateVisitOptionVindow = (visitType: VisitType) => {
         setTypeDetails({
@@ -61,6 +62,10 @@ export const ShowTypesNOptionsDashboard = () => {
             currentVisitType: visitType
         })
         navigate('/moderatorDashboard/visitOptions/create')
+    }
+
+    function ShowVisitOptionDetails(id: number): void {
+        navigate(links.moderatorDashboard.visitOptionDetailsMethod(id))
     }
 
     return (
@@ -99,7 +104,7 @@ export const ShowTypesNOptionsDashboard = () => {
                                     <div className="item" key={visitOption.id}>
                                         <span>{visitOption.visitOptionName}</span>
                                         <div className="buttonHolder">
-                                            <button>Check</button>
+                                            {visitOption && <button onClick={() => ShowVisitOptionDetails(visitOption.id!)}>Check</button>}
                                             <button>Edit</button>
                                         </div>
                                     </div>

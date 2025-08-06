@@ -6,16 +6,17 @@ import { BlurBack } from './BlurBack';
 interface PopUpProps {
     onClose: () => void;
     children: ReactNode
+    title: string
 }
 
-export const PopUpWindow: React.FC<PopUpProps> = ({ onClose, children }) => {
+export const PopUpWindow: React.FC<PopUpProps> = ({ title, onClose, children }) => {
     return (
         <BlurBack>
             <div className="popup-form">
                 <button onClick={onClose} className="popup-form-close" aria-label="Close">
                     ×
                 </button>
-                <h2 className="popup-form-title">Create Visitor Type</h2>
+                <h2 className="popup-form-title">{title}</h2>
                 <div className='pop-up-body'>
                     {children}
                 </div>

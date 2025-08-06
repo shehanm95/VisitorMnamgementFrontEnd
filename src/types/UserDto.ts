@@ -8,6 +8,7 @@ export interface UserDto {
     lastName: string,
     imagePath: string | null,
     email: string;
+    image: string | null,
     phoneNumber: string,
     role: string,
     duties: Duty[],

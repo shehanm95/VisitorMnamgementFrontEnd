@@ -1,6 +1,6 @@
 import { AnswerType } from "./AnswerType";
 import { Gate } from "./Gate";
-import { UserDto } from "./user";
+import { UserDto } from "./UserDto";
 import { VisitOption } from "./visitOption";
 import { VisitRow } from "./VisitRow";
 
@@ -12,7 +12,7 @@ export interface Visit {
     badgePrintDate?: Date;
     dynamicAnswers: AnswerType[];
     visitRow: VisitRow;
-    isPrinted: boolean;
+    printed: boolean;
     enteredGate?: Gate;
     exitGate?: Gate;
     exitTime?: string;

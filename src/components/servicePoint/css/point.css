@@ -148,3 +148,7 @@
     border-radius: 8px;
     border: 1px solid var(--light2);
 }
+
+.point-reference-questions .point-answering-question {
+    background-color: var(--light) !important;
+}

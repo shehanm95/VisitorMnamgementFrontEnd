@@ -1,10 +1,17 @@
 import React from 'react'
 import { DynamicQuestion } from '../../../types/dynamicQuestion'
 
-export const DisplayQuestionAndAnswer = ({ question }: { question: DynamicQuestion }) => {
+export const DisplayQuestionAndAnswer = ({ question, showReferences = false }: { question: DynamicQuestion, showReferences?: boolean }) => {
     return (
         <div className="point-answering-question">
-            <p>this is question text :- {question.questionText} {question.answerType}</p>
+
+            <div className="point-reference-questions">
+                {showReferences && <h3 className='point-title m-2'>Reference Questions</h3>}
+                {showReferences && question.referenceQuestions?.map(q => (
+                    <DisplayQuestionAndAnswer key={q.id} question={q}></DisplayQuestionAndAnswer>
+                ))}
+            </div>
+            <h3> {question.questionText} ?</h3>
             {question.answer ?
                 <>
                     {(question.answer.answerType === 'text' || question.answer.answerType === 'number') &&

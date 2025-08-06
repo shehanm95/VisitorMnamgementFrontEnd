@@ -322,3 +322,10 @@ New Classes for Dynamic Question Form .form-question-header {
 .form-button-wrapper {
     text-align: right;
 }
+
+.formt-visitDateType {
+    padding: 5px;
+    background-color: var(--light1);
+    border: 1px solid var(--primary);
+    border-radius: 3px;
+}

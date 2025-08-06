@@ -1,9 +1,10 @@
 import { useState, useEffect } from "react";
-import { UserDto } from "../../../../types/user";
+import { UserDto } from "../../../../types/UserDto";
 import userService from "../../../../services/userService";
 import { VisitorRow } from "./VisitorRow";
 import { EditUserWindow } from "./EditUserWindow";
 import { BlurBack } from "../../../common/BlurBack";
+import { RightAlign } from "../../../common/RightAlign";
 
 const VisitorList: React.FC = () => {
     const [users, setUsers] = useState<UserDto[]>([]);
@@ -48,6 +49,11 @@ const VisitorList: React.FC = () => {
         return <div className="text-red-500 text-center py-4">{error}</div>;
     }
 
+    const removeFromList = (id: number) => {
+        const updatedUsers = users.filter((u) => u.id != id)
+        setUsers(updatedUsers);
+    }
+
     return (
         <div className="visitor-list p-4">
             <table className="w-full border-collapse">
@@ -65,13 +71,15 @@ const VisitorList: React.FC = () => {
                 </thead>
                 <tbody>
                     {users.map(user => (
-                        <VisitorRow key={user.id} user={user} onEditUser={handleEditUser} />
+                        <VisitorRow key={user.id} user={user} onEditUser={handleEditUser} removeFromList={removeFromList} />
                     ))}
                 </tbody>
             </table>
-            <button className="mt-4 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
-                Load next 50 visitors
-            </button>
+            <RightAlign>
+                <button className="mt-5 outline_button">
+                    Load next 50 visitors
+                </button>
+            </RightAlign>
             {showEditWindow && selectedUser && (
                 <BlurBack>
                     <EditUserWindow

@@ -5,7 +5,7 @@ import { LinkService } from '../../frontServices/LinkService';
 import { useNavigate } from 'react-router-dom';
 import userService, { UserService } from '../../services/userService';
 import { getCurrentUser } from '../../api/axios';
-import { UserDto } from '../../types/user';
+import { UserDto } from '../../types/UserDto';
 import { usePointContext } from '../../context/PointContext';
 import { toast } from 'react-toastify';
 import { VisitService } from '../../services/visitService';

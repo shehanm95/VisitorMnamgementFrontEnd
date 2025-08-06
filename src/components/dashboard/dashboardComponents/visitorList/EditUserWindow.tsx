@@ -2,7 +2,7 @@ import React from 'react';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { UserDto } from '../../../../types/user';
+import { UserDto } from '../../../../types/UserDto';
 import UserService from '../../../../services/userService';
 import './editWindow.css';
 

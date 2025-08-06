@@ -3,7 +3,7 @@ import { Navigate } from 'react-router-dom';
 import { UserContext } from './ContextProvider';
 import { LinkService } from '../frontServices/LinkService';
 import { getCurrentUser } from '../api/axios';
-import { UserDto } from '../types/user';
+import { UserDto } from '../types/UserDto';
 import { Utils } from '../frontServices/Utils';
 
 interface ProtectedRouteProps {

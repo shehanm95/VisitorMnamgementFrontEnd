@@ -36,8 +36,24 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: white;
+
     border-radius: 50%;
+}
+
+.verification-ok {
+    background-color: green;
+}
+
+.verification-warning {
+    background-color: orange;
+}
+
+.verificationIconTick {
+    color: white !important;
+}
+
+.verificationIconTick {
+    color: white !important;
 }
 
 .prof-details {

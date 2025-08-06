@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { NavBar } from '../common/NavBar';
 import './authenticationForm.css';
 import { BlueLogo } from '../common/BlueLogo';
@@ -33,6 +33,7 @@ export const RegisterForm: React.FC = () => {
     const navigate = useNavigate();
     const [rememberMe, setRememberMe] = React.useState<boolean>(false);
     const linkService = LinkService.getInstance()
+    const [creating, setCreating] = useState(false)
     // Initialize react-hook-form with zod resolver
     const {
         register,
@@ -61,6 +62,7 @@ export const RegisterForm: React.FC = () => {
 
     const onSubmit = async (data: RegisterFormInputs) => {
         try {
+            setCreating(true)
             const credentials: RegisterCredentials = {
                 firstName: data.firstName,
                 lastName: data.lastName,
@@ -73,10 +75,11 @@ export const RegisterForm: React.FC = () => {
 
             const response = await api.post<TokenPair>('/api/auth/register', credentials);
             const { accessToken, refreshToken } = response.data;
+            setCreating(false)
             localStorage.setItem('accessToken', accessToken);
             localStorage.setItem('refreshToken', refreshToken);
             toast.success('Registration successful! Redirecting to home...');
-            setTimeout(() => navigate(LinkService.getInstance().preReg.base), 1000);
+            setTimeout(() => navigate(LinkService.getInstance().preReg.verifyEmail), 1000);
         } catch (err: any) {
             const errorMessage =
                 typeof err.response?.data === 'string'
@@ -109,10 +112,10 @@ export const RegisterForm: React.FC = () => {
                                 required
                             />
                             <i className="fa-solid fa-user"></i>
-                            {errors.firstName && (
-                                <p className="text-danger mt-2">{errors.firstName.message}</p>
-                            )}
                         </div>
+                        {errors.firstName && (
+                            <p className="text-danger mt-2">{errors.firstName.message}</p>
+                        )}
                         <div className="w-100 bigInputFields mt-3">
                             <input
                                 type="text"
@@ -121,10 +124,10 @@ export const RegisterForm: React.FC = () => {
                                 required
                             />
                             <i className="fa-solid fa-user"></i>
-                            {errors.lastName && (
-                                <p className="text-danger mt-2">{errors.lastName.message}</p>
-                            )}
                         </div>
+                        {errors.lastName && (
+                            <p className="text-danger mt-2">{errors.lastName.message}</p>
+                        )}
                         <div className="w-100 bigInputFields mt-3">
                             <input
                                 type="email"
@@ -133,10 +136,10 @@ export const RegisterForm: React.FC = () => {
                                 required
                             />
                             <i className="fa-solid fa-at"></i>
-                            {errors.email && (
-                                <p className="text-danger mt-2">{errors.email.message}</p>
-                            )}
                         </div>
+                        {errors.email && (
+                            <p className="text-danger mt-2">{errors.email.message}</p>
+                        )}
                         <div className="w-100 bigInputFields mt-3">
                             <input
                                 type="text"
@@ -145,10 +148,10 @@ export const RegisterForm: React.FC = () => {
                                 required
                             />
                             <i className="fa-solid fa-phone"></i>
-                            {errors.phoneNumber && (
-                                <p className="text-danger mt-2">{errors.phoneNumber.message}</p>
-                            )}
                         </div>
+                        {errors.phoneNumber && (
+                            <p className="text-danger mt-2">{errors.phoneNumber.message}</p>
+                        )}
                         <div className="w-100 bigInputFields mt-3">
                             <input
                                 type="password"
@@ -157,10 +160,10 @@ export const RegisterForm: React.FC = () => {
                                 required
                             />
                             <i className="fa-solid fa-lock"></i>
-                            {errors.password && (
-                                <p className="text-danger mt-2">{errors.password.message}</p>
-                            )}
                         </div>
+                        {errors.password && (
+                            <p className="text-danger mt-2">{errors.password.message}</p>
+                        )}
                         <div className="w-100 bigInputFields mt-3">
                             <input
                                 type="password"
@@ -169,10 +172,10 @@ export const RegisterForm: React.FC = () => {
                                 required
                             />
                             <i className="fa-solid fa-lock"></i>
-                            {errors.confirmPassword && (
-                                <p className="text-danger mt-2">{errors.confirmPassword.message}</p>
-                            )}
                         </div>
+                        {errors.confirmPassword && (
+                            <p className="text-danger mt-2">{errors.confirmPassword.message}</p>
+                        )}
                         <div className="p-1 rememberArea flex centerV mt-3 between">
                             <div>
                                 <input
@@ -194,7 +197,7 @@ export const RegisterForm: React.FC = () => {
                             onClick={handleSubmit(onSubmit)}
                             disabled={isSubmitting}
                         >
-                            Register
+                            {creating ? "Creating Account..." : "Register"}
                         </button>
                     </div>
                     <div className="formbottom flex center">

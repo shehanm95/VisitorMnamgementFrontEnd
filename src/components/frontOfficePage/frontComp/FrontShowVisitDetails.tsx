@@ -16,11 +16,22 @@ const FrontShowVisitDetails = () => {
     const visit = frontService.getCurrentVisitDetails();
     const [savedVisit, setSavedVisit] = useState<Visit | null>(null);
     const [qrCodeUrl, setqrCodeUrl] = useState('');
-    const [photo, setPhoto] = useState<File | null>();
+    const [photo, setPhoto] = useState<File | null>(frontService.getVisitorPhoto());
     const [photoUrl, setPhotoUrl] = useState<string>();
 
     const [showPrintPreview, setShowPrintPreview] = useState(false);
     const [comapanyName, setCompanyName] = useState("ZinCat Technologies")
+
+    useEffect(() => {
+        const pic = frontService.getVisitorPhoto()
+        if (pic) {
+            setPhoto(pic)
+            setPhotoUrl(URL.createObjectURL(pic))
+        } else {
+            console.log("not valid photo found")
+        }
+    }
+        , [])
 
     useEffect(() => {
 
@@ -36,7 +47,7 @@ const FrontShowVisitDetails = () => {
 
                     if (!frontService.isSaving()) {
                         frontService.setSaving(true)
-                        const createdVisit = await VisitService.createVisit(visit);
+                        const createdVisit = await VisitService.createVisit(visit, photo);
                         if (createdVisit) {
                             createdVisit.visitor = visit.visitor
                             createdVisit.visitOption = visit.visitOption
@@ -59,16 +70,7 @@ const FrontShowVisitDetails = () => {
         getSavedVisit();
     }, []);
 
-    useEffect(() => {
-        const pic = frontService.getVisitorPhoto()
-        if (pic) {
-            setPhoto(pic)
-            setPhotoUrl(URL.createObjectURL(pic))
-        } else {
-            console.log("not valid photo found")
-        }
-    }
-        , [])
+
 
     const links = LinkService.getInstance();
     const formatVerificationStatus = (verified: boolean) => verified ? 'Yes' : 'No';
@@ -228,7 +230,7 @@ const FrontShowVisitDetails = () => {
                             <p class="name">${Utils.toTitleCase(savedVisit.visitor.firstName)} ${Utils.toTitleCase(savedVisit.visitor.lastName)}</p>
                             <p>Reason: ${savedVisit.visitOption.visitOptionName}</p>
                             <p>${savedVisit.dynamicAnswers.find(a => a.dynamicQuestion.questionText.includes('Room'))?.value || 'Room: Not specified'}</p>
-                            <p>Time: ${visitDateTime}</p>
+                            <p>At ${savedVisit.visitRow.date} : ${savedVisit.visitRow.startTime} - ${savedVisit.visitRow.endTime} </p>
                         </div>
                         <div class="extra-info">
                             ${savedVisit.visitOption.description}
@@ -261,7 +263,7 @@ const FrontShowVisitDetails = () => {
 
     const saveVisitAndPrintPass = async () => {
         if (savedVisit && savedVisit.id) {
-            savedVisit.isPrinted = true;
+            savedVisit.printed = true;
             const savedObj = await VisitService.markAsPrinted(savedVisit.id);
             toast.info("Confirmed, Your visit marked as printed...")
             console.log(savedObj);
@@ -280,7 +282,7 @@ const FrontShowVisitDetails = () => {
                 <div className="vd-section-title">Visitor Information</div>
                 <div className="vd-visitor-profile">
                     <div className="vd-profile-img">
-                        {savedVisit && savedVisit.visitor.imagePath ? (
+                        {savedVisit && savedVisit.imageName ? (
                             <img src={photoUrl} alt="Visitor profile" />
                         ) : (
                             '[Visitor Profile Image]'

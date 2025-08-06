@@ -1,6 +1,6 @@
 import { Duty } from '../../../../types/Duty';
 import { DutyState } from '../../../../types/DutyState';
-import { UserDto } from '../../../../types/user';
+import { UserDto } from '../../../../types/UserDto';
 import { RightAlign } from '../../../common/RightAlign';
 import { useSearchUser } from '../../../customHooks/useSearchUser';
 import { DisplayVisitOptions } from '../../../frontOfficePage/DisplayOptionPage';

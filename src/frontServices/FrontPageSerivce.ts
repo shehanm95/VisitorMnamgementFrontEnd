@@ -1,5 +1,5 @@
 import { AnswerType } from "../types/AnswerType";
-import { UserDto } from "../types/user";
+import { UserDto } from "../types/UserDto";
 import { Visit } from "../types/visit";
 import { VisitOption } from "../types/visitOption";
 import { VisitType } from "../types/visitType";
