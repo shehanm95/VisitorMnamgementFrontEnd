@@ -86,8 +86,8 @@ export const AnsweringToQuestion = ({ question, setAnswer, incerementCurrentQues
                             </div>}
                         <RightAlign>
                             <div className='flex'>
-                                <button disabled={question.isRequired && !hasAnswer} style={question.isRequired ? { "backgroundColor": "gray !important" } : {}} onClick={() => settingFinalAnswer()} className="point-answering-small-btn">Set Answer</button>
                                 <button onClick={() => incerementCurrentQuestionIndex()} className="point-answering-small-btn m-1">Next Question</button>
+                                <button disabled={question.isRequired && !hasAnswer} style={question.isRequired ? { "backgroundColor": "gray !important" } : {}} onClick={() => settingFinalAnswer()} className="point-answering-small-btn">Set Answer</button>
 
                             </div>
                         </RightAlign>

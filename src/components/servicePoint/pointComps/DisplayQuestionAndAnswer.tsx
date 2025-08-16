@@ -1,4 +1,3 @@
-import React from 'react'
 import { DynamicQuestion } from '../../../types/dynamicQuestion'
 
 export const DisplayQuestionAndAnswer = ({ question, showReferences = false }: { question: DynamicQuestion, showReferences?: boolean }) => {

@@ -26,6 +26,7 @@ export const VisitOptionContainer = () => {
 
             //const op = await VisitOptionService.getActiveOptionsByType(type?.id || 0)
             const op = await VisitOptionService.getVisitOptionsByVisitType(type?.id || 0)
+            console.log("visit Options :", op)
             setOptions(op)
             setVisitType(type);
             setLoading(false)

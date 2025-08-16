@@ -134,3 +134,33 @@
         align-items: center;
     }
 }
+
+.disableHolder {
+    background-color: var(--disabled-backGround) !important;
+    color: gray !important;
+    cursor: not-allowed !important;
+    pointer-events: none !important;
+}
+
+.disableHolder .row-time,
+.disableHolder .row-time-slot-button,
+.disableHolder .row-circle-filled,
+.disableHolder .row-circle {
+    color: gray !important;
+
+}
+
+.disableHolder .row-circle {
+    border-color: gray !important;
+}
+
+.disableHolder .row-circle-filled {
+    border: 2px solid white;
+    background-color: gray !important;
+    box-shadow: 0 0 0 4px gray !important;
+}
+
+.disableHolder .row-circle {
+    border: 2px solid white;
+    box-shadow: 0 0 0 4px gray !important;
+}

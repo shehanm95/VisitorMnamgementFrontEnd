@@ -22,6 +22,7 @@ export const CheckFullVisit = () => {
                 console.log("fetched visit", v)
                 if (v) {
                     const av = PointFrontService.getFullyAnswerSetupVisit(v)
+                    console.log("full visit", av)
                     setVisit(av);
                 }
             } catch (e) {
@@ -38,7 +39,7 @@ export const CheckFullVisit = () => {
                 <ProfileDetails user={visit?.visitor!}></ProfileDetails>
                 <ShowOptionDetails visitOption={visit?.visitOption!}></ShowOptionDetails>
 
-                {visit?.visitRow && <DisplayVisitTimeDate visitRow={visit?.visitRow!} />}
+                {visit?.visitRow && <DisplayVisitTimeDate visitRow={visit?.visitRow!} visitId={visit.id!} />}
                 <hr />
 
                 {visit?.visitOption.servicePoints && visit.visitOption.servicePoints?.map((servicePoint) =>

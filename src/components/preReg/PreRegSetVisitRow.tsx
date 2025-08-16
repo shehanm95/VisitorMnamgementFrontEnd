@@ -119,6 +119,24 @@ export const PreRegSetVisitRow = () => {
         }
     };
 
+    const checkTimePassed = (date: string, timeString: string): boolean => {
+        if (!date || !timeString) return false;
+
+        // Parse the input date (format: "YYYY-MM-DD")
+        const [year, month, day] = date.split('-').map(Number);
+
+        // Parse the input time (format: "HH:MM")
+        const [hours, minutes] = timeString.split(':').map(Number);
+
+        // Create Date object for the specified date and time
+        const specifiedDateTime = new Date(year, month - 1, day, hours, minutes, 0);
+
+        // Get current time
+        const now = new Date();
+
+        return now > specifiedDateTime;
+    };
+
     // Convert available dates to Date objects for Flatpickr
     const enabledDates = availableDates
         .filter(date => !isNaN(Date.parse(date.date)))
@@ -192,12 +210,12 @@ export const PreRegSetVisitRow = () => {
                 visitRows.map((R) =>
                     <div key={R.id} className="ms-3 row-container">
                         {R.visitorsPerRow < 5 ? <div className='row-time-slot-button'>
-                            <div className="row-timeAndSlotContainer">
-                                <span className="row-time">{Utils.formatTimeTo12Hour(R.startTime)} - {Utils.formatTimeTo12Hour(R.endTime)}:</span>
+                            <div className={`row-timeAndSlotContainer  ${checkTimePassed(R.date, R.startTime) ? "disableHolder" : ""}`}>
+                                <span className={`row-time`}>{Utils.formatTimeTo12Hour(R.startTime)} - {Utils.formatTimeTo12Hour(R.endTime)}:</span>
                                 <div className="row-circles">
                                     {[...Array(R.visitorsPerRow)].map((_, i) => (
-                                        <div
-                                            onClick={() => selectVisitCircle(R, i)}
+                                        <div key={i}
+                                            onClick={() => selectVisitCircle(R, i,)}
                                             className={`row-circle ${R.visits && R.visits?.length > i || visitCircleId == (R.id + "-" + i.toString()) ? 'row-circle-filled' : 'row-circle-available'}`}>
 
                                         </div>

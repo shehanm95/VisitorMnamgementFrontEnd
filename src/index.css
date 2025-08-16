@@ -26,6 +26,7 @@
   font-weight: 600;
   font-style: normal;
   color: var(--primary);
+  --disabled-backGround: rgb(205, 205, 205);
 }
 
 .w-150px {

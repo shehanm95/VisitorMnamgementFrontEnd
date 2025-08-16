@@ -15,6 +15,7 @@ import { UNSAFE_AssetsManifest, useNavigate } from 'react-router-dom';
 import { LinkService } from '../../frontServices/LinkService';
 import { set } from 'react-hook-form';
 import { ServicePoint } from '../../types/ServicePoint';
+import { Center } from '../common/Center';
 
 export const PointAnswering = () => {
     const { visit, setVisit, servicePoints, setServicePoints } = usePointContext();
@@ -104,6 +105,7 @@ export const PointAnswering = () => {
                 } else {
                     visit?.dynamicAnswers!.push(...pointAnswers); // I need to set these answers to visit you know this will happen after rendring, but I need to do it before going to the next line
                     console.log(" visit?.dynamicAnswers!: ", visit?.dynamicAnswers!);
+                    visit?.dynamicAnswers!.push(...pointAnswers);
                     setQuestionsFinished(true)
                 }
             }
@@ -140,9 +142,17 @@ export const PointAnswering = () => {
                     </div>
                 </div>
                 :
-                <div>
-                    <h2 className="text-center">All Questions Answered in this SercrvicePoint</h2>
-                    <button onClick={() => moveToNextServicePoint()} className="point-answering-btn">Move Next</button>
+                <div className='m-5 container'>
+                    <div className="m-5">
+                        <Center>
+                            <div className="m-5">
+                                <h2 className="text-center">All Questions Answered in this SercrvicePoint</h2>
+                                <Center>
+                                    <button onClick={() => moveToNextServicePoint()} className="point-answering-btn m-5">Move Next</button>
+                                </Center>
+                            </div>
+                        </Center>
+                    </div>
                 </div>}
         </>
     )
