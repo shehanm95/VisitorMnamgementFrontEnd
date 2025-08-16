@@ -97,7 +97,7 @@ export const RegisterForm: React.FC = () => {
     return (
         <div>
             <NavBar />
-            <div className="maincontainer flex center">
+            <div className="maincontainer flex center mt-50">
                 <div className="authenticationForm">
                     <div className="logoArea flex center">
                         <BlueLogo />

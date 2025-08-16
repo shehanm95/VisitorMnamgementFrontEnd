@@ -18,25 +18,26 @@ const EmailVerification = ({ nextUrl, givenEmail, notFromFrontOffice = false, cl
     const [timeLeft, setTimeLeft] = useState(90); // 1:30 in seconds
     const [isExpired, setIsExpired] = useState(false);
     const [resending, setResending] = useState(false);
-    const frontServices = FrontPageService.getInstance();
-    const navigate = useNavigate();
+
     const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
+    const frontServices = FrontPageService.getInstance();
     const linkService = LinkService.getInstance();
     const emailService = new EmailService();
+    const navigate = useNavigate();
 
+    // Set up input refs
+    useEffect(() => {
+        inputRefs.current = Array(4).fill(null);
+    }, []);
+
+    // Auto-redirect if visitor not found (front office)
     useEffect(() => {
         if (!notFromFrontOffice && !frontServices.getCurrectVisitor()) {
             navigate(linkService.frontOffice.visitTypes);
         }
-        inputRefs.current = Array(4).fill(null);
     }, []);
 
-    useEffect(() => {
-        if (notFromFrontOffice) {
-            //   handleResend();
-        }
-    }, [])
-
+    // Timer countdown
     useEffect(() => {
         if (timeLeft <= 0) {
             setIsExpired(true);
@@ -44,7 +45,7 @@ const EmailVerification = ({ nextUrl, givenEmail, notFromFrontOffice = false, cl
         }
 
         const timer = setInterval(() => {
-            setTimeLeft((prev) => prev - 1);
+            setTimeLeft(prev => prev - 1);
         }, 1000);
 
         return () => clearInterval(timer);
@@ -68,41 +69,37 @@ const EmailVerification = ({ nextUrl, givenEmail, notFromFrontOffice = false, cl
         }
     };
 
-    const handleResend = async () => {
-        let emailToResend: string = "";
+    const getEmailToUse = (): string | null => {
         if (givenEmail && notFromFrontOffice) {
-            emailToResend = givenEmail;
-        } else {
-            frontServices.getCurrectVisitor()?.email;
+            return givenEmail;
         }
+        const visitor = frontServices.getCurrectVisitor();
+        return visitor ? visitor.email : null;
+    };
 
-
+    const handleResend = async () => {
+        const emailToResend = getEmailToUse();
         if (!emailToResend) return;
 
         try {
-            setResending(true)
+            setResending(true);
             await emailService.resendOpt(emailToResend);
             setTimeLeft(90);
             setIsExpired(false);
             setCode(['', '', '', '']);
             inputRefs.current[0]?.focus();
-            setResending(false)
         } catch (error) {
-            // toast already handled in service
+            // toast handled in service
+        } finally {
+            setResending(false);
         }
     };
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+        const emailToUse = getEmailToUse();
 
-        let emailToResend: string = "";
-        if (givenEmail && notFromFrontOffice) {
-            emailToResend = givenEmail;
-        } else {
-            frontServices.getCurrectVisitor()?.email;
-        }
-
-        if (!emailToResend) {
+        if (!emailToUse) {
             toast.error("No email found for verification.");
             return;
         }
@@ -114,7 +111,7 @@ const EmailVerification = ({ nextUrl, givenEmail, notFromFrontOffice = false, cl
         }
 
         try {
-            await emailService.checkOpt({ email: emailToResend, digits: enteredCode });
+            await emailService.checkOpt({ email: emailToUse, digits: enteredCode });
 
             const visitor = frontServices.getCurrectVisitor();
             if (visitor) {
@@ -123,11 +120,16 @@ const EmailVerification = ({ nextUrl, givenEmail, notFromFrontOffice = false, cl
             }
 
             if (closeVindow) {
-                closeVindow()
+                closeVindow();
             }
-            setTimeout(() => navigate(0), 3000);
+
+            setTimeout(() => {
+                navigate(0);
+            }, 3000);
+
             navigate(nextUrl);
         } catch (error) {
+            toast.error("Invalid or expired code.");
             setIsExpired(true);
         }
     };
@@ -141,7 +143,7 @@ const EmailVerification = ({ nextUrl, givenEmail, notFromFrontOffice = false, cl
             <form className="f-form" onSubmit={handleSubmit}>
                 <div className="f-form-group">
                     <label className="f-form-label">
-                        Enter the verification code that was sent to your email
+                        Enter the verification code sent to your email
                     </label>
                     <div className="code-inputs">
                         {code.map((digit, index) => (
@@ -154,15 +156,16 @@ const EmailVerification = ({ nextUrl, givenEmail, notFromFrontOffice = false, cl
                                 disabled={isExpired}
                                 className="code-input"
                                 ref={(el) => {
-                                    if (el) inputRefs.current[index] = el;
+                                    inputRefs.current[index] = el;
                                 }}
                             />
                         ))}
                     </div>
                     <p className="f-form-label">
-                        {frontServices.getCurrectVisitor()?.email}
+                        {getEmailToUse()}
                     </p>
                 </div>
+
                 <div className="form-actions">
                     <button
                         className="f-form-submit"
@@ -171,14 +174,24 @@ const EmailVerification = ({ nextUrl, givenEmail, notFromFrontOffice = false, cl
                     >
                         Change Email
                     </button>
-                    <button
-                        type="submit"
-                        className="f-form-submit"
-                        disabled={isExpired && timeLeft <= 0}
-                        onClick={isExpired ? handleResend : undefined}
-                    >
-                        {isExpired ? (resending ? "Resending.." : "Resend") : 'Submit'}
-                    </button>
+
+                    {!isExpired ? (
+                        <button
+                            type="submit"
+                            className="f-form-submit"
+                        >
+                            Submit
+                        </button>
+                    ) : (
+                        <button
+                            type="button"
+                            className="f-form-submit"
+                            onClick={handleResend}
+                            disabled={resending}
+                        >
+                            {resending ? "Resending..." : "Resend"}
+                        </button>
+                    )}
                 </div>
             </form>
         </div>

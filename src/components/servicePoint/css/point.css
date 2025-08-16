@@ -141,6 +141,11 @@
     margin: 5px;
 }
 
+.point-answering-button-slected {
+    background-color: var(--primary);
+    color: var(--light);
+}
+
 /* Section content container */
 .point-answering-section-content {
     background-color: var(--light1);

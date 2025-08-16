@@ -92,6 +92,8 @@
     font-size: 18px;
     cursor: pointer;
     min-width: 180px;
+    display: inline-block;
+    text-align: center;
 }
 
 .photo-page-btn.photo-page-retake {

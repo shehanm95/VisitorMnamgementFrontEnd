@@ -7,6 +7,7 @@ import { DateTimeLoc } from './frontComp/DateTimeLoc'
 import { TouchFreeSign } from './frontComp/TouchFreeSign'
 import { VisitCardContainer } from './frontComp/VisitCardContainer'
 import { FrontPageService } from '../../frontServices/FrontPageSerivce'
+import { ToPregPrint } from './frontComp/ToPregPrint'
 
 export const DisplayVisitTypes = () => {
     const [isSideBarOn, setSideBarOn] = useState(false)
@@ -37,7 +38,7 @@ export const DisplayVisitTypes = () => {
             </div>
             <div className="footer">
                 <div className="footerbox">
-                    <TouchFreeSign></TouchFreeSign>
+                    <ToPregPrint></ToPregPrint>
                 </div>
                 <div className="footerbox middle">
                     <DateTimeLoc></DateTimeLoc>

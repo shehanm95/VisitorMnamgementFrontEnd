@@ -7,7 +7,7 @@ import { FrontPageService } from '../../../frontServices/FrontPageSerivce';
 import ProfileImage from './profileImage.avif'
 import { toast } from 'react-toastify';
 
-const FrontTakePhoto: React.FC = () => {
+export const PreRegTakePhoto: React.FC = () => {
     const [photo, setPhoto] = useState<File | null>();
     const [photoUrl, setPhotoUrl] = useState(ProfileImage)
     const navigate = useNavigate()
@@ -23,11 +23,12 @@ const FrontTakePhoto: React.FC = () => {
     };
 
 
+
     function displayDetails(): void {
         if (photo) {
             frontService.setVisitorPhoto(photo);
         }
-        navigate(linkService.frontOffice.showVisitDetails)
+        navigate(linkService.frontOffice.preRegShowDetails);
     }
 
     function handleImageChange(event: React.ChangeEvent<HTMLInputElement>): void {
@@ -93,5 +94,3 @@ const FrontTakePhoto: React.FC = () => {
         </>
     );
 };
-
-export default FrontTakePhoto;

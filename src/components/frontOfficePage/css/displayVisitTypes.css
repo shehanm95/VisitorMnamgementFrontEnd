@@ -97,3 +97,8 @@
 .mainBack:hover {
     opacity: 1;
 }
+
+.light-button {
+    border: none;
+    font-family: "Inter", sans-serif;
+}

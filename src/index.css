@@ -33,6 +33,10 @@
   width: 150px;
 }
 
+.overflow-y-auto {
+  overflow-y: auto;
+}
+
 .radius50 {
   border-radius: 50% !important;
 }
@@ -78,7 +82,7 @@
 }
 
 .maincontainer {
-  height: 100vh;
+  height: calc(100vh - var(--navBarHeight));
 }
 
 .check {
@@ -228,6 +232,7 @@ a {
 .mt-auto {
   margin-top: auto !important;
 }
+
 
 /* Bottom */
 .mb-0 {

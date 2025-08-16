@@ -22,12 +22,45 @@ export const PointAnswering = () => {
         servicePoints && servicePoints.length > 0 ? servicePoints[0] : undefined
     );
     const [pointQuestions, setPointQuestions] = useState<DynamicQuestion[]>([]);
-    const pointAnswers = useRef<AnswerType[]>([]);
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
     const currentQuestionIndexTEMP = useRef(0);
     const currentPointIndex = useRef(0);
     const navigate = useNavigate();
     const linkS = LinkService.getInstance();
+    const [questionsFinished, setQuestionsFinished] = useState(false);
+
+    const [pointAnswers, setPointAnswers] = useState<AnswerType[]>([]);
+
+    const setAnswer = (answer: AnswerType) => {
+        setPointAnswers(prev => [...prev, answer]);
+    };
+
+    useEffect(() => {
+        if (visit)
+            setVisit(PointFrontService.getFullyAnswerSetupVisit(visit!))
+    }, [visit]);
+
+    useEffect(() => {
+        console.log("updated point answers :", pointAnswers)
+        visit?.dynamicAnswers!.push(...pointAnswers);
+    },
+        [pointAnswers])
+
+    const moveToNextServicePoint = () => {
+        if (currentPointIndex.current < (servicePoints!.length - 1)) {
+            currentPointIndex.current += 1;
+            setCurrentServicePoint(servicePoints![currentPointIndex.current]);
+            setPointQuestions(PointFrontService.getOfficerQuestionswithAnsweredReferences(visit!, servicePoints![currentPointIndex.current]));
+            setCurrentQuestionIndex(0);
+            currentQuestionIndexTEMP.current = 0;
+            setQuestionsFinished(false);
+            saveVisitWithOfficerAnswers(visit!);
+            setPointAnswers([]);
+        } else {
+            navigate(linkS.servicePoint.scan);
+        }
+    }
+
 
     useEffect(() => {
         if (currentServicePint) {
@@ -41,66 +74,77 @@ export const PointAnswering = () => {
 
     const saveVisitWithOfficerAnswers = async (visit: Visit) => {
         const res = await VisitService.updateVisit(visit);
+        if (res) {
+            setVisit(res);
+        }
         console.log(res);
     }
 
-    const setAnswer = (answer: AnswerType) => {
-        console.log("Setting answer: ", answer);
-        pointAnswers.current.push(answer);
-    }
+    useEffect(() => {
+        if (questionsFinished) {
+            saveVisitWithOfficerAnswers(visit!);
+        }
+    }, [questionsFinished])
 
 
     const incerementCurrentQuestionIndex = () => {
-        setCurrentQuestionIndex(prevIndex => prevIndex + 1);
-        currentQuestionIndexTEMP.current += 1;
-        if (currentQuestionIndexTEMP.current < pointQuestions.length) {
-            console.log("Incrementing question index");
-        } else {
-            if (currentPointIndex.current < servicePoints!.length - 1) {
-                console.log("incrementing point index : ", currentPointIndex);
-                currentPointIndex.current += 1;
-                setCurrentServicePoint(servicePoints![currentPointIndex.current]);
-                setPointQuestions(PointFrontService.getOfficerQuestionswithAnsweredReferences(visit!, servicePoints![currentPointIndex.current]));
-                setCurrentQuestionIndex(0);
-                currentQuestionIndexTEMP.current = 0;
-                visit?.dynamicAnswers!.push(...pointAnswers.current);
-                console.log("point answers: ", pointAnswers.current);
-                console.log("point answers: ", visit?.dynamicAnswers!);
-                setVisit(visit!);
-                console.log("saving visit : ", visit);
-                saveVisitWithOfficerAnswers(visit!);
-                pointAnswers.current = [];
+        if (!questionsFinished) {
+            setCurrentQuestionIndex(prevIndex => prevIndex + 1);
+            currentQuestionIndexTEMP.current += 1;
+            if (currentQuestionIndexTEMP.current < pointQuestions.length) {
+                console.log("Incrementing question index");
             } else {
-
-                navigate(linkS.servicePoint.scan);
+                if (currentPointIndex.current < servicePoints!.length - 1) {
+                    console.log("incrementing point index : ", currentPointIndex);
+                    visit?.dynamicAnswers!.push(...pointAnswers);
+                    console.log("point answers: ", pointAnswers);
+                    console.log(" visit?.dynamicAnswers!: ", visit?.dynamicAnswers!);
+                    console.log("saving visit : ", visit);
+                    setQuestionsFinished(true)
+                } else {
+                    visit?.dynamicAnswers!.push(...pointAnswers); // I need to set these answers to visit you know this will happen after rendring, but I need to do it before going to the next line
+                    console.log(" visit?.dynamicAnswers!: ", visit?.dynamicAnswers!);
+                    setQuestionsFinished(true)
+                }
             }
+        } else {
+
         }
+
     }
 
     return (
 
-        <div className="point-answering-container mt-3">
-            {/* <!-- Profile Section --> */}
-            <PointProfile visitor={visit?.visitor!} visitId={visit?.id}></PointProfile>
+        <>
+            {!questionsFinished ?
+                <div className="point-answering-container mt-3">
+                    {/* <!-- Profile Section --> */}
+                    <PointProfile visitor={visit?.visitor!} visitId={visit?.id}></PointProfile>
 
-            {/* <!-- Special Notes Section --> */}
-            <PointSpecialNoteTitle></PointSpecialNoteTitle>
+                    {/* <!-- Special Notes Section --> */}
+                    {/* <PointSpecialNoteTitle></PointSpecialNoteTitle> */}
 
-            {/* <!-- Visitor Request Section --> */}
-            {/* <!-- officer Answer Input Section --> */}
-            <PointShowRefsAndAskOffQuestions
-                officerQuestions={pointQuestions}
-                setAnswer={setAnswer}
-                dynamicAnswers={visit?.dynamicAnswers!}
-                incerementCurrentQuestionIndex={incerementCurrentQuestionIndex}
-                currentQuestionIndex={currentQuestionIndex}
-            ></PointShowRefsAndAskOffQuestions>
+                    {/* <!-- Visitor Request Section --> */}
+                    {/* <!-- officer Answer Input Section --> */}
+                    <PointShowRefsAndAskOffQuestions
+                        officerQuestions={pointQuestions}
+                        setAnswer={setAnswer}
+                        dynamicAnswers={visit?.dynamicAnswers!}
+                        incerementCurrentQuestionIndex={incerementCurrentQuestionIndex}
+                        currentQuestionIndex={currentQuestionIndex}
+                    ></PointShowRefsAndAskOffQuestions>
 
-            {/* <!-- Navigation --> */}
-            <div className="point-answering-footer">
-                <button onClick={() => navigate(linkS.servicePoint.scan)} className="point-answering-btn">Back To Scanner</button>
-            </div>
-        </div>
+                    {/* <!-- Navigation --> */}
+                    <div className="point-answering-footer">
+                        <button onClick={() => navigate(linkS.servicePoint.scan)} className="point-answering-btn">Back To Scanner</button>
+                    </div>
+                </div>
+                :
+                <div>
+                    <h2 className="text-center">All Questions Answered in this SercrvicePoint</h2>
+                    <button onClick={() => moveToNextServicePoint()} className="point-answering-btn">Move Next</button>
+                </div>}
+        </>
     )
 
 

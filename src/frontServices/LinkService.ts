@@ -13,6 +13,10 @@ export class LinkService {
     public readonly root: string = "/";
     public readonly test: string = "/test";
     public readonly frontOffice: {
+        PreRegTakePhotoPage: string;
+        preRegShowDetailsMethod(id: string): string
+        toPreRegPrintInput: string;
+        preRegShowDetails: string;
         thankyouAndInstructions: string;
         showVisitDetails: string;
         takePhoto: string;
@@ -33,7 +37,14 @@ export class LinkService {
             answerQuestions: "/frontOffice/answerQuestions",
             takePhoto: "/frontOffice/takePhoto",
             showVisitDetails: "/frontOffice/showVisitDetails",
-            thankyouAndInstructions: "/frontOffice/thankyou"
+            thankyouAndInstructions: "/frontOffice/thankyou",
+            toPreRegPrintInput: "/frontOffice/toPreRegInputId",
+
+            preRegShowDetailsMethod: (id: string): string => {
+                return "/frontOffice/showDetails/" + id;
+            },
+            preRegShowDetails: "/frontOffice/showDetails/:id",
+            PreRegTakePhotoPage: "/frontOffice/PreRegTakePhotoPage"
         };
     public readonly user: string = "/user";
     public readonly visitorDashboard: string = "/visitorDashboard";

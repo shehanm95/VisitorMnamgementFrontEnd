@@ -4,6 +4,7 @@ import { FrontPageService } from '../../../frontServices/FrontPageSerivce';
 import { LinkService } from '../../../frontServices/LinkService';
 import { RightAlign } from '../../common/RightAlign';
 import { DynamicQuestionService } from '../../../services/DyanmicQuestionService';
+import './css/displayQuestion.css'
 
 const FrontDisplayQuestion: React.FC = () => {
     const frontservice = FrontPageService.getInstance();
@@ -62,13 +63,13 @@ const FrontDisplayQuestion: React.FC = () => {
                 <div>
                     {currentQuestion.buttonAnswers?.map(btn => {
                         const selected = answers
-                            .find(a => a.questionId === currentQuestion.id)
+                            .find(a => a.dynamicQuestion.id === currentQuestion.id)
                             ?.selectedButtonAnswers?.some(b => b.id === btn.id);
 
                         return (
                             <button
                                 key={btn.id}
-                                className={`front-Button ${selected ? 'front-button-selected' : ''}`}
+                                className={`answer-button ${selected ? 'answer-button-selected' : ''}`}
                                 onClick={() => handleButtonClick(btn)}
                             >
                                 {btn.buttonText}

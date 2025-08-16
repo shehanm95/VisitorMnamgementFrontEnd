@@ -6,7 +6,7 @@ export const DisplayQuestionAndAnswer = ({ question, showReferences = false }: {
         <div className="point-answering-question">
 
             <div className="point-reference-questions">
-                {showReferences && <h3 className='point-title m-2'>Reference Questions</h3>}
+                {showReferences && (question.referenceQuestions?.length! > 0) && <h3 className='point-title m-2'>Reference Questions</h3>}
                 {showReferences && question.referenceQuestions?.map(q => (
                     <DisplayQuestionAndAnswer key={q.id} question={q}></DisplayQuestionAndAnswer>
                 ))}

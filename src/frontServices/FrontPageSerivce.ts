@@ -5,6 +5,7 @@ import { VisitOption } from "../types/visitOption";
 import { VisitType } from "../types/visitType";
 
 export class FrontPageService {
+
     private currentVisitId: number | null = null;
     private static instance: FrontPageService | null = null;
     private selectedVisitType: VisitType | null = null;
@@ -14,6 +15,7 @@ export class FrontPageService {
     private photo: File | null = null;
     private currentVisit: any;
     private saving = false
+    private PreRegVisit: Visit | undefined;
 
     setSaving(saving: boolean) {
         this.saving = saving;
@@ -62,6 +64,7 @@ export class FrontPageService {
         this.currentVisitor = null;
         this.currentVisit = null;
         this.currentVisitId = null;
+        this.PreRegVisit = undefined;
     }
 
     public setCurrectVisitor(visitor: UserDto) {
@@ -96,5 +99,16 @@ export class FrontPageService {
     }
     getVisitorPhoto() {
         return this.photo;
+
+    }
+
+    // Pre Reg visit Printing
+
+    setPreRegVisit(visit: Visit) {
+        this.PreRegVisit = visit;
+    }
+
+    getPreRegVisit(): Visit | undefined {
+        return this.PreRegVisit;
     }
 }

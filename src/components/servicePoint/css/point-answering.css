@@ -12,6 +12,12 @@
     flex-direction: column;
 }
 
+.answered-Officer-question {
+    border: 2px solid var(--primary);
+    background-color: var(--light2);
+    border-radius: 10px;
+}
+
 .point-answering-prof-sec-outer {
     display: flex;
     justify-content: center;

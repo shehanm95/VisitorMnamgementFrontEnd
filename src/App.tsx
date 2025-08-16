@@ -50,6 +50,11 @@ import { CheckVisitorProfile } from './components/profile/CheckVisitorProfile';
 import { CheckFullVisit } from './components/common/CheckFullVisit';
 import { VisitOptionDetails } from './components/dashboard/viewVisitOption/VisitOptionDetails';
 import { PreRegVerifyEmail } from './components/preReg/PreRegVerifyEmail';
+import { ToPregPrint } from './components/frontOfficePage/frontComp/ToPregPrint';
+import { PreRegPrintInput } from './components/frontOfficePage/PreRegPrintInput';
+import { PrintPreRegInputPage } from './components/frontOfficePage/PreRegPrintInputPage';
+import { ShowPrintRegDetailsPage } from './components/frontOfficePage/ShowPrintRegDetailsPage';
+import { PreRegTakePhotoPage } from './components/frontOfficePage/PreRegTakePhotoPage';
 
 const PrivateRoute: React.FC<{ element: React.ReactElement }> = ({ element }) => {
   return localStorage.getItem('accessToken') ? element : <Navigate to={LinkService.getInstance().login} />;
@@ -93,6 +98,7 @@ function App() {
 
 
           <Route path={links.frontOffice.visitTypes} element={<DisplayVisitTypes />} />
+          <Route path={links.frontOffice.toPreRegPrintInput} element={<PrintPreRegInputPage />} />
           <Route path={links.frontOffice.visitOptions} element={<DisplayVisitOptions />} />
           <Route path={links.frontOffice.register} element={<FrontRegistration />} />
           <Route path={links.frontOffice.login} element={<FrontLogin />} />
@@ -101,6 +107,8 @@ function App() {
           <Route path={links.frontOffice.answerQuestions} element={<FrontAskQuestionsPage />} />
           <Route path={links.frontOffice.showVisitDetails} element={<FrontShowVisitDetailsPage />} />
           <Route path={links.frontOffice.thankyouAndInstructions} element={<FrontThankyouPage />} />
+          <Route path={links.frontOffice.preRegShowDetails} element={<ShowPrintRegDetailsPage />} />
+          <Route path={links.frontOffice.PreRegTakePhotoPage} element={<PreRegTakePhotoPage />} />
 
 
           <Route path={links.servicePoint.base} element={<PointParent />}>

@@ -20,114 +20,118 @@ export const ProfileDetails = ({ user, allowChange = false }: { user: UserDto, a
     const { links, navigate } = useMyNavigator()
 
     return (
-        <div className='prof-outer'>
+        <>
+            {user &&
+                <div className='prof-outer'>
 
-            <Header title={'Profile Informations'} tooltipText={'this will show the users informations'}></Header>
-            <div className="prof-imageAndDetails">
-                <div onClick={() => setNewImageWindow(true)} className="prof-img">
-                    <img src={profileImage} alt={`user image - ${user?.firstName + " " + user?.lastName}`} />
-                    {user.isEmailVerified ? <div className={`prof-verifiedIcon verification-ok`}>
-                        <i className="fa fa-check verificationIconTick" aria-hidden="true"></i>
-                    </div>
-                        :
-                        <div className={`prof-verifiedIcon verification-warning`}>
-                            !
+                    <Header title={'Profile Informations'} tooltipText={'this will show the users informations'}></Header>
+                    <div className="prof-imageAndDetails">
+                        <div onClick={() => setNewImageWindow(true)} className="prof-img">
+                            <img src={profileImage} alt={`user image - ${user?.firstName + " " + user?.lastName}`} />
+                            {user.isEmailVerified ? <div className={`prof-verifiedIcon verification-ok`}>
+                                <i className="fa fa-check verificationIconTick" aria-hidden="true"></i>
+                            </div>
+                                :
+                                <div className={`prof-verifiedIcon verification-warning`}>
+                                    !
+                                </div>
+
+                            }
                         </div>
 
+                        <div className="prof-details">
+
+                            <div className="prof-details-slot">
+                                <div className="prof-detail-title">Name</div>
+                                <div className="prof-detail-value-slot">
+                                    <div className='prof-details-values-n-buttons'>
+                                        <div className="prof-detail-value">
+                                            {user && getFullName(user)}
+                                        </div>
+                                        <div className="prof-details-buttons">
+                                            {/* <button className='prof-button'>Change Name</button> name can change in all visitor list */}
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+
+
+                            <div className="prof-details-slot">
+                                <div className="prof-detail-title">Email</div>
+                                <div className="prof-detail-value-slot">
+                                    <div className='prof-details-values-n-buttons'>
+                                        <div className="prof-detail-value">
+                                            {`${user?.email}`}
+                                        </div>
+                                        <div className="prof-details-buttons">
+                                            <button className='prof-button'>Send Email</button>
+                                            {!user.isEmailVerified && <button onClick={() => setVerificationWindowOn(true)} className='prof-button'>Verifiy Email</button>}
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+
+
+                            <div className="prof-details-slot">
+                                <div className="prof-detail-title">Phone Number</div>
+                                <div className="prof-detail-value-slot">
+                                    {user?.phoneNumber ?
+                                        <div className='prof-details-values-n-buttons'>
+                                            <div className="prof-detail-value">
+                                                {`${user?.phoneNumber}`}
+                                            </div>
+                                            <div className="prof-details-buttons">
+                                                {/* <button className='prof-button'>Send Email</button> */}
+
+                                            </div>
+                                        </div>
+                                        :
+                                        <div className='prof-details-values-n-buttons'>
+
+                                            <div className="prof-details-buttons">
+                                                <button className='prof-button'>Add Phone Number</button>
+                                            </div>
+                                        </div>
+                                    }
+
+                                </div>
+                            </div>
+
+
+                        </div>
+                    </div>
+
+                    {allowChange && newImageWindow && <BlurBack>
+                        <PopUpWindow title='Set new profile image'
+                            onClose={() => setNewImageWindow(false)}>
+
+                            <SetProfilePic
+                                imagePath={profileImage}
+                                setImagePath={setProfileImage}
+                                user={user}
+                                closeWindow={() => setNewImageWindow(false)}
+                            ></SetProfilePic>
+
+                        </PopUpWindow>
+                    </BlurBack>}
+                    {verificationVindowOn &&
+                        <PopUpWindow onClose={() => setVerificationWindowOn(false)} title={'Verify Email'}>
+
+                            <EmailVerification
+
+                                nextUrl={links.preReg.base}
+                                givenEmail={user.email}
+                                notFromFrontOffice={true}
+                                closeVindow={() => setVerificationWindowOn(false)}
+
+                            ></EmailVerification>
+
+                        </PopUpWindow>
                     }
                 </div>
-
-                <div className="prof-details">
-
-                    <div className="prof-details-slot">
-                        <div className="prof-detail-title">Name</div>
-                        <div className="prof-detail-value-slot">
-                            <div className='prof-details-values-n-buttons'>
-                                <div className="prof-detail-value">
-                                    {user && getFullName(user)}
-                                </div>
-                                <div className="prof-details-buttons">
-                                    {/* <button className='prof-button'>Change Name</button> name can change in all visitor list */}
-                                </div>
-                            </div>
-
-                        </div>
-                    </div>
-
-
-                    <div className="prof-details-slot">
-                        <div className="prof-detail-title">Email</div>
-                        <div className="prof-detail-value-slot">
-                            <div className='prof-details-values-n-buttons'>
-                                <div className="prof-detail-value">
-                                    {`${user?.email}`}
-                                </div>
-                                <div className="prof-details-buttons">
-                                    <button className='prof-button'>Send Email</button>
-                                    {!user.isEmailVerified && <button onClick={() => setVerificationWindowOn(true)} className='prof-button'>Verifiy Email</button>}
-                                </div>
-                            </div>
-
-                        </div>
-                    </div>
-
-
-                    <div className="prof-details-slot">
-                        <div className="prof-detail-title">Phone Number</div>
-                        <div className="prof-detail-value-slot">
-                            {user?.phoneNumber ?
-                                <div className='prof-details-values-n-buttons'>
-                                    <div className="prof-detail-value">
-                                        {`${user?.phoneNumber}`}
-                                    </div>
-                                    <div className="prof-details-buttons">
-                                        {/* <button className='prof-button'>Send Email</button> */}
-
-                                    </div>
-                                </div>
-                                :
-                                <div className='prof-details-values-n-buttons'>
-
-                                    <div className="prof-details-buttons">
-                                        <button className='prof-button'>Add Phone Number</button>
-                                    </div>
-                                </div>
-                            }
-
-                        </div>
-                    </div>
-
-
-                </div>
-            </div>
-
-            {allowChange && newImageWindow && <BlurBack>
-                <PopUpWindow title='Set new profile image'
-                    onClose={() => setNewImageWindow(false)}>
-
-                    <SetProfilePic
-                        imagePath={profileImage}
-                        setImagePath={setProfileImage}
-                        user={user}
-                        closeWindow={() => setNewImageWindow(false)}
-                    ></SetProfilePic>
-
-                </PopUpWindow>
-            </BlurBack>}
-            {verificationVindowOn &&
-                <PopUpWindow onClose={() => setVerificationWindowOn(false)} title={'Verify Email'}>
-
-                    <EmailVerification
-
-                        nextUrl={links.preReg.base}
-                        givenEmail={user.email}
-                        notFromFrontOffice={true}
-                        closeVindow={() => setVerificationWindowOn(false)}
-
-                    ></EmailVerification>
-
-                </PopUpWindow>
             }
-        </div>
+        </>
     )
 }

@@ -1,21 +1,21 @@
-import { useNavigate } from "react-router-dom";
-import { FrontPageService } from "../../../frontServices/FrontPageSerivce";
-import { RightAlign } from "../../common/RightAlign";
-import './css/front-visitor-detials.css';
-import './css/frontForm.css';
-import { VisitService } from "../../../services/visitService";
-import { LinkService } from "../../../frontServices/LinkService";
-import { Visit } from "../../../types/visit";
-import { useEffect, useState } from "react";
-import { Utils } from "../../../frontServices/Utils";
-import { toast } from "react-toastify";
+import React, { useEffect, useState } from 'react'
+import { RightAlign } from '../../common/RightAlign';
+import { LinkService } from '../../../frontServices/LinkService';
+import { useNavigate, useParams } from 'react-router-dom';
 import BlueLogoImg from '../../../assets/BlueLogoImg.svg'
+import { VisitService } from '../../../services/visitService';
+import { FrontPageService } from '../../../frontServices/FrontPageSerivce';
+import { Visit } from '../../../types/visit';
+import { Utils } from '../../../frontServices/Utils';
+import { toast } from 'react-toastify';
+import { ApiErrorResponse } from '../../../types/ApiErrorResonse';
 import DefaultProf from '../../../assets/ProfDefault.avif'
 
-const FrontShowVisitDetails = () => {
+export const ShowPrintRegDetails = () => {
+    const [visit, setVisit] = useState<Visit | undefined>()
+    const id = useParams<{ id: string }>()
     const frontService = FrontPageService.getInstance();
-    const visit = frontService.getCurrentVisitDetails();
-    const [savedVisit, setSavedVisit] = useState<Visit | null>(null);
+    const [savedVisit, setSavedVisit] = useState(frontService.getPreRegVisit())
     const [qrCodeUrl, setqrCodeUrl] = useState('');
     const [photo, setPhoto] = useState<File | null>(frontService.getVisitorPhoto());
     const [photoUrl, setPhotoUrl] = useState<string>();
@@ -23,14 +23,22 @@ const FrontShowVisitDetails = () => {
     const [showPrintPreview, setShowPrintPreview] = useState(false);
     const [comapanyName, setCompanyName] = useState("ZinCat Technologies")
 
+
     useEffect(() => {
+
+        if (!savedVisit) {
+            navigate(links.frontOffice.visitTypes)
+            toast.error("no pre reg visit to display")
+        }
+
+
         const pic = frontService.getVisitorPhoto()
+
+
         if (pic) {
-            console.log("Photo found:", pic);
             setPhoto(pic);
             setPhotoUrl(URL.createObjectURL(pic));
         } else {
-            console.log("No photo found, using default profile image");
             // Convert DefaultProf string to File object
             const convertDefaultImageToFile = async () => {
                 try {
@@ -74,7 +82,7 @@ const FrontShowVisitDetails = () => {
 
                     if (!frontService.isSaving()) {
                         frontService.setSaving(true)
-                        const createdVisit = await VisitService.createVisit(visit, photo);
+                        const createdVisit = visit
                         if (createdVisit) {
                             createdVisit.visitor = visit.visitor
                             createdVisit.visitOption = visit.visitOption
@@ -87,7 +95,7 @@ const FrontShowVisitDetails = () => {
                         frontService.setSaving(false)
                     }
                 } else {
-                    setSavedVisit(visit)
+                    // setSavedVisit(visit)
                 }
             } catch (error) {
                 console.error("Failed to save visit:", error);
@@ -286,6 +294,7 @@ const FrontShowVisitDetails = () => {
                 // It will be removed when component unmounts or on next print
             }, 200);
         };
+        frontService.clearFrontEndService();
     };
 
     const saveVisitAndPrintPass = async () => {
@@ -309,10 +318,10 @@ const FrontShowVisitDetails = () => {
                 <div className="vd-section-title">Visitor Information</div>
                 <div className="vd-visitor-profile">
                     <div className="vd-profile-img">
-                        {savedVisit ? (
+                        {photoUrl ? (
                             <img src={photoUrl} alt="Visitor profile" />
                         ) : (
-                            '[Visitor Profile Image]'
+                            <img src={photoUrl} alt="Visitor profile" />
                         )}
                     </div>
                     <div className="vd-visitor-details">
@@ -350,7 +359,7 @@ const FrontShowVisitDetails = () => {
                 <div className="vd-detail-row">
                     <div className="vd-detail-label">Date & Time:</div>
                     <div className="vd-detail-value">
-                        {savedVisit && savedVisit.badgePrintDate ? new Date(savedVisit.badgePrintDate).toLocaleString() : 'Not printed yet'}
+                        {savedVisit && savedVisit.visitRow ? savedVisit.visitRow.startTime : 'Not printed yet'}
                     </div>
                 </div>
                 <div className="vd-detail-row">
@@ -403,5 +412,3 @@ const FrontShowVisitDetails = () => {
         </div>
     );
 };
-
-export default FrontShowVisitDetails;

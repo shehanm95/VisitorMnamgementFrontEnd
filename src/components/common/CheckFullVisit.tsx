@@ -3,7 +3,6 @@ import { useParams } from 'react-router-dom'
 import { Visit } from '../../types/visit';
 import { VisitService } from '../../services/visitService';
 import { NavBarContainer } from './NavBarContainer';
-import { useMyNavigator } from '../customHooks/useMyNavigator';
 import './css/fullVisit.css'
 import { ProfileDetails } from '../profile/subProf/ProfileDetails';
 import { ShowOptionDetails } from '../preReg/subPreReg/ShowOptionDetails';
