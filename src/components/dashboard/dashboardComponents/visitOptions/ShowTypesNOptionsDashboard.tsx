@@ -105,7 +105,7 @@ export const ShowVisitTypesNVisitOptionsDashboard = () => {
                                         <span>{visitOption.visitOptionName}</span>
                                         <div className="buttonHolder">
                                             {visitOption && <button onClick={() => ShowVisitOptionDetails(visitOption.id!)}>Check</button>}
-                                            <button>Edit</button>
+                                            {/* <button>Edit</button> */}
                                         </div>
                                     </div>
                                 ))}</>}

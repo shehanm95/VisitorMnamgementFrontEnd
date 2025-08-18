@@ -42,7 +42,7 @@ export const EmaiVeryfyPage = () => {
 
       </div>
       <div className="front-content">
-        <EmailVerification nextUrl={links.frontOffice.takePhoto}></EmailVerification>
+        <EmailVerification nextUrl={links.frontOffice.answerQuestions}></EmailVerification>
       </div>
       <div className="footer">
         <div className="footerbox">

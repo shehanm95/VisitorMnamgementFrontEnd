@@ -9,6 +9,7 @@ import './checkProfile.css'
 import { VisitService } from '../../services/visitService';
 import { Visit } from '../../types/visit';
 import { DisplayVisitList } from '../common/DisplayVisitList';
+import { getCurrentUser } from '../../api/axios';
 
 
 export const CheckVisitorProfile = () => {
@@ -17,6 +18,29 @@ export const CheckVisitorProfile = () => {
     const navigate = useNavigate();
     const links = LinkService.getInstance()
     const [visits, setVisits] = useState<Visit[]>([])
+
+    const [currentUser, setCurrentUser] = useState<UserDto | null>(null);
+
+    useEffect(() => {
+        const fetchCurrentUser = async () => {
+            try {
+                const currentU = await getCurrentUser();
+                if (currentU && user) {
+                    setCurrentUser(currentU);
+                    if (!(currentU.role === 'ROLE_ADMIN' || currentU.role === 'ROLE_MODERATOR' || currentU.id === user.id)) {
+                        navigate(links.preReg.types)
+                    } else {
+                        console.log("current user is allowed to view this profile")
+                        console.log("current user: ", currentU.role)
+                        console.log("current user: ", currentU.id)
+                    }
+                }
+            } catch (error) {
+                console.error('Error fetching current user:', error);
+            }
+        };
+        fetchCurrentUser();
+    }, [user])
 
     useEffect(() => {
         console.log("Visitor ID from params: ", id);

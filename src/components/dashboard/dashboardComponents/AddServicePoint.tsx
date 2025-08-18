@@ -83,6 +83,10 @@ export const AddServicePoint = () => {
     const { fields: OffQuestionList, append: appendOffQuestion, remove: removeOffQuestion } = useFieldArray({ control, name: 'officerQuestions' });
 
     const onSubmit = async (data: ServicePointFormData) => {
+        if (data.duties.length === 0) {
+            toast.error("you must add duties to a visit")
+            return;
+        }
         console.log('data', data)
         const newServicePoint: ServicePoint = {
             pointName: data.pointName,

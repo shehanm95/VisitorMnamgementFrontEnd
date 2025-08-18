@@ -97,18 +97,137 @@ function App() {
           </Route>
 
 
-          <Route path={links.frontOffice.visitTypes} element={<DisplayVisitTypes />} />
-          <Route path={links.frontOffice.toPreRegPrintInput} element={<PrintPreRegInputPage />} />
-          <Route path={links.frontOffice.visitOptions} element={<DisplayVisitOptions />} />
-          <Route path={links.frontOffice.register} element={<FrontRegistration />} />
-          <Route path={links.frontOffice.login} element={<FrontLogin />} />
-          <Route path={links.frontOffice.verifyEmail} element={<EmaiVeryfyPage />} />
-          <Route path={links.frontOffice.takePhoto} element={<FrontTakePhotoPage />} />
-          <Route path={links.frontOffice.answerQuestions} element={<FrontAskQuestionsPage />} />
-          <Route path={links.frontOffice.showVisitDetails} element={<FrontShowVisitDetailsPage />} />
-          <Route path={links.frontOffice.thankyouAndInstructions} element={<FrontThankyouPage />} />
-          <Route path={links.frontOffice.preRegShowDetails} element={<ShowPrintRegDetailsPage />} />
-          <Route path={links.frontOffice.PreRegTakePhotoPage} element={<PreRegTakePhotoPage />} />
+          {/* <ProtectedRoute roles={['ADMIN', 'MODERATOR']}>
+
+
+            <Route path={links.frontOffice.visitTypes} element={<DisplayVisitTypes />} />
+            <Route path={links.frontOffice.toPreRegPrintInput} element={<PrintPreRegInputPage />} />
+            <Route path={links.frontOffice.visitOptions} element={<DisplayVisitOptions />} />
+            <Route path={links.frontOffice.register} element={<FrontRegistration />} />
+            <Route path={links.frontOffice.login} element={<FrontLogin />} />
+            <Route path={links.frontOffice.verifyEmail} element={<EmaiVeryfyPage />} />
+            <Route path={links.frontOffice.takePhoto} element={<FrontTakePhotoPage />} />
+            <Route path={links.frontOffice.answerQuestions} element={<FrontAskQuestionsPage />} />
+            <Route path={links.frontOffice.showVisitDetails} element={<FrontShowVisitDetailsPage />} />
+            <Route path={links.frontOffice.thankyouAndInstructions} element={<FrontThankyouPage />} />
+            <Route path={links.frontOffice.preRegShowDetails} element={<ShowPrintRegDetailsPage />} />
+            <Route path={links.frontOffice.PreRegTakePhotoPage} element={<PreRegTakePhotoPage />} />
+          </ProtectedRoute> */}
+
+          <Route
+            path={links.frontOffice.visitTypes}
+            element={
+              <ProtectedRoute roles={['ADMIN', 'MODERATOR']}>
+                <DisplayVisitTypes />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path={links.frontOffice.toPreRegPrintInput}
+            element={
+              <ProtectedRoute roles={['ADMIN', 'MODERATOR']}>
+                <PrintPreRegInputPage />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path={links.frontOffice.visitOptions}
+            element={
+              <ProtectedRoute roles={['ADMIN', 'MODERATOR']}>
+                <DisplayVisitOptions />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path={links.frontOffice.register}
+            element={
+              <ProtectedRoute roles={['ADMIN', 'MODERATOR']}>
+                <FrontRegistration />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path={links.frontOffice.login}
+            element={
+              <ProtectedRoute roles={['ADMIN', 'MODERATOR']}>
+                <FrontLogin />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path={links.frontOffice.verifyEmail}
+            element={
+              <ProtectedRoute roles={['ADMIN', 'MODERATOR']}>
+                <EmaiVeryfyPage />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path={links.frontOffice.takePhoto}
+            element={
+              <ProtectedRoute roles={['ADMIN', 'MODERATOR']}>
+                <FrontTakePhotoPage />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path={links.frontOffice.answerQuestions}
+            element={
+              <ProtectedRoute roles={['ADMIN', 'MODERATOR']}>
+                <FrontAskQuestionsPage />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path={links.frontOffice.showVisitDetails}
+            element={
+              <ProtectedRoute roles={['ADMIN', 'MODERATOR']}>
+                <FrontShowVisitDetailsPage />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path={links.frontOffice.thankyouAndInstructions}
+            element={
+              <ProtectedRoute roles={['ADMIN', 'MODERATOR']}>
+                <FrontThankyouPage />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path={links.frontOffice.preRegShowDetails}
+            element={
+              <ProtectedRoute roles={['ADMIN', 'MODERATOR']}>
+                <ShowPrintRegDetailsPage />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path={links.frontOffice.PreRegTakePhotoPage}
+            element={
+              <ProtectedRoute roles={['ADMIN', 'MODERATOR']}>
+                <PreRegTakePhotoPage />
+              </ProtectedRoute>
+            }
+          />
+
+
+          {/* <Route path={links.servicePoint.base} element={<PointParent />}>
+            <Route path={links.servicePoint.scan} element={<PointScanVisit />} />
+            <Route path={links.servicePoint.answerQuestions} element={<PointAnswering />} />
+            <Route path={links.servicePoint.showFullVisit} element={<PointFullVisit />} />
+          </Route> */}
 
 
           <Route path={links.servicePoint.base} element={<PointParent />}>
@@ -157,10 +276,12 @@ function App() {
             }
           />
           {/* Moderator Dashboard Routes */}
+
+
           <Route
             path={links.moderatorDashboard.base}
             element={
-              <ProtectedRoute roles={['MODERATOR']}>
+              <ProtectedRoute roles={['MODERATOR', 'ADMIN']}>
                 <ModeratorDashboard />
               </ProtectedRoute>
             }
@@ -168,7 +289,7 @@ function App() {
             <Route
               path={links.moderatorDashboard.visitOptions}
               element={
-                <ProtectedRoute roles={['MODERATOR']}>
+                <ProtectedRoute roles={['ADMIN']}>
                   <ShowVisitTypesNVisitOptionsDashboard />
                 </ProtectedRoute>
               }
@@ -176,7 +297,7 @@ function App() {
             <Route
               path={links.moderatorDashboard.visitOptionDetails}
               element={
-                <ProtectedRoute roles={['MODERATOR']}>
+                <ProtectedRoute roles={['MODERATOR', 'ADMIN']}>
                   <VisitOptionDetails />
                 </ProtectedRoute>
               }
@@ -184,7 +305,7 @@ function App() {
             <Route
               path={links.moderatorDashboard.goToOptions}
               element={
-                <ProtectedRoute roles={['MODERATOR']}>
+                <ProtectedRoute roles={['MODERATOR', 'ADMIN']}>
                   <GoToOptions />
                 </ProtectedRoute>
               }
@@ -192,7 +313,7 @@ function App() {
             <Route
               path={links.moderatorDashboard.createVisitOption}
               element={
-                <ProtectedRoute roles={['MODERATOR']}>
+                <ProtectedRoute roles={['MODERATOR', 'ADMIN']}>
                   <CreateVisitOption />
                 </ProtectedRoute>
               }
@@ -200,7 +321,7 @@ function App() {
             <Route
               path={links.moderatorDashboard.addDynamicQuestion}
               element={
-                <ProtectedRoute roles={['MODERATOR']}>
+                <ProtectedRoute roles={['MODERATOR', 'ADMIN']}>
                   <AddDynamicQuestionForm />
                 </ProtectedRoute>
               }
@@ -208,7 +329,7 @@ function App() {
             <Route
               path={links.moderatorDashboard.addServicePoint}
               element={
-                <ProtectedRoute roles={['MODERATOR']}>
+                <ProtectedRoute roles={['MODERATOR', 'ADMIN']}>
                   <AddServicePoint />
                 </ProtectedRoute>
               }
@@ -216,7 +337,7 @@ function App() {
             <Route
               path={links.moderatorDashboard.allVisitors}
               element={
-                <ProtectedRoute roles={['MODERATOR']}>
+                <ProtectedRoute roles={['MODERATOR', 'ADMIN']}>
                   <VisitorPage />
                 </ProtectedRoute>
               }
@@ -224,7 +345,7 @@ function App() {
             <Route
               path={links.moderatorDashboard.allVisits}
               element={
-                <ProtectedRoute roles={['MODERATOR']}>
+                <ProtectedRoute roles={['MODERATOR', 'ADMIN']}>
                   <AllVisits />
                 </ProtectedRoute>
               }
@@ -234,7 +355,7 @@ function App() {
           <Route
             path={links.officerDashboard}
             element={
-              <ProtectedRoute roles={['OFFICER']}>
+              <ProtectedRoute roles={['MODERATOR', 'ADMIN']}>
                 <OfficerDashboard />
               </ProtectedRoute>
             }

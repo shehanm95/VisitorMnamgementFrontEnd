@@ -5,8 +5,10 @@ import { VisitorRow } from "./VisitorRow";
 import { EditUserWindow } from "./EditUserWindow";
 import { BlurBack } from "../../../common/BlurBack";
 import { RightAlign } from "../../../common/RightAlign";
+import { CsvService } from "../../../../frontServices/CsvService";
+import { PageNumberChanger } from "../../../common/PageNumberChanger";
 
-const VisitorList: React.FC = () => {
+const VisitorList = ({ visitors }: { visitors: UserDto[] }) => {
     const [users, setUsers] = useState<UserDto[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
@@ -14,18 +16,24 @@ const VisitorList: React.FC = () => {
     const [selectedUser, setSelectedUser] = useState<UserDto | null>(null);
 
     useEffect(() => {
-        const fetchUsers = async () => {
-            try {
-                const data = await userService.getAllUsers();
-                setUsers(data);
-                setLoading(false);
-            } catch (err) {
-                setError('Failed to load users');
-                setLoading(false);
-            }
-        };
-        fetchUsers();
+        if (users.length === 0) {
+            const fetchUsers = async () => {
+                try {
+                    const data = await userService.getAllUsers();
+                    setUsers(data);
+                    setLoading(false);
+                } catch (err) {
+                    setError('Failed to load users');
+                    setLoading(false);
+                }
+            };
+            fetchUsers();
+        }
     }, []);
+
+    useEffect(() => {
+        setUsers(visitors);
+    }, [visitors]);
 
     const handleEditUser = (user: UserDto) => {
         setSelectedUser(user);
@@ -55,7 +63,14 @@ const VisitorList: React.FC = () => {
     }
 
     return (
+
         <div className="visitor-list p-4">
+            {/* VisitorList */}
+            <RightAlign>
+                <button onClick={() => CsvService.downloadAsCsvFile(users)} className="mt-5 outline_button">
+                    Download CSV
+                </button>
+            </RightAlign>
             <table className="w-full border-collapse">
                 <thead>
                     <tr className="bg-gray-100">
@@ -63,8 +78,8 @@ const VisitorList: React.FC = () => {
                         <th className="py-2 px-4 text-left">Name</th>
                         <th className="py-2 px-4 text-left">Email</th>
                         <th className="py-2 px-4 text-left">Phone Number</th>
-                        <th className="py-2 px-4 text-left">Times Visited</th>
-                        <th className="py-2 px-4 text-left">No of Notes</th>
+                        {/* <th className="py-2 px-4 text-left">Times Visited</th>
+                        <th className="py-2 px-4 text-left">No of Notes</th> */}
                         <th className="py-2 px-4 text-left">Role</th>
                         <th className="py-2 px-4 text-left">Action</th>
                     </tr>
@@ -75,11 +90,11 @@ const VisitorList: React.FC = () => {
                     ))}
                 </tbody>
             </table>
-            <RightAlign>
-                <button className="mt-5 outline_button">
-                    Load next 50 visitors
-                </button>
-            </RightAlign>
+
+            <PageNumberChanger pageNumber={0} setPageNumber={function (pageNumber: number): void {
+                throw new Error("Function not implemented.");
+            }} pageLimit={50} currentListLength={49}></PageNumberChanger>
+
             {showEditWindow && selectedUser && (
                 <BlurBack>
                     <EditUserWindow

@@ -48,11 +48,11 @@ const PointScanVisit: React.FC = () => {
                 setVisit(visitData);
                 console.log('Scanned visit:', visitData);
                 const servicePoints = PointFrontService.fetchServicePointsByOfficer(visitData, officer!)
-                if (servicePoints) {
+                if (servicePoints.length > 0) {
                     setServicePoints(servicePoints)
                     navigate(links.servicePoint.answerQuestions);
                 } else {
-                    navigate(links.servicePoint.showFullVisit);
+                    navigate(links.visit.fullVisitMethod(visitData.id!));
                 }
 
             }

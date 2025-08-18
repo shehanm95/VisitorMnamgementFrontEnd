@@ -11,13 +11,21 @@ import { useFullNameHook } from '../../customHooks/useFullNameHook'
 import { boolean } from 'zod'
 import EmailVerification from '../../frontOfficePage/frontComp/EmailVerificationForm'
 import { useMyNavigator } from '../../customHooks/useMyNavigator'
+import { EditUserWindow } from '../../dashboard/dashboardComponents/visitorList/EditUserWindow'
 
-export const ProfileDetails = ({ user, allowChange = false }: { user: UserDto, allowChange?: boolean }) => {
+export const ProfileDetails = ({ user: initialUser, allowChange = false }: { user: UserDto, allowChange?: boolean }) => {
+    const [user, setUser] = useState(initialUser);
     const { profileImage, setProfileImage } = usePorfileImageSetter({ user })
     const [newImageWindow, setNewImageWindow] = useState<boolean>(false);
     const { getFullName } = useFullNameHook()
     const [verificationVindowOn, setVerificationWindowOn] = useState(false)
     const { links, navigate } = useMyNavigator()
+    const [showEditWindow, setShowEditWindow] = useState(false);
+
+    const handleUserSave = (updatedUser: UserDto) => {
+        setUser(updatedUser);
+    };
+
 
     return (
         <>
@@ -42,6 +50,20 @@ export const ProfileDetails = ({ user, allowChange = false }: { user: UserDto, a
                         <div className="prof-details">
 
                             <div className="prof-details-slot">
+                                <div className="prof-detail-title">User Id</div>
+                                <div className="prof-detail-value-slot">
+                                    <div className='prof-details-values-n-buttons'>
+                                        <div className="prof-detail-value">
+                                            {user && user.id}
+                                        </div>
+                                        <div onClick={() => setShowEditWindow(true)} className="prof-details-buttons">
+                                            <button className='prof-button'>Edit Profile</button>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                            <div className="prof-details-slot">
                                 <div className="prof-detail-title">Name</div>
                                 <div className="prof-detail-value-slot">
                                     <div className='prof-details-values-n-buttons'>
@@ -65,7 +87,7 @@ export const ProfileDetails = ({ user, allowChange = false }: { user: UserDto, a
                                             {`${user?.email}`}
                                         </div>
                                         <div className="prof-details-buttons">
-                                            <button className='prof-button'>Send Email</button>
+                                            {/* <button className='prof-button'>Send Email</button> */}
                                             {!user.isEmailVerified && <button onClick={() => setVerificationWindowOn(true)} className='prof-button'>Verifiy Email</button>}
                                         </div>
                                     </div>
@@ -130,6 +152,16 @@ export const ProfileDetails = ({ user, allowChange = false }: { user: UserDto, a
 
                         </PopUpWindow>
                     }
+
+                    {showEditWindow && user && (
+                        <BlurBack>
+                            <EditUserWindow
+                                user={user}
+                                onClose={() => setShowEditWindow(false)}
+                                onSave={handleUserSave}
+                            />
+                        </BlurBack>
+                    )}
                 </div>
             }
         </>

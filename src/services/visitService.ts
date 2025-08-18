@@ -6,6 +6,7 @@ import { Visit } from '../types/visit';
 import { ObjectService } from '../frontServices/ObjectService';
 import { VisitRowReq } from '../types/VisitRowReq';
 import { VisitRow } from '../types/VisitRow';
+import { VisitSearchObject } from '../components/dashboard/dashboardComponents/AllVisits';
 
 const API_BASE_URL = '/visits';
 
@@ -63,9 +64,19 @@ export const VisitService = {
         }
     },
 
-    async getAllVisits(): Promise<Visit[]> {
+    async getAllVisits(pageLimit: number, pageNumber: number): Promise<Visit[]> {
         try {
-            const response: AxiosResponse<Visit[]> = await api.get(`${API_BASE_URL}/all`);
+            const response: AxiosResponse<Visit[]> = await api.get(`${API_BASE_URL}/all/${pageLimit}/${pageNumber}`);
+            return response.data;
+        } catch (error) {
+            this.handleError(error, 'Error fetching all visits');
+            return [];
+        }
+    },
+
+    async getVisitsBySearchObj(pageLimit: number, pageNumber: number, searchObj: VisitSearchObject): Promise<Visit[]> {
+        try {
+            const response: AxiosResponse<Visit[]> = await api.post(`${API_BASE_URL}/getVisitsBySearchObj/${pageLimit}/${pageNumber}`, searchObj);
             return response.data;
         } catch (error) {
             this.handleError(error, 'Error fetching all visits');
@@ -95,6 +106,20 @@ export const VisitService = {
         }
     },
 
+    async cancelVisit(id: number): Promise<Visit | null> {
+        try {
+            const response = await api.post(`${API_BASE_URL}/cancelVisit/${id}`);
+
+            return response.data;
+        } catch (error) {
+            const err = error as AxiosError<ApiErrorResponse>;
+
+            this.handleError(error, 'Error deleting visit');
+            console.error("Error canceling visit:", error);
+            return null;
+        }
+    },
+
     async getVisitsByVisitOptionId(visitOptionId: number): Promise<Visit[]> {
         try {
             const response: AxiosResponse<Visit[]> = await api.get(`${API_BASE_URL}/by-visit-option/${visitOptionId}`);
@@ -119,7 +144,7 @@ export const VisitService = {
     handleError(error: unknown, defaultMessage: string): void {
         const err = error as AxiosError<ApiErrorResponse>;
         const errorMessage = err.response?.data?.message || defaultMessage;
-        toast.error(errorMessage);
+        //toast.error(errorMessage);
         console.error('API Error:', errorMessage, err.response?.data);
     }
 }

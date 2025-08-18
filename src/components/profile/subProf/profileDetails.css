@@ -58,11 +58,12 @@
 
 .prof-details {
     flex: 1;
+    /* font-size: 0.8rem; */
 }
 
 .prof-details-slot {
     display: flex;
-    margin-bottom: 15px;
+    margin-bottom: 4px;
     align-items: center;
 }
 

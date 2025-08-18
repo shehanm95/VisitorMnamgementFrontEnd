@@ -9,7 +9,7 @@ export const Unauthorized = () => {
 
     const handleBack = () => {
         getRole();
-        navigate(LinkService.getInstance().frontOffice.visitTypes);
+        navigate(LinkService.getInstance().preReg.types);
     };
 
     return (

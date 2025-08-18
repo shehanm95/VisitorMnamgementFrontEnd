@@ -9,11 +9,14 @@ import { ShowOptionDetails } from '../preReg/subPreReg/ShowOptionDetails';
 import { FullServicePoint } from './FullServicePoint';
 import { PointFrontService } from '../../frontServices/PointFrontService';
 import { DisplayVisitTimeDate } from './DisplayVisitTimeDate';
+import { getCurrentUser } from '../../api/axios';
+import { UserDto } from '../../types/UserDto';
+import { useMyNavigator } from '../customHooks/useMyNavigator';
 
 export const CheckFullVisit = () => {
     const { id } = useParams<{ id: string }>();
     const [visit, setVisit] = useState<Visit>()
-    //const { navigate, links } = useMyNavigator()
+    const { navigate, links } = useMyNavigator()
 
     useEffect(() => {
         const fetchVisit = async () => {
@@ -32,6 +35,29 @@ export const CheckFullVisit = () => {
         }
         fetchVisit();
     }, [])
+
+    const [currentUser, setCurrentUser] = useState<UserDto | null>(null);
+
+    useEffect(() => {
+        const fetchCurrentUser = async () => {
+            try {
+                const currentU = await getCurrentUser();
+                if (currentU && visit) {
+                    setCurrentUser(currentU);
+                    if (!(currentU.role === 'ROLE_ADMIN' || currentU.role === 'ROLE_MODERATOR' || currentU.id === visit.visitor.id)) {
+                        navigate(links.preReg.types)
+                    } else {
+                        console.log("current user is allowed to view this profile")
+                        console.log("current user: ", currentU.role)
+                        console.log("current user: ", currentU.id)
+                    }
+                }
+            } catch (error) {
+                console.error('Error fetching current user:', error);
+            }
+        };
+        fetchCurrentUser();
+    }, [visit])
 
     return (
         <NavBarContainer>

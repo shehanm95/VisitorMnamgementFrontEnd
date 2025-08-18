@@ -124,7 +124,9 @@ const EmailVerification = ({ nextUrl, givenEmail, notFromFrontOffice = false, cl
             }
 
             setTimeout(() => {
-                navigate(0);
+                if (!nextUrl.includes("uestion")) {
+                    navigate(0);
+                }
             }, 3000);
 
             navigate(nextUrl);

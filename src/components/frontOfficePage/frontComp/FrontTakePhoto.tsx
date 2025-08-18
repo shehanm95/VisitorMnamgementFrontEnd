@@ -59,8 +59,8 @@ const FrontTakePhoto: React.FC = () => {
                     <div className="photo-page-camera-icon" />
                 </div>
                 <div className="photo-page-button-group">
-                    <button className="photo-page-btn retake">Re-take</button>
-                    <button className="photo-page-btn ok">Ok</button>
+                    {/* <button className="photo-page-btn retake">Re-take</button>
+                    <button className="photo-page-btn ok">Ok</button> */}
                     <>
                         <button
                             type="button"

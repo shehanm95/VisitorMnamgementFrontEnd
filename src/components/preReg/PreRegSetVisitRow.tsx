@@ -46,7 +46,7 @@ export const PreRegSetVisitRow = () => {
 
 
     const selectVisitCircle = (visitRow: VisitRow, circleId: number) => {
-        if (visitRow.visits && visitRow.visits.length <= circleId) {
+        if (visitRow.visits && visitRow.visits.filter(v => !v.canceled).length <= circleId) {
             setVisitCircleId(visitRow.id + "-" + circleId.toString())
             setSelectedVisitRow(visitRow.id)
         }
@@ -216,7 +216,7 @@ export const PreRegSetVisitRow = () => {
                                     {[...Array(R.visitorsPerRow)].map((_, i) => (
                                         <div key={i}
                                             onClick={() => selectVisitCircle(R, i,)}
-                                            className={`row-circle ${R.visits && R.visits?.length > i || visitCircleId == (R.id + "-" + i.toString()) ? 'row-circle-filled' : 'row-circle-available'}`}>
+                                            className={`row-circle ${R.visits && R.visits?.filter(v => !v.canceled).length > i || visitCircleId == (R.id + "-" + i.toString()) ? 'row-circle-filled' : 'row-circle-available'}`}>
 
                                         </div>
 

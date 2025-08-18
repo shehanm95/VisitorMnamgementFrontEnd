@@ -512,10 +512,10 @@ const validateTimeRanges = (
 const VisitOptionSchema = z
     .object({
         name: z.string().min(1, 'Visitor option name is required'),
-        description: z.string().min(1, 'Description is required'),
+        description: z.string().optional(),
         visitTypeId: z.number().min(1, 'Please select a visitor type'),
         isPreRegistration: z.boolean(),
-        visitDateType: z.enum(['SPECIFIC_DATES']),
+        visitDateType: z.enum(['SPECIFIC_DATES', 'ALL_WORKING_DATES']),
         specificDates: z.array(SpecificDateSchema),
         averageTimeForAPerson: z.number().min(1, 'Must be at least 1 minute'),
         visitorsPerRow: z.number().min(1, 'Must allow at least 1 per row'),
@@ -585,7 +585,7 @@ export const CreateVisitOption = () => {
             averageTimeForAPerson: 30,
             visitorsPerRow: 1,
             active: true, // ✅ default active true
-            visitDateType: 'SPECIFIC_DATES',
+            visitDateType: 'ALL_WORKING_DATES',
             timeRanges: [{ startTime: '', endTime: '' }],
             collectDetails: {
                 email: false,
@@ -822,6 +822,8 @@ export const CreateVisitOption = () => {
                                 <label className="form-sublabel">Pre Registration Visit Date Time :</label>
                                 <div className="form-time-inputs">
                                     <select className="formt-visitDateType" {...register('visitDateType')}>
+
+                                        <option value="ALL_WORKING_DATES">All Working Dates</option>
                                         <option value="SPECIFIC_DATES">Specific Dates</option>
                                     </select>
                                 </div>
@@ -839,7 +841,9 @@ export const CreateVisitOption = () => {
                         </div>
                     )}
                 </div>
-
+                {errors.specificDates && (
+                    <span className="form-error-text">{errors.specificDates.message}</span>
+                )}
                 {/* Collect details */}
                 <div className="form-group">
                     <label className="form-label">About Collecting Basic Visitor Details :</label>

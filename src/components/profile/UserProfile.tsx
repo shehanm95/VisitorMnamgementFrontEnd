@@ -24,10 +24,36 @@ export const UserProfile = () => {
     const [loadingVisits, setLoadingVisits] = useState(true)
     const [activeFilter, setActiveFilter] = useState<'all' | 'future' | 'past'>('all')
 
+    const [currentUser, setCurrentUser] = useState<UserDto | null>(null);
+
+    useEffect(() => {
+        const fetchCurrentUser = async () => {
+            try {
+                const currentU = await getCurrentUser();
+                if (currentU && user) {
+                    setCurrentUser(currentU);
+                    if (!(currentU.role === 'ROLE_ADMIN' || currentU.role === 'ROLE_MODERATOR' || currentU.id === user.id)) {
+                        navigate(links.preReg.types)
+                    } else {
+                        console.log("current user is allowed to view this profile")
+                        console.log("current user: ", currentU.role)
+                        console.log("current user: ", currentU.id)
+                    }
+                }
+            } catch (error) {
+                console.error('Error fetching current user:', error);
+            }
+        };
+        fetchCurrentUser();
+    }, [user])
+
+
+
+
 
     const goToDashboard = () => {
         console.log(user)
-        if (user?.role === 'ROLE_MODERATOR') { navigate(links.moderatorDashboard.visitOptions) }
+        if (user?.role === 'ROLE_MODERATOR') { navigate(links.moderatorDashboard.allVisits) }
         else if (user?.role === 'ROLE_ADMIN') { navigate(links.moderatorDashboard.visitOptions) }
         else if (user?.role === 'ROLE_VISITOR') { navigate(links.visitorDashboard) }
         else {
@@ -68,7 +94,7 @@ export const UserProfile = () => {
         setFilteredVisits(visits.filter(visit => {
             if (!visit.visitRow?.date) return false
 
-            const visitDate = new Date(visit.visitRow.date)
+            const visitDate = new Date(visit.visitRow.date + 'T' + visit.visitRow.startTime)
             return filterType === 'future'
                 ? visitDate >= currentDate
                 : visitDate < currentDate
@@ -83,7 +109,7 @@ export const UserProfile = () => {
                 {user && <ProfileDetails allowChange={true} user={user}></ProfileDetails>}
 
                 <RightAlign>
-                    <button onClick={goToDashboard} className='front-Button'>Dashboard </button>
+                    {user && !(user.role === 'ROLE_VISITOR') && <button onClick={goToDashboard} className='front-Button'>Dashboard </button>}
                     <button onClick={() => navigate(links.preReg.base)} className='front-Button'>Home </button>
                     <button onClick={logout} className='front-Button'>Logout</button>
                 </RightAlign>

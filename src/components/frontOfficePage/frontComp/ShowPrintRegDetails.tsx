@@ -10,6 +10,7 @@ import { Utils } from '../../../frontServices/Utils';
 import { toast } from 'react-toastify';
 import { ApiErrorResponse } from '../../../types/ApiErrorResonse';
 import DefaultProf from '../../../assets/ProfDefault.avif'
+import userService from '../../../services/userService';
 
 export const ShowPrintRegDetails = () => {
     const [visit, setVisit] = useState<Visit | undefined>()
@@ -297,17 +298,43 @@ export const ShowPrintRegDetails = () => {
         frontService.clearFrontEndService();
     };
 
-    const saveVisitAndPrintPass = async () => {
-        if (savedVisit && savedVisit.id) {
-            savedVisit.printed = true;
-            const savedObj = await VisitService.markAsPrinted(savedVisit.id);
-            toast.info("Confirmed, Your visit marked as printed...")
-            console.log(savedObj);
-        }
 
-        printPass();
-        navigate(links.frontOffice.thankyouAndInstructions)
+
+    const saveVisitAndPrintPass = async () => {
+        try {
+            if (savedVisit && savedVisit.id) {
+                savedVisit.printed = true;
+                const savedObj = await VisitService.markAsPrinted(savedVisit.id);
+
+                const visitorPhoto = frontService.getVisitorPhoto();
+                if (visitorPhoto != null && visit?.visitor.id) {
+                    // Ensure the photo is in the correct format
+                    let imageFile;
+                    if (visitorPhoto instanceof File) {
+                        imageFile = visitorPhoto;
+                    } else {
+                        // Convert to File if it's raw data
+                        imageFile = new File([visitorPhoto], 'visitor-photo.jpg', {
+                            type: 'image/jpeg'
+                        });
+                    }
+
+                    await userService.saveImage(visit.visitor.id, imageFile);
+                }
+
+                toast.info("Confirmed, Your visit marked as printed...");
+                console.log(savedObj);
+            }
+
+            printPass();
+            navigate(links.frontOffice.thankyouAndInstructions);
+        } catch (error) {
+            console.error("Error saving visit:", error);
+            toast.error("Failed to save visit details");
+        }
     };
+
+
 
     return (
         <div className="vd-container">

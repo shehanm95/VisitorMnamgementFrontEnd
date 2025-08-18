@@ -16,4 +16,5 @@ export interface Visit {
     enteredGate?: Gate;
     exitGate?: Gate;
     exitTime?: string;
+    canceled?: boolean;
 }

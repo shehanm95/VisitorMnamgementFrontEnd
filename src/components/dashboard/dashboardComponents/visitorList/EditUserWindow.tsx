@@ -17,15 +17,24 @@ const EditUserSchema = z.object({
     lastName: z.string().min(1, 'Last Name is required'),
     email: z.string().email('Invalid email address'),
     role: z.enum(['visitor', 'admin', 'staff', 'moderator']),
+    password: z.string().optional(),
+    confirmPassword: z.string().optional(),
+}).superRefine((data, ctx) => {
+    if (data.password && data.confirmPassword && data.password !== data.confirmPassword) {
+        ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: 'Passwords do not match',
+            path: ['confirmPassword'],
+        });
+    }
 });
 
 type EditUserFormValues = z.infer<typeof EditUserSchema>;
 
-const getFrontendRole = (backendRole: string): 'visitor' | 'admin' | 'staff' | 'moderator' => {
+const getFrontendRole = (backendRole: string): 'visitor' | 'admin' | 'moderator' => {
     switch (backendRole) {
         case 'ROLE_ADMIN': return 'admin';
         case 'ROLE_VISITOR': return 'visitor';
-        case 'ROLE_GUEST': return 'staff';
         case 'ROLE_MODERATOR': return 'moderator';
         default: return 'visitor';
     }
@@ -35,7 +44,7 @@ const mapFrontendRoleToBackend = (frontendRole: string) => {
     switch (frontendRole) {
         case 'admin': return 'ROLE_ADMIN';
         case 'visitor': return 'ROLE_VISITOR';
-        case 'staff': return 'ROLE_GUEST';
+        // case 'staff': return 'ROLE_GUEST';
         case 'moderator': return 'ROLE_MODERATOR';
         default: return 'ROLE_VISITOR';
     }
@@ -123,9 +132,31 @@ export const EditUserWindow: React.FC<EditUserWindowProps> = ({ user, onClose, o
                         <select {...register('role')}>
                             <option value="visitor">Visitor</option>
                             <option value="admin">Admin</option>
-                            <option value="staff">Staff</option>
+                            {/* <option value="staff">Staff</option> */}
                             <option value="moderator">Moderator</option>
                         </select>
+                    </div>
+
+                    <div className="editUserWindow-field">
+                        <label>Password</label>
+                        <input
+                            type='password'
+                            {...register('password')}
+                            placeholder="Fill this if you need to change the password"
+                            className={errors.email ? 'input-error' : ''}
+                        />
+
+                    </div>
+
+                    <div className="editUserWindow-field">
+                        <label>Confirm Password</label>
+                        <input
+                            type='password'
+                            {...register('password')}
+                            placeholder="Fill this if you need to change the password"
+                            className={errors.email ? 'input-error' : ''}
+                        />
+                        {errors.confirmPassword && <p className="error-message">{errors.confirmPassword.message}</p>}
                     </div>
 
                     <div className="editUserWindow-buttons">

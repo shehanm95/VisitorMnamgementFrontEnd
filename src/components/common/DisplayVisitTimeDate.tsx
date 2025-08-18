@@ -18,7 +18,9 @@ export const DisplayVisitTimeDate = ({ visitRow, visitId }: { visitRow: VisitRow
                 <>
                     <h3 className='m-3'>Visit Id :</h3>
                     <h3 className='m-3'>Visit Time :</h3>
-                    <h4 className='m-3'>{visitRow.startTime} - {visitRow.endTime}</h4></>}
+                    <h4 className='m-3'>{visitRow.startTime} - {visitRow.endTime}</h4>
+                </>
+            }
         </div>
     )
 }

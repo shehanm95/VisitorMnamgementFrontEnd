@@ -742,3 +742,10 @@ button:hover {
 .text-danger {
   color: var(--danger);
 }
+
+.disable-button {
+
+  cursor: not-allowed;
+  border: 1px solid var(--disabled);
+  color: var(--disabled);
+}
