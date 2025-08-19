@@ -8,7 +8,6 @@ import { FrontPageService } from '../../../frontServices/FrontPageSerivce';
 import { Visit } from '../../../types/visit';
 import { Utils } from '../../../frontServices/Utils';
 import { toast } from 'react-toastify';
-import { ApiErrorResponse } from '../../../types/ApiErrorResonse';
 import DefaultProf from '../../../assets/ProfDefault.avif'
 import userService from '../../../services/userService';
 

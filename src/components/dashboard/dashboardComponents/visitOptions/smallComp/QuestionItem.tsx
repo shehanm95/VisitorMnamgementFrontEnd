@@ -6,13 +6,14 @@ type QuestionItemProps = {
     question: DynamicQuestion,
     edit: (question: DynamicQuestion) => void
     toggleActivate: (question: DynamicQuestion) => void
+    index: number
 }
 
 
-export const QuestionItem: React.FC<QuestionItemProps> = ({ question, toggleActivate, edit }) => {
+export const QuestionItem: React.FC<QuestionItemProps> = ({ question, toggleActivate, edit, index }) => {
     return (
         <div className='from-question-item flex between centerV'>
-            Question 01: {question?.questionText}
+            Question {index + 1}: {question?.questionText}
             <div className='form-button-holder'>
                 <button onClick={() => { toggleActivate(question) }}>Activate</button>
                 <button onClick={() => { edit(question) }}>Edit</button>

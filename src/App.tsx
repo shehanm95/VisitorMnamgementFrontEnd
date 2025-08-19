@@ -77,6 +77,22 @@ function App() {
       />
       <PointProvider>
         <Routes>
+
+
+          <Route path={links.preReg.base} element={<PreReg />}>
+            {/* Default child route */}
+            <Route index element={<PreRegTypes />} />
+
+            {/* Explicit child route */}
+            <Route path={links.preReg.types} element={<PreRegTypes />} />
+          </Route>
+
+          {/* Wildcard route for 404 */}
+          <Route path="*" element={<Navigate to={links.unauthorized} replace />} />
+
+
+
+
           <Route path={links.login} element={<LoginForm />} />
           <Route path={links.register} element={<RegisterForm />} />
           <Route path={links.home} element={<PrivateRoute element={<Home />} />} />

@@ -17,6 +17,8 @@ import { OfficerQuestionSchema } from '../../../types/OfficerQuestionSchema';
 import { DynamicQuestion } from '../../../types/dynamicQuestion';
 import { ModeratorService } from '../../../frontServices/moderatorService';
 import { DynamicQuestionService } from '../../../services/DyanmicQuestionService';
+import { useMyNavigator } from '../../customHooks/useMyNavigator';
+import { RightAlign } from '../../common/RightAlign';
 
 
 const dutySchema = z.object({
@@ -52,6 +54,7 @@ export const AddServicePoint = () => {
     const [addOfficerQuestion, setAddOfficerQuestion] = useState(false)
     const [addOfficer, setAddOfficer] = useState(false)
     const [addedDynamicRefQustion, setAddedDynamicRefQuestions] = useState<DynamicQuestion[]>([])
+    const { navigate, links } = useMyNavigator()
 
     useEffect(() => {
         const getQ = async () => {
@@ -237,6 +240,7 @@ export const AddServicePoint = () => {
                 </div>
 
                 <div className="form-button-wrapper">
+
                     <button
                         type="submit"
                         className="form-save-button form-button"
@@ -244,11 +248,13 @@ export const AddServicePoint = () => {
                     >
                         {isSubmitting ? 'Saving...' : 'Save'}
                     </button>
-                    <button type="button" className="form-save-button form-button ms-3">
-                        Next
-                    </button>
                 </div>
             </form>
+            <RightAlign>
+                <button onClick={() => navigate(links.moderatorDashboard.goToOptions)} type="button" className="me-2 form-save-button form-button ms-3">
+                    Go to Dashboard
+                </button>
+            </RightAlign>
 
 
             {addOfficerQuestion &&

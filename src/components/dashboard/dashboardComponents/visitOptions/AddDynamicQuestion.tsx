@@ -175,8 +175,8 @@ const AddDynamicQuestionForm = () => {
 
             <div className="form-question-header">
                 {currentVisitOption?.description && currentVisitOption?.dynamicQuestions.length ? (
-                    currentVisitOption.dynamicQuestions.map((q) => (
-                        <QuestionItem key={q.id} question={q} edit={edit} toggleActivate={toggleActivate} />
+                    currentVisitOption.dynamicQuestions.map((q, index) => (
+                        <QuestionItem key={q.id} index={index} question={q} edit={edit} toggleActivate={toggleActivate} />
                     ))
                 ) : (
                     <Center>

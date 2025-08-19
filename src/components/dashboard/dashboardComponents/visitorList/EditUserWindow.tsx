@@ -1,10 +1,11 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { UserDto } from '../../../../types/UserDto';
 import UserService from '../../../../services/userService';
 import './editWindow.css';
+import { getCurrentUser, logout } from '../../../../api/axios';
 
 interface EditUserWindowProps {
     user: UserDto;
@@ -51,6 +52,24 @@ const mapFrontendRoleToBackend = (frontendRole: string) => {
 };
 
 export const EditUserWindow: React.FC<EditUserWindowProps> = ({ user, onClose, onSave }) => {
+    const [currentUser, setCurrentUser] = React.useState<UserDto | null>(null);
+
+    useEffect(() => {
+        const fetchCurrentUser = async () => {
+            try {
+                const currentU = await getCurrentUser();
+                if (currentU) {
+                    setCurrentUser(currentU);
+
+                }
+            } catch (error) {
+                console.error('Error fetching current user:', error);
+            }
+        };
+        fetchCurrentUser();
+    }
+        , []);
+
     const {
         register,
         handleSubmit,
@@ -79,6 +98,12 @@ export const EditUserWindow: React.FC<EditUserWindowProps> = ({ user, onClose, o
 
             if (onSave) {
                 onSave(response);
+                if (currentUser && currentUser.id === user.id) {
+                    if (response.email !== user.email) {
+                        alert("Email changed, please login again with the new email")
+                        logout();
+                    }
+                }
             }
         } catch (error) {
             console.error('Error updating user:', error);

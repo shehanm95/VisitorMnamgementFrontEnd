@@ -21,6 +21,7 @@ import { LinkService } from '../../frontServices/LinkService';
 import { Utils } from '../../frontServices/Utils';
 import { ShowOptionDetails } from './subPreReg/ShowOptionDetails';
 import { VisitOptionService } from '../../services/visitOptionService';
+import { useMyNavigator } from '../customHooks/useMyNavigator';
 
 // Schema for visit row data
 const visitRowSchema = z.object({
@@ -37,12 +38,16 @@ export const PreRegSetVisitRow = () => {
     const [visitCircleId, setVisitCircleId] = useState<string>()
     const [selectedVisitRow, setSelectedVisitRow] = useState<number | undefined>()
     const [confirmState, setConfirmState] = useState<ConfirmState>(ConfirmState.readyToconfirm)
-    const navigate = useNavigate()
 
-    if (!visit) {
-        navigate(LinkService.getInstance().preReg.base)
-        return null;
-    }
+    const { navigate, links } = useMyNavigator()
+
+    useEffect(() => {
+        if (!visit.visitOption) {
+            navigate(links.preReg.types)
+            return;
+        }
+
+    }, [])
 
 
     const selectVisitCircle = (visitRow: VisitRow, circleId: number) => {

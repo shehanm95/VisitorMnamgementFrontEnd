@@ -8,12 +8,14 @@ import { useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import { RightAlign } from "../../common/RightAlign";
 import './optionDetails.css';
+import { useMyNavigator } from "../../customHooks/useMyNavigator";
 
 export const VisitOptionDetails = () => {
     const [visitOption, setVisitOption] = useState<VisitOption | undefined>();
     const [editable, setEditable] = useState<VisitOption | undefined>();
     const [isEditing, setIsEditing] = useState(false);
     const { id } = useParams<{ id: string }>();
+    const { navigate, links } = useMyNavigator()
 
     useEffect(() => {
         const getVisitOption = async () => {
@@ -35,6 +37,19 @@ export const VisitOptionDetails = () => {
     const cancelEdit = () => {
         setIsEditing(false);
         setEditable(undefined);
+    };
+
+    const deleteOption = async () => {
+        if (window.confirm("Are you sure you want to delete this visit option?")) {
+            try {
+                await VisitOptionService.deleteVisitOption(visitOption!.id!);
+                toast.success("Visit option deleted successfully");
+                setVisitOption(undefined);
+                navigate(links.moderatorDashboard.visitOptions)
+            } catch (e) {
+                toast.error("Failed to delete visit option");
+            }
+        }
     };
 
     const handleSave = async () => {
@@ -149,6 +164,7 @@ export const VisitOptionDetails = () => {
                 {isEditing ? (
                     <>
                         <button onClick={handleSave} className="option-details-btn save">Save</button>
+                        <button onClick={deleteOption} className="option-details-btn cancel">Delete</button>
                         <button onClick={cancelEdit} className="option-details-btn cancel">Cancel</button>
                     </>
                 ) : (

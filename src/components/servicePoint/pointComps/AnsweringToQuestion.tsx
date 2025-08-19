@@ -58,6 +58,7 @@ export const AnsweringToQuestion = ({ question, setAnswer, incerementCurrentQues
             selectedButtonAnswers: selectedButtonAnswers
         };
         setAnswer(finalAnswer!);
+        setAnswerFiled('');
         incerementCurrentQuestionIndex()
     }
 
